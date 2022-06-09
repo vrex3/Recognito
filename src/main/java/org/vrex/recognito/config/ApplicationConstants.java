@@ -1,9 +1,26 @@
 package org.vrex.recognito.config;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+
 public class ApplicationConstants {
 
     private ApplicationConstants() {
         //enforces singleton pattern
+    }
+
+    /**
+     * DateTime CONSTANTS
+     */
+    public static final String DEFAULT_TIMEZONE = "UTC";
+
+    /**
+     * Returns the current time in UTC
+     *
+     * @return
+     */
+    public static final LocalDateTime currentTime() {
+        return LocalDateTime.now(ZoneId.of(ApplicationConstants.DEFAULT_TIMEZONE));
     }
 
     /**
