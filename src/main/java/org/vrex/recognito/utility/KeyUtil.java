@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
+import org.vrex.recognito.entity.Application;
 import org.vrex.recognito.entity.User;
 import org.vrex.recognito.model.ApplicationException;
 
@@ -12,6 +13,8 @@ import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.PrivateKey;
 import java.security.PublicKey;
+import java.security.interfaces.RSAPrivateKey;
+import java.security.interfaces.RSAPublicKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
@@ -53,26 +56,26 @@ public class KeyUtil {
     }
 
     /**
-     * Extract private key for user
+     * Extract private key for an application
      *
-     * @param user
+     * @param application
      * @return
      * @throws InvalidKeySpecException
      */
-    public PrivateKey extractPrivateKey(User user) throws InvalidKeySpecException {
-        log.info("{} Extracting private key for user {}", LOG_TEXT, user.getUsername());
-        return keyFactory.generatePrivate(new PKCS8EncodedKeySpec(user.readPrivateKey()));
+    public RSAPrivateKey extractPrivateKey(Application application) throws InvalidKeySpecException {
+        log.info("{} Extracting private key for application {}", LOG_TEXT, application.getName());
+        return (RSAPrivateKey) keyFactory.generatePrivate(new PKCS8EncodedKeySpec(application.readPrivateKey()));
     }
 
     /**
-     * Extracts public key for user
+     * Extracts public key for an application
      *
-     * @param user
+     * @param application
      * @return
      * @throws InvalidKeySpecException
      */
-    public PublicKey extractPublicKey(User user) throws InvalidKeySpecException {
-        log.info("{} Extracting public key for user {}", LOG_TEXT, user.getUsername());
-        return keyFactory.generatePublic(new X509EncodedKeySpec(user.readPublicKey()));
+    public RSAPublicKey extractPublicKey(Application application) throws InvalidKeySpecException {
+        log.info("{} Extracting public key for application {}", LOG_TEXT, application.getName());
+        return (RSAPublicKey) keyFactory.generatePublic(new X509EncodedKeySpec(application.readPublicKey()));
     }
 }

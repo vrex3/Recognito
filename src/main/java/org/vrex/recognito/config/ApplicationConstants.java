@@ -1,7 +1,10 @@
 package org.vrex.recognito.config;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.util.Date;
 
 public class ApplicationConstants {
 
@@ -24,6 +27,15 @@ public class ApplicationConstants {
     }
 
     /**
+     * Returns the current date in UTC
+     *
+     * @return
+     */
+    public static final Date currentDate() {
+        return Date.from(currentTime().toInstant(ZoneOffset.UTC));
+    }
+
+    /**
      * RSA CONSTANTS
      */
     public static final String KEY_GENERATOR_INSTANCE = "RSA";
@@ -35,4 +47,12 @@ public class ApplicationConstants {
     public static final String PASSAY_SPL_CHAR_ERROR_CODE = "PassayError";
 
     public static final String RSA_SETUP_EXCEPTION = "Error in RSA Config : ";
+
+    /**
+     * Error messages
+     */
+    public static final String INVALID_TOKEN_SIGNATURE = "Token signature could not be parsed or is invalid";
+    public static final String INVALID_TOKEN_PAYLOAD = "Token payload could not be parsed or is invalid";
+
+
 }
