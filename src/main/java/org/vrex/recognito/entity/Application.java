@@ -9,10 +9,14 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
+import org.vrex.recognito.config.ApplicationConstants;
+import org.vrex.recognito.model.dto.UpsertApplicationRequest;
 
 import java.io.Serializable;
 import java.nio.charset.StandardCharsets;
+import java.security.KeyPair;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @AllArgsConstructor
@@ -31,10 +35,15 @@ public class Application implements Serializable {
     @Field("appName")
     private String name;
 
+    @Field("description")
+    private String description;
+
     //AUTO GENERATED
     @Indexed(unique = true)
     @Field("appUUID")
     private String appUUID;
+
+    //private boolean hasRoles;
 
     @Indexed(unique = true)
     @Field("publicKey")
@@ -48,6 +57,21 @@ public class Application implements Serializable {
 
     @Field("updatedOn")
     private LocalDateTime updatedOn;
+
+    public Application(UpsertApplicationRequest request, KeyPair keyPair){
+        this.appUUID = UUID.randomUUID().toString();
+        this.id = request.getName();
+        this.name = request.getName();
+        this.description = request.getDescription();
+        this.publicKey = readKeyToString(keyPair.getPublic().getEncoded());
+        this.privateKey = readKeyToString(keyPair.getPrivate().getEncoded());
+        this.onboardedOn = ApplicationConstants.currentTime();
+        this.updatedOn = onboardedOn;
+    }
+
+    public void updateApp(){
+        this.updatedOn = ApplicationConstants.currentTime();
+    }
 
     /**
      * Reads public key into byte array

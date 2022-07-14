@@ -54,5 +54,7 @@ public class ApplicationConstants {
     public static final String INVALID_TOKEN_SIGNATURE = "Token signature could not be parsed or is invalid";
     public static final String INVALID_TOKEN_PAYLOAD = "Token payload could not be parsed or is invalid";
 
+    public static final String EMPTY_APPLICATION_NAME = "Application name cannot be empty";
+
 
 }

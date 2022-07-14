@@ -10,4 +10,7 @@ public interface ApplicationRepository extends MongoRepository<Application, Stri
 
     @Query("{appUUID:'?0'}")
     public Application findApplicationByUUID(String UUID);
+
+    @Query("{appName:'?0'}")
+    public Application findApplicationByName(String name);
 }

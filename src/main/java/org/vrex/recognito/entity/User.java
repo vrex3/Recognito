@@ -40,6 +40,8 @@ public class User implements Serializable {
     @Field("email")
     private String email;
 
+    //private Role role;
+
     @DBRef
     private Application application;
 
