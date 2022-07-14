@@ -55,6 +55,7 @@ public class ApplicationConstants {
     public static final String INVALID_TOKEN_PAYLOAD = "Token payload could not be parsed or is invalid";
 
     public static final String EMPTY_APPLICATION_NAME = "Application name cannot be empty";
+    public static final String EMPTY_APPLICATION_IDENTIFIER = "Either app name or UUID needs to be provided";
 
 
 }

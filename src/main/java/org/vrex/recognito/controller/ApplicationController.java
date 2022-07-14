@@ -1,0 +1,50 @@
+package org.vrex.recognito.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.vrex.recognito.model.dto.ApplicationIdentifier;
+import org.vrex.recognito.model.dto.UpsertApplicationRequest;
+import org.vrex.recognito.service.ApplicationService;
+
+import javax.validation.Valid;
+
+@RestController
+@RequestMapping(value = "/application")
+public class ApplicationController {
+
+    @Autowired
+    private ApplicationService applicationService;
+
+    /**
+     * Accepts either appName or appUUID
+     * Throws exception if neither are provided
+     * Attempts to locate app details otherwise
+     *
+     * @param appId
+     * @return
+     * @throws Exception
+     */
+    @GetMapping
+    public ResponseEntity<?> getApplication(@Valid @ModelAttribute ApplicationIdentifier appId) throws Exception {
+        return applicationService.getApplication(appId);
+    }
+
+    /**
+     * Can be used to both create and update an application
+     * NEEDS ACCESS CONTROL
+     *
+     * @param request
+     * @return
+     * @throws Exception
+     */
+    @PostMapping
+    public ResponseEntity<?> upsertApplication(@RequestBody UpsertApplicationRequest request) throws Exception {
+        return applicationService.upsertApplication(request);
+    }
+}

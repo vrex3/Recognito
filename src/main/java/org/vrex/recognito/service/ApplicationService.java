@@ -2,17 +2,23 @@ package org.vrex.recognito.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.vrex.recognito.entity.Application;
 import org.vrex.recognito.model.ApplicationException;
 import org.vrex.recognito.model.Message;
 import org.vrex.recognito.model.dto.ApplicationDTO;
+import org.vrex.recognito.model.dto.ApplicationIdentifier;
 import org.vrex.recognito.model.dto.UpsertApplicationRequest;
 import org.vrex.recognito.repository.ApplicationRepository;
 import org.vrex.recognito.utility.KeyUtil;
+
+import javax.transaction.Transactional;
 
 @Slf4j
 @Service
@@ -28,6 +34,39 @@ public class ApplicationService {
     private ApplicationRepository applicationRepository;
 
     /**
+     * AppUUID preffered to appName (IF BOTH PROVIDED)
+     * Fetches application by appUUID if UUID provided
+     * Otherwise fetches by appName
+     * Hides keys (both sets)
+     *
+     * @param appId
+     * @return
+     */
+    public ResponseEntity<?> getApplication(ApplicationIdentifier appId) {
+
+        boolean id = StringUtils.isEmpty(appId.getAppUUID()) ? false : true;
+        String identifier = id ? appId.getAppUUID() : appId.getAppName();
+        String logIdentifier = id ? "UUID" : "name";
+
+        log.info("{} Fetching application with {} - {}", LOG_TEXT, logIdentifier, identifier);
+
+        try {
+            return new ResponseEntity<>(Message.builder().
+                    data(new ApplicationDTO(id ?
+                            applicationRepository.findApplicationByUUID(identifier) :
+                            applicationRepository.findApplicationByName(identifier))).
+                    build(),
+                    HttpStatus.OK);
+        } catch (Exception exception) {
+            log.error("{} Fetching application with {} - {}", LOG_TEXT_ERROR, logIdentifier, identifier, exception);
+            throw ApplicationException.builder().
+                    errorMessage(exception.getMessage()).
+                    status(HttpStatus.INTERNAL_SERVER_ERROR).
+                    build();
+        }
+    }
+
+    /**
      * Updates (if already existing) or creates new Application
      * and persists it in the schema.
      * App details EXCEPT keys are returned as response.
@@ -35,7 +74,9 @@ public class ApplicationService {
      * @param request
      * @return
      */
-    public ResponseEntity<> upsertApplication(UpsertApplicationRequest request) {
+    @Transactional
+    @Retryable(maxAttempts = 5, backoff = @Backoff(delay = 500))
+    public ResponseEntity<?> upsertApplication(UpsertApplicationRequest request) {
         if (ObjectUtils.isEmpty(request)) {
             log.error("{} Request empty", LOG_TEXT_ERROR);
             return new ResponseEntity(Message.builder().text(LOG_TEXT_ERROR).build(), HttpStatus.BAD_REQUEST);
@@ -97,12 +138,12 @@ public class ApplicationService {
             if (!app.getDescription().equals(request.getDescription().trim())) {
                 altered = true;
                 app.setDescription(request.getDescription());
-                log.info("{} App Comparator - Description altered for app {}", LOG_TEXT, name)
+                log.info("{} App Comparator - Description altered for app {}", LOG_TEXT, name);
             }
         }
         if (altered) {
             app.updateApp();
-            log.info("{} App Comparator - App marked for update : {}", LOG_TEXT, name)
+            log.info("{} App Comparator - App marked for update : {}", LOG_TEXT, name);
         }
         return altered;
     }
