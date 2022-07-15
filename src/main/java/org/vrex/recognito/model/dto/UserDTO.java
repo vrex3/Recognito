@@ -23,6 +23,12 @@ public class UserDTO implements Serializable {
     private LocalDateTime onboardedOn;
     private LocalDateTime updatedOn;
 
+    //TO BE REMOVED
+    private String secret;
+    //secret to be removed from here
+    //return in email
+
+
     public UserDTO(User user) {
         if (!ObjectUtils.isEmpty(user)) {
             this.username = user.getUsername();
@@ -31,6 +37,9 @@ public class UserDTO implements Serializable {
             this.version = user.getVersion();
             this.onboardedOn = user.getOnboardedOn();
             this.updatedOn = user.getUpdatedOn();
+
+            //TO BE REMOVED
+            this.secret = user.getSecret();
         }
     }
 }

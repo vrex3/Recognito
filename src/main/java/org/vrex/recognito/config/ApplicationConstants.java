@@ -1,6 +1,5 @@
 package org.vrex.recognito.config;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
@@ -36,8 +35,12 @@ public class ApplicationConstants {
     }
 
     /**
-     * RSA CONSTANTS
+     * CRYPTO CONSTANTS
      */
+    public static final String USER_KEY_GENERATOR_INSTANCE = "AES";
+    public static final Integer USER_KEY_GENERATOR_KEYSIZE = 256;
+
+
     public static final String KEY_GENERATOR_INSTANCE = "RSA";
     public static final Integer KEY_GENERATOR_KEYSIZE = 2048;
 
@@ -46,7 +49,7 @@ public class ApplicationConstants {
 
     public static final String PASSAY_SPL_CHAR_ERROR_CODE = "PassayError";
 
-    public static final String RSA_SETUP_EXCEPTION = "Error in RSA Config : ";
+    public static final String CRYPTO_SETUP_EXCEPTION = "Error in Crypto Config : ";
 
     /**
      * Error messages
@@ -56,6 +59,9 @@ public class ApplicationConstants {
 
     public static final String EMPTY_APPLICATION_NAME = "Application name cannot be empty";
     public static final String EMPTY_APPLICATION_IDENTIFIER = "Either app name or UUID needs to be provided";
+    public static final String APPLICATION_NOT_FOUND = "Application could not be found";
 
-
+    public static final String EMPTY_USERNAME = "Username cannot be empty";
+    public static final String EMPTY_USER_CREATION_REQUEST = "Empty user creation payload";
+    public static final String DUPLICATE_USER = "Username is already taken";
 }

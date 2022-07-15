@@ -103,7 +103,7 @@ public class ApplicationService {
             }
             if (altered) {
                 log.info("{} Persisting Application in schema - {}", LOG_TEXT, name);
-                applicationRepository.save(application);
+                application = applicationRepository.save(application);
             }
         } catch (Exception exception) {
             log.error("{} Updating application in schema - {}", LOG_TEXT_ERROR, name, exception);

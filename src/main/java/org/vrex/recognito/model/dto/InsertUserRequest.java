@@ -13,11 +13,14 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class UpsertApplicationRequest implements Serializable {
+public class InsertUserRequest implements Serializable {
 
-    @NotNull(message = ApplicationConstants.EMPTY_APPLICATION_NAME)
-    private String name;
+    @NotNull(message = ApplicationConstants.EMPTY_USERNAME)
+    private String username;
 
-    private String description;
+    private String email;
+
+    @NotNull(message = ApplicationConstants.EMPTY_APPLICATION_IDENTIFIER)
+    private String appIdentifier;
 
 }

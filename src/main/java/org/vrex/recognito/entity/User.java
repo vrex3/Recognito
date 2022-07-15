@@ -61,10 +61,12 @@ public class User implements Serializable {
      * @param userName
      * @param secret
      * @param email
+     * @param application
      */
     public User(String userName,
                 String secret,
-                String email) {
+                String email,
+                Application application) {
 
         this.id = username;
         this.username = userName;
@@ -73,6 +75,15 @@ public class User implements Serializable {
         this.version = getNextVersion();
         this.onboardedOn = ApplicationConstants.currentTime();
         this.updatedOn = onboardedOn;
+        this.application = application;
+    }
+
+    /**
+     * Marks user timestamp and version to register update
+     */
+    public void updateUser() {
+        this.updatedOn = ApplicationConstants.currentTime();
+        this.version = getNextVersion();
     }
 
     /**

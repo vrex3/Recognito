@@ -8,6 +8,8 @@ import org.vrex.recognito.entity.Application;
 import org.vrex.recognito.entity.User;
 import org.vrex.recognito.model.ApplicationException;
 
+import javax.crypto.KeyGenerator;
+import javax.crypto.SecretKey;
 import java.security.KeyFactory;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
@@ -34,11 +36,31 @@ public class KeyUtil {
     private KeyPairGenerator keyPairGenerator;
 
     @Autowired
+    private KeyGenerator aesKeyGenerator;
+
+    @Autowired
     private KeyFactory keyFactory;
 
+    /**
+     * Generates a strong 256 bit AES key
+     *
+     * @return
+     */
+    public SecretKey generateAesSecretKey() {
+        log.info("{} Generating AES Key", LOG_TEXT);
+        try {
+            return aesKeyGenerator.generateKey();
+        } catch (Exception exception) {
+            log.error(LOG_TEXT_ERROR, exception);
+            throw ApplicationException.builder()
+                    .errorMessage(LOG_TEXT_ERROR + exception.getMessage())
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .build();
+        }
+    }
 
     /**
-     * Generates a RSA key pair
+     * Generates a 2048 bit signed RSA key pair
      *
      * @return
      */
