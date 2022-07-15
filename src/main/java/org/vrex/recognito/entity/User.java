@@ -43,6 +43,7 @@ public class User implements Serializable {
     //private Role role;
 
     @DBRef
+    @Field("application")
     private Application application;
 
     @Field("profileVersion")
