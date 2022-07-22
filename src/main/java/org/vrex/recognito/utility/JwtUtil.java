@@ -168,8 +168,8 @@ public class JwtUtil {
             String token = userToken.getToken();
 
             log.info("{} Extracted token and appUUID - {}", LOG_TEXT, appId);
-            log.info("{} Extracting application details - {}", LOG_TEXT, appId);
 
+            log.info("{} Extracting application details - {}", LOG_TEXT, appId);
             Application application = applicationRepository.findApplicationByUUID(appId);
 
             if (ObjectUtils.isEmpty(application)) {
@@ -179,9 +179,9 @@ public class JwtUtil {
                         status(HttpStatus.UNAUTHORIZED).
                         build();
             }
-
             log.info("{} Extracted application details - {}", LOG_TEXT, appId);
 
+            log.info("{} Parsing token for app - {}", LOG_TEXT, appId);
             JWEObject jweObject = JWEObject.parse(token);
 
             log.info("{} Decrypting token with private key for app - {}", LOG_TEXT, appId);
@@ -212,7 +212,7 @@ public class JwtUtil {
                     .status(HttpStatus.UNAUTHORIZED)
                     .build();
         } catch (InvalidKeySpecException exception) {
-            log.error("{} Encountered InvalidKeySpecException decoding token for appID {} : {}", LOG_TEXT_ERROR, appId, exception.getMessage(), exception);
+            log.error("{} Encountered InvalidKeySpecException decrypting token for appID {} : {}", LOG_TEXT_ERROR, appId, exception.getMessage(), exception);
             throw ApplicationException.builder()
                     .errorMessage(ApplicationConstants.INVALID_TOKEN_PAYLOAD)
                     .status(HttpStatus.UNAUTHORIZED)
@@ -224,7 +224,7 @@ public class JwtUtil {
                     .status(HttpStatus.UNAUTHORIZED)
                     .build();
         } catch (ParseException exception) {
-            log.error("{} Encountered ParseException decoding token for appID {} : {}", LOG_TEXT_ERROR, appId, exception.getMessage(), exception);
+            log.error("{} Encountered ParseException reading token for appID {} : {}", LOG_TEXT_ERROR, appId, exception.getMessage(), exception);
             throw ApplicationException.builder()
                     .errorMessage(ApplicationConstants.INVALID_TOKEN_PAYLOAD)
                     .status(HttpStatus.UNAUTHORIZED)
