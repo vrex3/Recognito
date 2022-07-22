@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.vrex.recognito.entity.Application;
 import org.vrex.recognito.model.ApplicationException;
 import org.vrex.recognito.model.Message;
@@ -17,8 +18,6 @@ import org.vrex.recognito.model.dto.ApplicationIdentifier;
 import org.vrex.recognito.model.dto.UpsertApplicationRequest;
 import org.vrex.recognito.repository.ApplicationRepository;
 import org.vrex.recognito.utility.KeyUtil;
-
-import javax.transaction.Transactional;
 
 @Slf4j
 @Service
