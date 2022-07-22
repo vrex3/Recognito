@@ -11,6 +11,9 @@ import java.util.List;
 @SuppressWarnings("unused")
 public interface UserRepository extends MongoRepository<User, String> {
 
+    @Query("{'userName':?0}")
+    public User getUserByName(String username);
+
     @Query("{'application.$appUUID':?0}")
     public List<User> getUsersForAppUUID(String appUUID);
 

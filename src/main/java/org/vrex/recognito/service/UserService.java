@@ -15,8 +15,10 @@ import org.vrex.recognito.model.Message;
 import org.vrex.recognito.model.dto.ApplicationIdentifier;
 import org.vrex.recognito.model.dto.ApplicationUserListDTO;
 import org.vrex.recognito.model.dto.InsertUserRequest;
+import org.vrex.recognito.model.dto.UserDTO;
 import org.vrex.recognito.repository.ApplicationRepository;
 import org.vrex.recognito.repository.UserRepository;
+import org.vrex.recognito.utility.JwtUtil;
 import org.vrex.recognito.utility.KeyUtil;
 
 import java.util.Base64;
@@ -36,6 +38,9 @@ public class UserService {
 
     @Autowired
     private KeyUtil keyUtil;
+
+    @Autowired
+    private JwtUtil jwtUtil;
 
     /**
      * Accepts an UNIQUE username, existing application (UUID or name)
@@ -123,6 +128,89 @@ public class UserService {
                     status(HttpStatus.INTERNAL_SERVER_ERROR).
                     build();
         }
+    }
+
+    /**
+     * Accepts username
+     * Generates token for user
+     * Token is signed by user linked app's private key
+     * Token is encrypted by user linked app's public key
+     * Token is wrapped into json which also contains appUUID
+     *
+     * @param username
+     * @return
+     */
+    public ResponseEntity<String> generateTokenForUser(String username) {
+        log.info("{} Token Generator - Received request to generate token for user - {}", LOG_TEXT, username);
+
+        String token = null;
+        try {
+            log.info("{} Token Generator - Extracting user details from repository - {}", LOG_TEXT, username);
+            User user = userRepository.getUserByName(username);
+
+            if (ObjectUtils.isEmpty(user)) {
+                log.info("{} Token Generator - User details not found for - {}", LOG_TEXT, username);
+                throw ApplicationException.builder().
+                        errorMessage(ApplicationConstants.INVALID_USER).
+                        status(HttpStatus.BAD_REQUEST).
+                        build();
+            } else {
+                log.info("{} Token Generator - User details found. Generating token for - {}", LOG_TEXT, username);
+                token = jwtUtil.generateToken(user);
+                log.info("{} Token Generator - User details found. Generated token for - {}", LOG_TEXT, username);
+            }
+
+        } catch (ApplicationException exception) {
+            throw exception;
+        } catch (Exception exception) {
+            log.error("{} Token Generator - Encountered exception generating token for user {}", LOG_TEXT_ERROR, username, exception);
+            throw ApplicationException.builder().
+                    errorMessage(exception.getMessage()).
+                    status(HttpStatus.INTERNAL_SERVER_ERROR).
+                    build();
+        }
+
+        return new ResponseEntity<>(
+                token,
+                token != null ? HttpStatus.OK : HttpStatus.INTERNAL_SERVER_ERROR
+        );
+    }
+
+    /**
+     * Accepts encoded signed token
+     * Verifies and Authenticates token
+     * Extracts userDTO information from token
+     *
+     * OPTIONAL : Add validation of user data later
+     *
+     * @param token
+     * @return
+     */
+    public ResponseEntity<UserDTO> extractUserFromToken(String token) {
+        log.info("{} Token Generator - Extracting token", LOG_TEXT);
+        UserDTO user = null;
+        try {
+            if (StringUtils.isEmpty(token)) {
+                log.error("{} Token Generator - Encountered empty token", LOG_TEXT_ERROR);
+                throw ApplicationException.builder().
+                        errorMessage(ApplicationConstants.EMPTY_TOKEN).
+                        status(HttpStatus.UNAUTHORIZED).
+                        build();
+            }
+
+            user = new UserDTO(jwtUtil.extractPayload(token));
+            log.info("{} Token Generator - Extracted payload from token", LOG_TEXT);
+
+        } catch (ApplicationException exception) {
+            throw exception;
+        } catch (Exception exception) {
+            log.error("{} Token Generator - Encountered exception extracting token", LOG_TEXT_ERROR, exception);
+            throw ApplicationException.builder().
+                    errorMessage(exception.getMessage()).
+                    status(HttpStatus.INTERNAL_SERVER_ERROR).
+                    build();
+        }
+        return new ResponseEntity<>(user, user != null ? HttpStatus.OK : HttpStatus.UNAUTHORIZED);
     }
 
     /**

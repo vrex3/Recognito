@@ -6,16 +6,20 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.vrex.recognito.model.dto.ApplicationIdentifier;
 import org.vrex.recognito.model.dto.InsertUserRequest;
+import org.vrex.recognito.model.dto.UserDTO;
 import org.vrex.recognito.service.UserService;
 
 import javax.validation.Valid;
 
 @RestController
 @RequestMapping(value = "/user")
+@SuppressWarnings("unused")
 public class UserController {
 
     @Autowired
@@ -49,5 +53,30 @@ public class UserController {
         return userService.getUsersForApplication(appId);
     }
 
+    /**
+     * Generates token for username and returns it
+     * Status 200 if token is returned
+     * Status 500 in case of error
+     *
+     * @param username
+     * @return
+     * @throws Exception
+     */
+    @GetMapping(value = "/token/generate")
+    public ResponseEntity<String> generateToken(@RequestParam String username) throws Exception {
+        return userService.generateTokenForUser(username);
+    }
 
+    /**
+     * Token accepted as part of request header : x-auth-token
+     * If token is authenticated, user info is returned
+     *
+     * @param token
+     * @return
+     * @throws Exception
+     */
+    @GetMapping(value = "/token/authenticate")
+    public ResponseEntity<UserDTO> authenticateToken(@RequestHeader(name = "x-auth-token") String token) throws Exception {
+        return userService.extractUserFromToken(token);
+    }
 }

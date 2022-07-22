@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.ObjectUtils;
 import org.vrex.recognito.entity.User;
+import org.vrex.recognito.model.TokenPayload;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -18,6 +19,7 @@ public class UserDTO implements Serializable {
 
     private String username;
     private String email;
+    private String appUUID;
     private String appName;
     private String version;
     private LocalDateTime onboardedOn;
@@ -34,12 +36,21 @@ public class UserDTO implements Serializable {
             this.username = user.getUsername();
             this.email = user.getEmail();
             this.appName = ObjectUtils.isEmpty(user.getApplication()) ? null : user.getApplication().getName();
+            this.appUUID = ObjectUtils.isEmpty(user.getApplication()) ? null : user.getApplication().getAppUUID();
             this.version = user.getVersion();
             this.onboardedOn = user.getOnboardedOn();
             this.updatedOn = user.getUpdatedOn();
 
             //TO BE REMOVED
             this.secret = user.getSecret();
+        }
+    }
+
+    public UserDTO(TokenPayload payload) {
+        if (!ObjectUtils.isEmpty(payload)) {
+            this.username = payload.getUsername();
+            this.email = payload.getEmail();
+            this.version = payload.getProfileVersion();
         }
     }
 }

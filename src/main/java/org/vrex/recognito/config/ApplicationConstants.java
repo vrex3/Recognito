@@ -54,14 +54,18 @@ public class ApplicationConstants {
     /**
      * Error messages
      */
+    public static final String EMPTY_TOKEN = "No token found";
     public static final String INVALID_TOKEN_SIGNATURE = "Token signature could not be parsed or is invalid";
     public static final String INVALID_TOKEN_PAYLOAD = "Token payload could not be parsed or is invalid";
 
     public static final String EMPTY_APPLICATION_NAME = "Application name cannot be empty";
     public static final String EMPTY_APPLICATION_IDENTIFIER = "Either app name or UUID needs to be provided";
     public static final String APPLICATION_NOT_FOUND = "Application could not be found";
+    public static final String UNVERIFIED_APPLICATION_IN_TOKEN = "Application information in token could not be verified";
 
     public static final String EMPTY_USERNAME = "Username cannot be empty";
     public static final String EMPTY_USER_CREATION_REQUEST = "Empty user creation payload";
     public static final String DUPLICATE_USER = "Username is already taken";
+    public static final String INVALID_USER = "User does not exist";
+    public static final String UNLINKED_USER = "User is not mapped to any application.";
 }

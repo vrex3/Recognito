@@ -13,7 +13,6 @@ import org.springframework.data.mongodb.core.mapping.Field;
 import org.vrex.recognito.config.ApplicationConstants;
 
 import java.io.Serializable;
-import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)

@@ -16,6 +16,7 @@ import javax.validation.Valid;
 
 @RestController
 @RequestMapping(value = "/application")
+@SuppressWarnings("unused")
 public class ApplicationController {
 
     @Autowired
