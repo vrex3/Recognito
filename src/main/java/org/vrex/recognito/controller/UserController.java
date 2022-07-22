@@ -4,9 +4,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.vrex.recognito.model.dto.ApplicationIdentifier;
+import org.vrex.recognito.model.dto.InsertUserRequest;
 import org.vrex.recognito.service.UserService;
 
 import javax.validation.Valid;
@@ -17,6 +20,20 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
+    /**
+     * Accepts username, email and app identifier
+     * AppIdentifier -> appUUID or appName
+     * Returns saved user data + secret (ONLY time this is returned)
+     *
+     * @param request
+     * @return
+     * @throws Exception
+     */
+    @PostMapping
+    public ResponseEntity<?> createUser(@Valid @RequestBody InsertUserRequest request) throws Exception {
+        return userService.createUser(request);
+    }
 
     /**
      * Accepts either appName or appUUID
@@ -31,4 +48,6 @@ public class UserController {
     public ResponseEntity<?> getUsersForApplication(@Valid @ModelAttribute ApplicationIdentifier appId) throws Exception {
         return userService.getUsersForApplication(appId);
     }
+
+
 }
