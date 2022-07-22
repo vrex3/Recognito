@@ -55,8 +55,12 @@ public class ApplicationConstants {
      * Error messages
      */
     public static final String EMPTY_TOKEN = "No token found";
+    public static final String EMPTY_TOKEN_PAYLOAD = "No token payload found";
     public static final String INVALID_TOKEN_SIGNATURE = "Token signature could not be parsed or is invalid";
     public static final String INVALID_TOKEN_PAYLOAD = "Token payload could not be parsed or is invalid";
+    public static final String INVALID_TOKEN_ISSUER = "Token issuer could not be recognized";
+    public static final String EXPIRED_TOKEN = "Token is no longer valid";
+
 
     public static final String EMPTY_APPLICATION_NAME = "Application name cannot be empty";
     public static final String EMPTY_APPLICATION_IDENTIFIER = "Either app name or UUID needs to be provided";

@@ -17,6 +17,7 @@ import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -198,9 +199,9 @@ public class JwtUtil {
 
             log.info("{} Token verified for app - {}", LOG_TEXT, appId);
 
-            log.info("{} Populating payload for app - {}", LOG_TEXT, appId);
+            log.info("{} Populating and verifying payload for app - {}", LOG_TEXT, appId);
             payload.populatePayload(signedJWT.getJWTClaimsSet());
-
+            verifyTokenPayload(payload);
 
         } catch (ApplicationException exception) {
             throw exception;
@@ -226,11 +227,11 @@ public class JwtUtil {
             log.error("{} Encountered ParseException decoding token for appID {} : {}", LOG_TEXT_ERROR, appId, exception.getMessage(), exception);
             throw ApplicationException.builder()
                     .errorMessage(ApplicationConstants.INVALID_TOKEN_PAYLOAD)
-                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .status(HttpStatus.UNAUTHORIZED)
                     .build();
         }
 
-        log.info("{} Payload populated for app - {}", LOG_TEXT, appId);
+        log.info("{} Payload populated and verified for app - {}", LOG_TEXT, appId);
 
         return payload;
     }
@@ -260,5 +261,58 @@ public class JwtUtil {
         claims.expirationTime(DateUtils.addMinutes(tokenIssuedAt, JWT_LIFESPAN_MINUTES));
 
         return claims.build();
+    }
+
+    /**
+     * Verifiex a token payload
+     * Checks if payload is empty or not
+     * Checks if payload has username
+     * Checks if payload issuer is recognized
+     * Checks if payload expiry time is a future date (i.e. token has not expired)
+     * <p>
+     * Throws 401 for first condition that is broken
+     * Does nothing otherwise
+     *
+     * @param payload
+     */
+    private void verifyTokenPayload(TokenPayload payload) {
+        log.info("{} Verifying token payload", LOG_TEXT);
+
+        if (ObjectUtils.isEmpty(payload)) {
+            log.error("{} Empty token payload", LOG_TEXT_ERROR);
+            throw ApplicationException.builder()
+                    .errorMessage(ApplicationConstants.EMPTY_TOKEN_PAYLOAD)
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .build();
+        }
+
+        String username = payload.getUsername();
+        if (StringUtils.isEmpty(username)) {
+            log.error("{} Empty token username", LOG_TEXT_ERROR);
+            throw ApplicationException.builder()
+                    .errorMessage(ApplicationConstants.EMPTY_USERNAME)
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .build();
+        }
+
+        log.debug("{} Verifying token payload for user {}", LOG_TEXT, username);
+
+        if (!JWT_ISSUER.equals(payload.getIssuer())) {
+            log.error("{} Issuer name does not match for token for user - {}", LOG_TEXT_ERROR, username);
+            throw ApplicationException.builder()
+                    .errorMessage(ApplicationConstants.INVALID_TOKEN_ISSUER)
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .build();
+        }
+
+        if (!payload.getExpiryOn().toInstant().isAfter(ApplicationConstants.currentDate().toInstant())) {
+            log.error("{} Token expired for user - {}", LOG_TEXT_ERROR, username);
+            throw ApplicationException.builder()
+                    .errorMessage(ApplicationConstants.EXPIRED_TOKEN)
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .build();
+        }
+
+        log.info("{} Successfully verified token payload", LOG_TEXT);
     }
 }
