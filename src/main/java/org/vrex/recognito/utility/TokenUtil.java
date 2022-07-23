@@ -1,6 +1,5 @@
 package org.vrex.recognito.utility;
 
-import com.google.gson.JsonSyntaxException;
 import com.nimbusds.jose.EncryptionMethod;
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JWEAlgorithm;
@@ -43,7 +42,7 @@ import javax.annotation.PostConstruct;
 
 @Slf4j
 @Component
-public class JwtUtil {
+public class TokenUtil {
 
     private static final String LOG_TEXT = "JWT-Util : Token Util - ";
     private static final String LOG_TEXT_ERROR = "JWT-Util - Token Util - Encountered Exception - ";

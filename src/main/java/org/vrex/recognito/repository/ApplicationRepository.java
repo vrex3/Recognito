@@ -9,17 +9,20 @@ import org.vrex.recognito.entity.Application;
 @SuppressWarnings("unused")
 public interface ApplicationRepository extends MongoRepository<Application, String> {
 
-    @Query("{'appUUID':?0}")
+    @Query("{appUUID:?0}")
     public Application findApplicationByUUID(String UUID);
 
-    @Query("{'appName':?0}")
+    @Query("{appName:?0}")
     public Application findApplicationByName(String name);
 
-    @Query("{'$or':[ {'appUUID':?0}, {'appName':?0} ]}")
+    @Query("{'$or':[{appUUID:?0}, {appName:?0}]}")
     public Application findApplicationByUUIDorName(String identifier);
 
-    @Query(value = "{'appName': ?0}", count = true)
+    @Query(value = "{appName: ?0}", count = true)
     public long countApplication(String appName);
+
+    @Query(value = "{appName: ?0}", fields = "{appSecret : 1, _id : 0}")
+    public Application findApplicationSecret(String appUUID);
 
     /**
      * Checks whether an application is existing or not

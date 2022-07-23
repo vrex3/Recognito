@@ -25,4 +25,7 @@ public class InsertUserRequest implements Serializable {
     @NotNull(message = ApplicationConstants.EMPTY_APPLICATION_IDENTIFIER)
     private String appIdentifier;
 
+    @NotNull(message = ApplicationConstants.EMPTY_APP_INVITE)
+    private String appInvite;
+
 }

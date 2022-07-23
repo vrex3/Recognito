@@ -42,6 +42,12 @@ public class Application implements Serializable {
     @Field("appUUID")
     private String appUUID;
 
+    // encrypted version of appUUID
+    // encrypted by app public key
+    // decrypted by app private key
+    @Field("appSecret")
+    private String appSecret;
+
     @Field("rolesEnabled")
     private boolean rolesEnabled;
 
@@ -57,14 +63,12 @@ public class Application implements Serializable {
     @Field("updatedOn")
     private LocalDateTime updatedOn;
 
-    public Application(UpsertApplicationRequest request, KeyPair keyPair) {
+    public Application(UpsertApplicationRequest request) {
         this.appUUID = UUID.randomUUID().toString();
         String appName = formatAppName(request.getName());
         this.id = appName;
         this.name = appName;
         this.description = request.getDescription();
-        this.publicKey = keyPair.getPublic().getEncoded();
-        this.privateKey = keyPair.getPrivate().getEncoded();
         this.onboardedOn = ApplicationConstants.currentTime();
         this.updatedOn = onboardedOn;
         this.rolesEnabled = request.isRolesEnabled();

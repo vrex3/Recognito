@@ -51,6 +51,8 @@ public class ApplicationConstants {
 
     public static final String CRYPTO_SETUP_EXCEPTION = "Error in Crypto Config : ";
 
+    public static final String APP_CRYPTO_EXCEPTION = "Encountered error setting up keys and secrets for app";
+
     /**
      * Error messages
      */
@@ -66,6 +68,7 @@ public class ApplicationConstants {
     public static final String EMPTY_APPLICATION_IDENTIFIER = "Either app name or UUID needs to be provided";
     public static final String APPLICATION_NOT_FOUND = "Application could not be found";
     public static final String UNVERIFIED_APPLICATION_IN_TOKEN = "Application information in token could not be verified";
+    public static final String EMPTY_APP_INVITE = "You must be invited to join the application";
 
     public static final String EMPTY_USERNAME = "Username cannot be empty";
     public static final String EMPTY_USER_CREATION_REQUEST = "Empty user creation payload";

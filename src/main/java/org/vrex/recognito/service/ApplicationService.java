@@ -10,6 +10,7 @@ import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.vrex.recognito.config.ApplicationConstants;
 import org.vrex.recognito.entity.Application;
 import org.vrex.recognito.model.ApplicationException;
 import org.vrex.recognito.model.Message;
@@ -66,6 +67,36 @@ public class ApplicationService {
     }
 
     /**
+     * Returns the app invite secret for an appUUID
+     *
+     * @param appUUID
+     * @return
+     */
+    public ResponseEntity<String> findApplicationSecret(String appUUID) {
+
+        if (StringUtils.isEmpty(appUUID)) {
+            log.error("{} Cannot fetch secret for empty appUUID.", LOG_TEXT_ERROR);
+            throw ApplicationException.builder().
+                    errorMessage(ApplicationConstants.EMPTY_APPLICATION_IDENTIFIER).
+                    status(HttpStatus.INTERNAL_SERVER_ERROR).
+                    build();
+        }
+
+        log.info("{} Fetching secret invite for app {}", LOG_TEXT, appUUID);
+        Application application = applicationRepository.findApplicationSecret(appUUID);
+        if (ObjectUtils.isEmpty(application)) {
+            log.error("{} Could not locate application {}", LOG_TEXT_ERROR, appUUID);
+            throw ApplicationException.builder().
+                    errorMessage(ApplicationConstants.APPLICATION_NOT_FOUND).
+                    status(HttpStatus.BAD_REQUEST).
+                    build();
+        }
+
+        log.info("{} Fetched secret invite for app {}", LOG_TEXT, appUUID);
+        return new ResponseEntity<String>(application.getAppSecret(), HttpStatus.OK);
+    }
+
+    /**
      * Updates (if already existing) or creates new Application
      * and persists it in the schema.
      * App details EXCEPT keys are returned as response.
@@ -94,7 +125,8 @@ public class ApplicationService {
             boolean altered = false;
             if (ObjectUtils.isEmpty(application)) {
                 log.info("{} Application does not exist. Creating new - {}", LOG_TEXT, name);
-                application = new Application(request, keyUtil.generateKeyPair());
+                application = new Application(request);
+                keyUtil.populateApplicationSecrets(application);
                 altered = true;
             } else {
                 log.info("{} Application does exist. Comparing data to request - {}", LOG_TEXT, name);
@@ -104,6 +136,8 @@ public class ApplicationService {
                 log.info("{} Persisting Application in schema - {}", LOG_TEXT, name);
                 application = applicationRepository.save(application);
             }
+        } catch (ApplicationException exception) {
+            throw exception;
         } catch (Exception exception) {
             log.error("{} Updating application in schema - {}", LOG_TEXT_ERROR, name, exception);
             throw ApplicationException.builder().

@@ -11,13 +11,13 @@ import java.util.List;
 @SuppressWarnings("unused")
 public interface UserRepository extends MongoRepository<User, String> {
 
-    @Query("{'userName':?0}")
+    @Query("{userName:?0}")
     public User getUserByName(String username);
 
-    @Query("{'application.$id':?0}")
+    @Query("{application.$id:?0}")
     public List<User> getUserForAppName(String appName);
 
-    @Query(value = "{'userName': ?0}", count = true)
+    @Query(value = "{userName: ?0}", count = true)
     public long countUser(String username);
 
     /**

@@ -34,7 +34,7 @@ public class ApplicationController {
      * @throws Exception
      */
     @GetMapping
-    public ResponseEntity<?> getApplication(@RequestParam Map<String,String> appIdentifierParam) throws Exception {
+    public ResponseEntity<?> getApplication(@RequestParam Map<String, String> appIdentifierParam) throws Exception {
         return applicationService.getApplication(new ApplicationIdentifier(appIdentifierParam));
     }
 
@@ -49,5 +49,19 @@ public class ApplicationController {
     @PostMapping
     public ResponseEntity<?> upsertApplication(@RequestBody UpsertApplicationRequest request) throws Exception {
         return applicationService.upsertApplication(request);
+    }
+
+    /**
+     * Returns app invite secret for provided App UUID
+     * <p>
+     * MUST BE ALLOWED ONLY FOR SYSTEM ADMINS OF RECOGNITO
+     *
+     * @param appUUID
+     * @return
+     * @throws Exception
+     */
+    @GetMapping(value = "/invite")
+    public ResponseEntity<String> getAppInvite(@RequestParam String appUUID) throws Exception {
+        return applicationService.findApplicationSecret(appUUID);
     }
 }

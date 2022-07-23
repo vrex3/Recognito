@@ -18,7 +18,7 @@ import org.vrex.recognito.model.dto.InsertUserRequest;
 import org.vrex.recognito.model.dto.UserDTO;
 import org.vrex.recognito.repository.ApplicationRepository;
 import org.vrex.recognito.repository.UserRepository;
-import org.vrex.recognito.utility.JwtUtil;
+import org.vrex.recognito.utility.TokenUtil;
 import org.vrex.recognito.utility.KeyUtil;
 import org.vrex.recognito.utility.RoleUtil;
 
@@ -43,7 +43,7 @@ public class UserService {
     private KeyUtil keyUtil;
 
     @Autowired
-    private JwtUtil jwtUtil;
+    private TokenUtil tokenUtil;
 
     @Autowired
     private RoleUtil roleUtil;
@@ -160,7 +160,7 @@ public class UserService {
                         build();
             } else {
                 log.info("{} Token Generator - User details found. Generating token for - {}", LOG_TEXT, username);
-                token = jwtUtil.generateToken(user);
+                token = tokenUtil.generateToken(user);
                 log.info("{} Token Generator - User details found. Generated token for - {}", LOG_TEXT, username);
             }
 
@@ -226,7 +226,7 @@ public class UserService {
                         build();
             }
 
-            user = new UserDTO(jwtUtil.extractPayload(appUUID, token));
+            user = new UserDTO(tokenUtil.extractPayload(appUUID, token));
             log.info("{} Token Generator - Extracted payload from token for appUUID {}", LOG_TEXT, appUUID);
 
         } catch (ApplicationException exception) {
@@ -256,6 +256,15 @@ public class UserService {
 
         String appIdentifier = request.getAppIdentifier();
         String username = request.getUsername();
+        String inviteSecret = request.getAppInvite();
+
+        if (StringUtils.isEmpty(inviteSecret)) {
+            log.error("{} User Builder - No app invite detected for app {} and user {}", LOG_TEXT_ERROR, appIdentifier, username);
+            throw ApplicationException.builder().
+                    errorMessage(ApplicationConstants.EMPTY_APP_INVITE).
+                    status(HttpStatus.BAD_REQUEST).
+                    build();
+        }
 
         log.info("{} User Builder - Building user entity for user {} linked to application {}", LOG_TEXT, username, appIdentifier);
 
@@ -264,6 +273,14 @@ public class UserService {
 
         if (!ObjectUtils.isEmpty(application)) {
             log.info("{} User Builder - Found application - {}", LOG_TEXT, appIdentifier);
+
+            if (!keyUtil.verifyApplicationSecret(inviteSecret, application)) {
+                log.error("{} User Builder - Invalid app invite detected for app {} and user {}", LOG_TEXT_ERROR, appIdentifier, username);
+                throw ApplicationException.builder().
+                        errorMessage(ApplicationConstants.EMPTY_APP_INVITE).
+                        status(HttpStatus.UNAUTHORIZED).
+                        build();
+            }
 
             String userRole = request.getRole();
             String roleEnabled = application.isRolesEnabled() ? "yes" : "no";

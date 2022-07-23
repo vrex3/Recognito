@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.http.HttpStatus;
 import org.vrex.recognito.config.ApplicationConstants;
-import org.vrex.recognito.utility.JwtUtil;
+import org.vrex.recognito.utility.TokenUtil;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -38,12 +38,12 @@ public class TokenPayload implements Serializable {
             if (!ObjectUtils.isEmpty(claims)) {
                 this.issuer = claims.getIssuer();
                 this.username = claims.getSubject();
-                this.email = claims.getClaim(JwtUtil.EMAIL).toString();
-                this.profileVersion = claims.getClaim(JwtUtil.PROFILE_VERSION).toString();
+                this.email = claims.getClaim(TokenUtil.EMAIL).toString();
+                this.profileVersion = claims.getClaim(TokenUtil.PROFILE_VERSION).toString();
                 this.issuedAt = claims.getIssueTime();
                 this.expiryOn = claims.getExpirationTime();
 
-                Object claimRole = claims.getClaim(JwtUtil.ROLE);
+                Object claimRole = claims.getClaim(TokenUtil.ROLE);
                 this.role = claimRole != null ? claimRole.toString() : null;
             }
         } catch (Exception exception) {
