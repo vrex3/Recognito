@@ -22,6 +22,7 @@ public class TokenPayload implements Serializable {
     private String issuer;
     private String username;
     private String email;
+    private String role;
     private String profileVersion;
     private Date issuedAt;
     private Date expiryOn;
@@ -41,6 +42,9 @@ public class TokenPayload implements Serializable {
                 this.profileVersion = claims.getClaim(JwtUtil.PROFILE_VERSION).toString();
                 this.issuedAt = claims.getIssueTime();
                 this.expiryOn = claims.getExpirationTime();
+
+                Object claimRole = claims.getClaim(JwtUtil.ROLE);
+                this.role = claimRole != null ? claimRole.toString() : null;
             }
         } catch (Exception exception) {
             throw ApplicationException.builder().

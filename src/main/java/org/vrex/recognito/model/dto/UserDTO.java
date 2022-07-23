@@ -19,6 +19,7 @@ public class UserDTO implements Serializable {
 
     private String username;
     private String email;
+    private String role;
     private String appUUID;
     private String appName;
     private String version;
@@ -37,6 +38,7 @@ public class UserDTO implements Serializable {
             this.email = user.getEmail();
             this.appName = ObjectUtils.isEmpty(user.getApplication()) ? null : user.getApplication().getName();
             this.appUUID = ObjectUtils.isEmpty(user.getApplication()) ? null : user.getApplication().getAppUUID();
+            this.role = ObjectUtils.isEmpty(user.getApplication()) || !user.getApplication().isRolesEnabled() ? null : user.getRole();
             this.version = user.getVersion();
             this.onboardedOn = user.getOnboardedOn();
             this.updatedOn = user.getUpdatedOn();
@@ -51,6 +53,7 @@ public class UserDTO implements Serializable {
             this.username = payload.getUsername();
             this.email = payload.getEmail();
             this.version = payload.getProfileVersion();
+            this.role = payload.getRole();
         }
     }
 }

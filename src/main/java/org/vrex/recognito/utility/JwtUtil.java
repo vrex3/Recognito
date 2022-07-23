@@ -50,6 +50,7 @@ public class JwtUtil {
 
     public static final String EMAIL = "email";
     public static final String PROFILE_VERSION = "profileVersion";
+    public static final String ROLE = "authority";
     private static final String JWT_ISSUER = "recognito";
     private static final Integer JWT_LIFESPAN_MINUTES = 30;
 
@@ -242,6 +243,8 @@ public class JwtUtil {
         claims.claim(EMAIL, user.getEmail());
         claims.claim(PROFILE_VERSION, user.getVersion());
 
+        if (user.getApplication().isRolesEnabled())
+            claims.claim(ROLE, user.getRole());
 
         Date tokenIssuedAt = ApplicationConstants.currentDate();
         claims.issueTime(tokenIssuedAt);
