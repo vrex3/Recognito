@@ -35,7 +35,7 @@ public class CryptoConfig {
             generator = KeyPairGenerator.getInstance(ApplicationConstants.KEY_GENERATOR_INSTANCE);
             generator.initialize(ApplicationConstants.KEY_GENERATOR_KEYSIZE);
         } catch (NoSuchAlgorithmException exception) {
-            log.error(ApplicationConstants.CRYPTO_SETUP_EXCEPTION + "Key Pair Generator", exception);
+            log.error(ApplicationConstants.CRYPTO_SETUP_EXCEPTION + "RSA Key Pair Generator", exception);
         }
         return generator;
     }

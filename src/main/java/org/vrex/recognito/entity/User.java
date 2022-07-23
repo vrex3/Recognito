@@ -20,7 +20,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-@Document(collection = "user_identity")
+@Document(collection = "User")
 public class User implements Serializable {
 
     @Id

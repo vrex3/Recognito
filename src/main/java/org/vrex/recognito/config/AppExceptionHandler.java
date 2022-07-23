@@ -3,7 +3,6 @@ package org.vrex.recognito.config;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.vrex.recognito.model.ApplicationException;
@@ -41,4 +40,6 @@ public class AppExceptionHandler {
                 Message.builder().text(exception.getErrorMessage() != null ? exception.getErrorMessage() : GENERIC_ERROR_MESSAGE).build(),
                 exception.getStatus() != null ? exception.getStatus() : HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
+    //BindException
 }

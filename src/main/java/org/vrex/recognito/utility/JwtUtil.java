@@ -29,6 +29,7 @@ import org.vrex.recognito.model.ApplicationException;
 import org.vrex.recognito.model.TokenPayload;
 import org.vrex.recognito.model.UserToken;
 
+import java.security.interfaces.RSAPublicKey;
 import java.security.spec.InvalidKeySpecException;
 import java.text.ParseException;
 import java.util.Date;
@@ -115,7 +116,7 @@ public class JwtUtil {
 
             log.info("{} Encrypting token with app public key for user {} - {}", LOG_TEXT, username, appName);
 
-            tokenWrapper.encrypt(new RSAEncrypter(keyUtil.extractPublicKey(application)));
+            tokenWrapper.encrypt(new RSAEncrypter((RSAPublicKey) keyUtil.extractPublicKey(application)));
 
             log.info("{} Encoding token with appUUID information for user {} - [{}:{}]", LOG_TEXT, username, application.getAppUUID(), appName);
             token = gson.toJson(new UserToken(application, tokenWrapper));
@@ -151,23 +152,16 @@ public class JwtUtil {
      * <p>
      * TBA : User data verification?
      *
-     * @param encodedToken
+     * @param appId
+     * @param token
      * @return
      */
-    public TokenPayload extractPayload(String encodedToken) {
-        log.info("{} Extracting user info from token", LOG_TEXT);
+    public TokenPayload extractPayload(String appId, String token) {
+        log.info("{} Extracting user info from token for appId {}", LOG_TEXT, appId);
 
         TokenPayload payload = new TokenPayload();
-        String appId = null;
 
         try {
-
-            log.info("{} Un-wrapping token", LOG_TEXT);
-            UserToken userToken = gson.fromJson(encodedToken, UserToken.class);
-            appId = userToken.getAppId();
-            String token = userToken.getToken();
-
-            log.info("{} Extracted token and appUUID - {}", LOG_TEXT, appId);
 
             log.info("{} Extracting application details - {}", LOG_TEXT, appId);
             Application application = applicationRepository.findApplicationByUUID(appId);
@@ -191,7 +185,7 @@ public class JwtUtil {
             SignedJWT signedJWT = jweObject.getPayload().toSignedJWT();
 
             log.info("{} Verifying token signature with public key for app - {}", LOG_TEXT, appId);
-            if (!signedJWT.verify(new RSASSAVerifier(keyUtil.extractPublicKey(application))))
+            if (!signedJWT.verify(new RSASSAVerifier((RSAPublicKey) keyUtil.extractPublicKey(application))))
                 throw ApplicationException.builder().
                         errorMessage(ApplicationConstants.INVALID_TOKEN_SIGNATURE).
                         status(HttpStatus.UNAUTHORIZED).
@@ -205,12 +199,6 @@ public class JwtUtil {
 
         } catch (ApplicationException exception) {
             throw exception;
-        } catch (JsonSyntaxException exception) {
-            log.error("{} Encountered JSON Token parsing exception decoding token for appID {} : {}", LOG_TEXT_ERROR, appId, exception.getMessage(), exception);
-            throw ApplicationException.builder()
-                    .errorMessage(exception.getMessage())
-                    .status(HttpStatus.UNAUTHORIZED)
-                    .build();
         } catch (InvalidKeySpecException exception) {
             log.error("{} Encountered InvalidKeySpecException decrypting token for appID {} : {}", LOG_TEXT_ERROR, appId, exception.getMessage(), exception);
             throw ApplicationException.builder()

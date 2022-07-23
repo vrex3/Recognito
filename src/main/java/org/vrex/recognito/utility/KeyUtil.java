@@ -84,9 +84,9 @@ public class KeyUtil {
      * @return
      * @throws InvalidKeySpecException
      */
-    public RSAPrivateKey extractPrivateKey(Application application) throws InvalidKeySpecException {
+    public PrivateKey extractPrivateKey(Application application) throws InvalidKeySpecException {
         log.info("{} Extracting private key for application {}", LOG_TEXT, application.getName());
-        return (RSAPrivateKey) keyFactory.generatePrivate(new PKCS8EncodedKeySpec(application.readPrivateKey()));
+        return keyFactory.generatePrivate(new PKCS8EncodedKeySpec(application.getPrivateKey()));
     }
 
     /**
@@ -96,8 +96,8 @@ public class KeyUtil {
      * @return
      * @throws InvalidKeySpecException
      */
-    public RSAPublicKey extractPublicKey(Application application) throws InvalidKeySpecException {
+    public PublicKey extractPublicKey(Application application) throws InvalidKeySpecException {
         log.info("{} Extracting public key for application {}", LOG_TEXT, application.getName());
-        return (RSAPublicKey) keyFactory.generatePublic(new X509EncodedKeySpec(application.readPublicKey()));
+        return keyFactory.generatePublic(new X509EncodedKeySpec(application.getPublicKey()));
     }
 }

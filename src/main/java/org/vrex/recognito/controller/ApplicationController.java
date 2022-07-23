@@ -7,12 +7,14 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.vrex.recognito.model.dto.ApplicationIdentifier;
 import org.vrex.recognito.model.dto.UpsertApplicationRequest;
 import org.vrex.recognito.service.ApplicationService;
 
 import javax.validation.Valid;
+import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/application")
@@ -27,13 +29,13 @@ public class ApplicationController {
      * Throws exception if neither are provided
      * Attempts to locate app details otherwise
      *
-     * @param appId
+     * @param appIdentifierParam
      * @return
      * @throws Exception
      */
     @GetMapping
-    public ResponseEntity<?> getApplication(@Valid @ModelAttribute ApplicationIdentifier appId) throws Exception {
-        return applicationService.getApplication(appId);
+    public ResponseEntity<?> getApplication(@RequestParam Map<String,String> appIdentifierParam) throws Exception {
+        return applicationService.getApplication(new ApplicationIdentifier(appIdentifierParam));
     }
 
     /**

@@ -16,6 +16,7 @@ import org.vrex.recognito.model.dto.UserDTO;
 import org.vrex.recognito.service.UserService;
 
 import javax.validation.Valid;
+import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/user")
@@ -44,13 +45,13 @@ public class UserController {
      * Throws exception if neither are provided
      * Attempts to locate user details for app otherwise
      *
-     * @param appId
+     * @param appIdentifierParam
      * @return
      * @throws Exception
      */
     @GetMapping(value = "/application")
-    public ResponseEntity<?> getUsersForApplication(@Valid @ModelAttribute ApplicationIdentifier appId) throws Exception {
-        return userService.getUsersForApplication(appId);
+    public ResponseEntity<?> getUsersForApplication(@RequestParam Map<String,String> appIdentifierParam) throws Exception {
+        return userService.getUsersForApplication(new ApplicationIdentifier(appIdentifierParam));
     }
 
     /**
@@ -68,15 +69,19 @@ public class UserController {
     }
 
     /**
+     * App UUID accepted as part of request header : x-app-uuid
      * Token accepted as part of request header : x-auth-token
      * If token is authenticated, user info is returned
      *
+     * @param appUUID
      * @param token
      * @return
      * @throws Exception
      */
     @GetMapping(value = "/token/authenticate")
-    public ResponseEntity<UserDTO> authenticateToken(@RequestHeader(name = "x-auth-token") String token) throws Exception {
-        return userService.extractUserFromToken(token);
+    public ResponseEntity<UserDTO> authenticateToken(
+            @RequestHeader(name = "x-app-uuid") String appUUID,
+            @RequestHeader(name = "x-auth-token") String token) throws Exception {
+        return userService.authenticateUser(appUUID, token);
     }
 }

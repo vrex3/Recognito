@@ -14,10 +14,7 @@ public interface UserRepository extends MongoRepository<User, String> {
     @Query("{'userName':?0}")
     public User getUserByName(String username);
 
-    @Query("{'application.$appUUID':?0}")
-    public List<User> getUsersForAppUUID(String appUUID);
-
-    @Query("{'application.$appName':?0}")
+    @Query("{'application.$id':?0}")
     public List<User> getUserForAppName(String appName);
 
     @Query(value = "{'userName': ?0}", count = true)

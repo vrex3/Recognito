@@ -1,0 +1,187 @@
+{
+	"info": {
+		"_postman_id": "ad3964d6-99a5-4f5c-984b-0cffa9322f48",
+		"name": "Recognito",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "3896502"
+	},
+	"item": [
+		{
+			"name": "Upsert App",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"test_app_1\",\n    \"description\": \"test data application\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8040/application",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8040",
+					"path": [
+						"application"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get App",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8040/application?appName=test_app_2",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8040",
+					"path": [
+						"application"
+					],
+					"query": [
+						{
+							"key": "appName",
+							"value": "test_app_2"
+						},
+						{
+							"key": "appUUID",
+							"value": null,
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get users for app",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8040/user/application?appUUID=865c02c4-97d2-41ab-8824-ae7ec1af24da",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8040",
+					"path": [
+						"user",
+						"application"
+					],
+					"query": [
+						{
+							"key": "appName",
+							"value": "test_app_1",
+							"disabled": true
+						},
+						{
+							"key": "appUUID",
+							"value": "865c02c4-97d2-41ab-8824-ae7ec1af24da"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create User",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"test_user_1\",\n    \"email\": \"test_email@gmail.com\",\n    \"appIdentifier\": \"test_app_1\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8040/user/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8040",
+					"path": [
+						"user",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Generate Token",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8040/user/token/generate?username=test_user_1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8040",
+					"path": [
+						"user",
+						"token",
+						"generate"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "test_user_1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Authenticate Token",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-auth-token",
+						"value": "eyJjdHkiOiJKV1QiLCJlbmMiOiJBMjU2R0NNIiwiYWxnIjoiUlNBLU9BRVAtMjU2In0.kSX0IK0PtpA3BfPJOyHFSfjM4AwxCDwSxFWlNLnzNomYG3WDurjjUdu2Zc9cNnaBjcPurOla3TqSL2sbGFVR1fXwUeK00tissKe_31R-XP3FPZvjQC4uaKL0QC-X9EgGTOmaBuxXBZn7tBYuHxm0Zj-G9dhS8Tcq0v-RVdFb5KgbXkOOoLp81bkQ5q5iwt8ko7BVHfcAviLIciYrnvGDlzjEJhjbIcL8NKWpajabL8KYfxHkERHA3vmM3VyD5cpcDxk7aRZ0vUC-si-pReO8xMhdJZe3pYowuzqXDB-nyRFzWejEWfR3QilF8U2IFxDuMbYOLa4Gfo9hGJm2-CRl9A.uOHErad8vd9sWqNv.mnUKPAP849dqqHNcZUMvAE4icvTEaN746cf871O4WcIa0e8zauxSw_ddbmXdZ2G2nCKYWL5s4ugf83Zg0cBFxqwyOImwx90joYLayHm0xMl5RZREapNXsZzJA-eBAXwHzGOTdbxyUUJP6GP8N9YQCG_RQUczYopyPuOHV9bGAUne1WXTdBuj3RJDA1NCclYQPij0_fiEbA89YCsNdQJuLqYsPYIUeFPWH3wIusIZnOfbZiGaJggDk3GoIqQTroQy8zEcyV4MoDWX8K16qpywQHmyG_dQLO01FRRtIxCGDQdV0PvU5Ptp3vJJy1plyVk_2uvPIF04PR8mU_QGDF0z8gTIVwOywILjOkhWn40c-ct9VDbaTYmUDPL9ab6fubdfSB1EXeCY8_vd_wt5WOakSzueOXdmZnT3rcfxgD1wO7XDvg_u71EZDswGCnksTc14gQfK791xW6DJ8WaZoj3uYRUK-4Fm_qPwvb0LselLGP6hU_1AR-8vK5qZqDApYyM6Fq8x7EzkCFzSPcVr-p-tsw1oZr6snvLnhXs4BbrE2EXOe5T1f8NiABpYCAbR2SrQjaEVWQv-T-yr12_zouUVSDOXv9KOB7ZQNfQi4qngE_vw4c9CWkvK0zfRhen68rF-BYtG475EZ4XU5aGWXRIxDQJe79x6k4_gb668pABorccNk0jXGk3DqqZGuC1lVAc2F-g8abJkxbkRfVVjbcnnpPEHgcqh1M-y4TijIHIPvn-N2v25zexC_sm42Z6nX26RS3hbvSV3o4i6GHUrFGZaqNk_4Q22R6zp_8TFR7XY36yFyj5CocPJ.baoRw_IuPvR_IQSED7iUmg",
+						"type": "text"
+					},
+					{
+						"key": "x-app-uuid",
+						"value": "865c02c4-97d2-41ab-8824-ae7ec1af24da",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8040/user/token/authenticate",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8040",
+					"path": [
+						"user",
+						"token",
+						"authenticate"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

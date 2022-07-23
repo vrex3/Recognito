@@ -22,6 +22,8 @@ import org.vrex.recognito.utility.JwtUtil;
 import org.vrex.recognito.utility.KeyUtil;
 
 import java.util.Base64;
+import java.util.LinkedList;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -81,7 +83,7 @@ public class UserService {
                 User user = userRepository.save(buildUserEntity(request));
                 log.info("{} Created user {} for application {}", LOG_TEXT, username, appIdentifier);
 
-                return new ResponseEntity<>(Message.builder().data(user).build(), HttpStatus.OK);
+                return new ResponseEntity<>(Message.builder().data(new UserDTO(user)).build(), HttpStatus.OK);
 
             } catch (ApplicationException exception) {
                 throw exception;
@@ -107,7 +109,7 @@ public class UserService {
      */
     public ResponseEntity<?> getUsersForApplication(ApplicationIdentifier appId) {
 
-        boolean id = StringUtils.isEmpty(appId.getAppUUID()) ? false : true;
+        boolean id = !StringUtils.isEmpty(appId.getAppUUID());
         String identifier = id ? appId.getAppUUID() : appId.getAppName();
         String logIdentifier = id ? "UUID" : "name";
 
@@ -115,9 +117,7 @@ public class UserService {
 
         try {
             return new ResponseEntity<>(Message.builder().
-                    data(new ApplicationUserListDTO(identifier, id ?
-                            userRepository.getUsersForAppUUID(identifier) :
-                            userRepository.getUserForAppName(identifier))).
+                    data(new ApplicationUserListDTO(identifier, fetchUsersForApp(id, identifier))).
                     build(),
                     HttpStatus.OK);
 
@@ -177,29 +177,53 @@ public class UserService {
     }
 
     /**
-     * Accepts encoded signed token
-     * Verifies and Authenticates token
-     * Extracts userDTO information from token
+     * Authenticates user information encoded in token
+     * Returns HTTP response accordingly
      *
-     * OPTIONAL : Add validation of user data later
-     *
+     * @param appUUID
      * @param token
      * @return
      */
-    public ResponseEntity<UserDTO> extractUserFromToken(String token) {
-        log.info("{} Token Generator - Extracting token", LOG_TEXT);
+    public ResponseEntity<UserDTO> authenticateUser(String appUUID, String token) {
+        log.info("{} Token Generator - Extracting token for appUUID {}", LOG_TEXT, appUUID);
+
+        UserDTO user = extractUserFromToken(appUUID, token);
+        return new ResponseEntity<>(user, user != null ? HttpStatus.OK : HttpStatus.UNAUTHORIZED);
+    }
+
+    /**
+     * Accepts encoded signed token
+     * Verifies and Authenticates token
+     * Extracts userDTO information from token
+     * <p>
+     * OPTIONAL : Add validation of user data later
+     *
+     * @param appUUID
+     * @param token
+     * @return
+     */
+    public UserDTO extractUserFromToken(String appUUID, String token) {
         UserDTO user = null;
         try {
+
+            if (StringUtils.isEmpty(appUUID)) {
+                log.error("{} Token Generator - Encountered empty appUUID ", LOG_TEXT_ERROR, appUUID);
+                throw ApplicationException.builder().
+                        errorMessage(ApplicationConstants.EMPTY_APPLICATION_IDENTIFIER).
+                        status(HttpStatus.UNAUTHORIZED).
+                        build();
+            }
+
             if (StringUtils.isEmpty(token)) {
-                log.error("{} Token Generator - Encountered empty token", LOG_TEXT_ERROR);
+                log.error("{} Token Generator - Encountered empty token for appUUID {} ", LOG_TEXT_ERROR, appUUID);
                 throw ApplicationException.builder().
                         errorMessage(ApplicationConstants.EMPTY_TOKEN).
                         status(HttpStatus.UNAUTHORIZED).
                         build();
             }
 
-            user = new UserDTO(jwtUtil.extractPayload(token));
-            log.info("{} Token Generator - Extracted payload from token", LOG_TEXT);
+            user = new UserDTO(jwtUtil.extractPayload(appUUID, token));
+            log.info("{} Token Generator - Extracted payload from token for appUUID {}", LOG_TEXT, appUUID);
 
         } catch (ApplicationException exception) {
             throw exception;
@@ -210,7 +234,8 @@ public class UserService {
                     status(HttpStatus.INTERNAL_SERVER_ERROR).
                     build();
         }
-        return new ResponseEntity<>(user, user != null ? HttpStatus.OK : HttpStatus.UNAUTHORIZED);
+
+        return user;
     }
 
     /**
@@ -251,5 +276,27 @@ public class UserService {
         }
 
         return user;
+    }
+
+    /**
+     * Utility method to fetch users for app identifier
+     * For UUID, app is fetched first from application collection
+     * For appname, users are fetched comparing appid to app name
+     *
+     * @param id
+     * @param identifier
+     * @return
+     */
+    private List<User> fetchUsersForApp(boolean id, String identifier) {
+        List<User> users = null;
+        if (id) {
+            Application application = applicationRepository.findApplicationByUUID(identifier);
+            if (!ObjectUtils.isEmpty(application))
+                users = userRepository.getUserForAppName(application.getName());
+        } else
+            users = userRepository.getUserForAppName(identifier);
+
+        return users != null ? users : new LinkedList<>();
+
     }
 }
