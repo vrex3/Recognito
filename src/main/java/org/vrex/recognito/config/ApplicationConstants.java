@@ -72,4 +72,6 @@ public class ApplicationConstants {
     public static final String DUPLICATE_USER = "Username is already taken";
     public static final String INVALID_USER = "User does not exist";
     public static final String UNLINKED_USER = "User is not mapped to any application.";
+
+    public static final String INVALID_ROLE = "User authority cannot be recognized";
 }

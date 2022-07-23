@@ -39,7 +39,8 @@ public class User implements Serializable {
     @Field("email")
     private String email;
 
-    //private Role role;
+    @Field("role")
+    private String role;
 
     @DBRef
     @Field("application")
@@ -65,7 +66,8 @@ public class User implements Serializable {
     public User(String userName,
                 String secret,
                 String email,
-                Application application) {
+                Application application,
+                String role) {
 
         this.id = username;
         this.username = userName;
@@ -75,6 +77,7 @@ public class User implements Serializable {
         this.onboardedOn = ApplicationConstants.currentTime();
         this.updatedOn = onboardedOn;
         this.application = application;
+        this.role = application.isRolesAllowed() ? role : null;
     }
 
     /**

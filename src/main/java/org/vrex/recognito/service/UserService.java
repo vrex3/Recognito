@@ -20,6 +20,7 @@ import org.vrex.recognito.repository.ApplicationRepository;
 import org.vrex.recognito.repository.UserRepository;
 import org.vrex.recognito.utility.JwtUtil;
 import org.vrex.recognito.utility.KeyUtil;
+import org.vrex.recognito.utility.RoleUtil;
 
 import java.util.Base64;
 import java.util.LinkedList;
@@ -43,6 +44,9 @@ public class UserService {
 
     @Autowired
     private JwtUtil jwtUtil;
+
+    @Autowired
+    private RoleUtil roleUtil;
 
     /**
      * Accepts an UNIQUE username, existing application (UUID or name)
@@ -260,11 +264,27 @@ public class UserService {
 
         if (!ObjectUtils.isEmpty(application)) {
             log.info("{} User Builder - Found application - {}", LOG_TEXT, appIdentifier);
+
+            String userRole = application.isRolesAllowed() ? request.getRole() : null;
+            log.info("{} User Builder - App : {} - Verifying Role : {} - Roles Allowed for App ? {}.",
+                    LOG_TEXT,
+                    appIdentifier,
+                    userRole,
+                    application.isRolesAllowed() ? "yes" : "no");
+
+            if (application.isRolesAllowed() && !roleUtil.isValidRole(userRole))
+                throw ApplicationException.builder().
+                        errorMessage(ApplicationConstants.INVALID_ROLE).
+                        status(HttpStatus.BAD_REQUEST).
+                        build();
+
+
             user = new User(
                     username,
                     Base64.getEncoder().encodeToString(keyUtil.generateAesSecretKey().getEncoded()),
                     request.getEmail(),
-                    application
+                    application,
+                    userRole
             );
             log.info("{} User Builder - Built user entity for user {} linked to application {}", LOG_TEXT, username, appIdentifier);
         } else {

@@ -20,4 +20,6 @@ public class UpsertApplicationRequest implements Serializable {
 
     private String description;
 
+    private boolean rolesAllowed = true;
+
 }

@@ -20,6 +20,8 @@ public class InsertUserRequest implements Serializable {
 
     private String email;
 
+    private String role;
+
     @NotNull(message = ApplicationConstants.EMPTY_APPLICATION_IDENTIFIER)
     private String appIdentifier;
 

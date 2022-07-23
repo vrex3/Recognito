@@ -42,7 +42,8 @@ public class Application implements Serializable {
     @Field("appUUID")
     private String appUUID;
 
-    //private boolean hasRoles;
+    @Field("rolesAllowed")
+    private boolean rolesAllowed;
 
     @Field("publicKey")
     private byte[] publicKey;
@@ -66,6 +67,7 @@ public class Application implements Serializable {
         this.privateKey = keyPair.getPrivate().getEncoded();
         this.onboardedOn = ApplicationConstants.currentTime();
         this.updatedOn = onboardedOn;
+        this.rolesAllowed = request.isRolesAllowed();
     }
 
     /**
