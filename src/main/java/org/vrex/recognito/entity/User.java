@@ -77,7 +77,7 @@ public class User implements Serializable {
         this.onboardedOn = ApplicationConstants.currentTime();
         this.updatedOn = onboardedOn;
         this.application = application;
-        this.role = application.isRolesAllowed() ? role : null;
+        this.role = application.isRolesEnabled() ? role : null;
     }
 
     /**

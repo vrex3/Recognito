@@ -265,18 +265,27 @@ public class UserService {
         if (!ObjectUtils.isEmpty(application)) {
             log.info("{} User Builder - Found application - {}", LOG_TEXT, appIdentifier);
 
-            String userRole = application.isRolesAllowed() ? request.getRole() : null;
-            log.info("{} User Builder - App : {} - Verifying Role : {} - Roles Allowed for App ? {}.",
+            String userRole = request.getRole();
+            String roleEnabled = application.isRolesEnabled() ? "yes" : "no";
+            log.info("{} User Builder - App : {} - Verifying Role : {} - Roles Enabled for App ? {}.",
                     LOG_TEXT,
                     appIdentifier,
                     userRole,
-                    application.isRolesAllowed() ? "yes" : "no");
+                    roleEnabled
+            );
 
-            if (application.isRolesAllowed() && !roleUtil.isValidRole(userRole))
+            if (application.isRolesEnabled() && !roleUtil.isValidRole(userRole)) {
+                log.error("{} User Builder - App : {} - COULD NOT VERIFY Role : {} - Roles Enabled for App ? {}.",
+                        LOG_TEXT_ERROR,
+                        appIdentifier,
+                        userRole,
+                        roleEnabled);
+
                 throw ApplicationException.builder().
                         errorMessage(ApplicationConstants.INVALID_ROLE).
                         status(HttpStatus.BAD_REQUEST).
                         build();
+            }
 
 
             user = new User(
