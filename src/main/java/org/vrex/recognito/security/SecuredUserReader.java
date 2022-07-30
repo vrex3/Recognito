@@ -1,5 +1,6 @@
 package org.vrex.recognito.security;
 
+/**
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.vrex.recognito.config.ApplicationConstants;
 import org.vrex.recognito.entity.User;
 import org.vrex.recognito.repository.UserRepository;
+
 
 @Service
 public class SecuredUserReader implements UserDetailsService {
@@ -25,3 +27,8 @@ public class SecuredUserReader implements UserDetailsService {
         return new SecuredUser(user);
     }
 }
+**/
+
+/**
+ * DISABLED FOR CUSTOM AUTHENTICATION PROVIDER : org.vrex.recognito.security.UserAuthenticationProvider
+ */
