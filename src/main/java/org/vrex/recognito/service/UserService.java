@@ -304,7 +304,7 @@ public class UserService {
 
             user = new User(
                     username,
-                    Base64.getEncoder().encodeToString(keyUtil.generateAesSecretKey().getEncoded()),
+                    keyUtil.generateUserSecret(),
                     request.getEmail(),
                     application,
                     userRole

@@ -52,6 +52,17 @@ public class KeyUtil {
     private KeyFactory keyFactory;
 
     /**
+     * Generates an unique user secret
+     * BASE 64 encoded version of a 256 bit strong AES key
+     *
+     * @return
+     */
+    public String generateUserSecret() {
+        log.info("{} Generating User Secret", LOG_TEXT);
+        return Base64.getEncoder().encodeToString(generateAesSecretKey().getEncoded());
+    }
+
+    /**
      * Generates a strong 256 bit AES key
      *
      * @return
