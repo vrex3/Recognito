@@ -242,7 +242,7 @@ public class TokenUtil {
         claims.claim(EMAIL, user.getEmail());
         claims.claim(PROFILE_VERSION, user.getVersion());
 
-        if (user.getApplication().isRolesEnabled())
+        if (user.getApplication().isResourcesEnabled())
             claims.claim(ROLE, user.getRole());
 
         Date tokenIssuedAt = ApplicationConstants.currentDate();

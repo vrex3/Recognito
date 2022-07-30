@@ -280,7 +280,7 @@ public class UserService {
             }
 
             String userRole = request.getRole();
-            String roleEnabled = application.isRolesEnabled() ? "yes" : "no";
+            String roleEnabled = application.isResourcesEnabled() ? "yes" : "no";
             log.info("{} User Builder - App : {} - Verifying Role : {} - Roles Enabled for App ? {}.",
                     LOG_TEXT,
                     appIdentifier,
@@ -288,7 +288,7 @@ public class UserService {
                     roleEnabled
             );
 
-            if (application.isRolesEnabled() && !RoleUtil.isValidRole(userRole)) {
+            if (application.isResourcesEnabled() && !RoleUtil.isValidRole(userRole)) {
                 log.error("{} User Builder - App : {} - COULD NOT VERIFY Role : {} - Roles Enabled for App ? {}.",
                         LOG_TEXT_ERROR,
                         appIdentifier,

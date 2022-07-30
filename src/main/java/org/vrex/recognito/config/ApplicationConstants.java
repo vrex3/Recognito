@@ -79,4 +79,5 @@ public class ApplicationConstants {
     public static final String INVALID_ROLE = "User authority cannot be recognized";
     public static final String INVALID_RESOURCE = "Resource string must be unique for role, and no more than 15 characters";
     public static final String SYSTEM_ROLE_RESOURCE_MAPPING_ATTEMPT = "System roles cannot have mapped resources.";
+    public static final String INVALID_APP_FOR_RESOURCES = "Application does not allow resource creation for it's roles";
 }

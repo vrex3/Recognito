@@ -13,7 +13,6 @@ import org.vrex.recognito.config.ApplicationConstants;
 import org.vrex.recognito.model.dto.UpsertApplicationRequest;
 
 import java.io.Serializable;
-import java.security.KeyPair;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -48,8 +47,10 @@ public class Application implements Serializable {
     @Field("appSecret")
     private String appSecret;
 
-    @Field("rolesEnabled")
-    private boolean rolesEnabled;
+    // Allows of mapping of roles to resources
+    // NOT ALLOWED FOR SYSTEM ROLES
+    @Field("resourcesEnabled")
+    private boolean resourcesEnabled;
 
     @Field("publicKey")
     private byte[] publicKey;
@@ -71,7 +72,7 @@ public class Application implements Serializable {
         this.description = request.getDescription();
         this.onboardedOn = ApplicationConstants.currentTime();
         this.updatedOn = onboardedOn;
-        this.rolesEnabled = request.isRolesEnabled();
+        this.resourcesEnabled = request.isResourcesEnabled();
     }
 
     /**

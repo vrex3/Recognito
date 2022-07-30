@@ -43,13 +43,19 @@ public class ResourceAppMap implements Serializable {
     @Field("updatedOn")
     private LocalDateTime updatedOn;
 
-    public ResourceAppMap(String appUUID, String resourceId, String description, List<String> roles) {
-        this.id = new ResourceIndex(appUUID, resourceId);
-        this.description = description;
-        this.roles = new HashSet<>();
-        this.onboardedOn = ApplicationConstants.currentTime();
-        addRoles(roles);
+    public ResourceAppMap(Application application, String resourceId, String description, List<String> roles) {
 
+        if (application.isResourcesEnabled()) {
+            this.id = new ResourceIndex(application.getAppUUID(), resourceId);
+            this.description = description;
+            this.roles = new HashSet<>();
+            this.onboardedOn = ApplicationConstants.currentTime();
+            addRoles(roles);
+        } else
+            throw ApplicationException.builder().
+                    errorMessage(ApplicationConstants.INVALID_APP_FOR_RESOURCES).
+                    status(HttpStatus.BAD_REQUEST).
+                    build();
     }
 
     /**

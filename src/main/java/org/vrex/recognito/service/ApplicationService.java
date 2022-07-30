@@ -168,11 +168,25 @@ public class ApplicationService {
         log.info("{} App Comparator - Attempting to compare persisted application {} to request", LOG_TEXT, name);
         boolean altered = false;
         if (name.equals(request.getName())) {
+
+            /**
+             * Keep adding attribute comparison logic here
+             */
+
+            /* DESCRIPTION */
             if (!app.getDescription().equals(request.getDescription().trim())) {
                 altered = true;
                 app.setDescription(request.getDescription());
                 log.info("{} App Comparator - Description altered for app {}", LOG_TEXT, name);
             }
+
+            /* RESOURCES ENABLED */
+            if (app.isResourcesEnabled() != request.isResourcesEnabled()) {
+                altered = true;
+                app.setResourcesEnabled(request.isResourcesEnabled());
+                log.info("{} App Comparator - Role-Resource Mapping for app {} - Turned {} ", LOG_TEXT, name, request.isResourcesEnabled() ? "ON" : "OFF");
+            }
+
         }
         if (altered) {
             app.updateApp();
