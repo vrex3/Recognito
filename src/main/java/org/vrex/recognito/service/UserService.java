@@ -45,9 +45,6 @@ public class UserService {
     @Autowired
     private TokenUtil tokenUtil;
 
-    @Autowired
-    private RoleUtil roleUtil;
-
     /**
      * Accepts an UNIQUE username, existing application (UUID or name)
      * Generates secret for user
@@ -291,7 +288,7 @@ public class UserService {
                     roleEnabled
             );
 
-            if (application.isRolesEnabled() && !roleUtil.isValidRole(userRole)) {
+            if (application.isRolesEnabled() && !RoleUtil.isValidRole(userRole)) {
                 log.error("{} User Builder - App : {} - COULD NOT VERIFY Role : {} - Roles Enabled for App ? {}.",
                         LOG_TEXT_ERROR,
                         appIdentifier,

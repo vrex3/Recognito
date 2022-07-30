@@ -77,4 +77,6 @@ public class ApplicationConstants {
     public static final String UNLINKED_USER = "User is not mapped to any application.";
 
     public static final String INVALID_ROLE = "User authority cannot be recognized";
+    public static final String INVALID_RESOURCE = "Resource string must be unique for role, and no more than 15 characters";
+    public static final String SYSTEM_ROLE_RESOURCE_MAPPING_ATTEMPT = "System roles cannot have mapped resources.";
 }
