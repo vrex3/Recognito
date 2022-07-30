@@ -17,7 +17,11 @@ import org.vrex.recognito.utility.RoleUtil;
 
 @Slf4j
 @Component
+@SuppressWarnings("unused")
 public class UserAuthenticationProvider implements AuthenticationProvider {
+
+    private static final String LOG_TEXT = "Auth-Service : ";
+    private static final String LOG_TEXT_ERROR = "Auth-Service - Encountered Exception - ";
 
     @Autowired
     private UserRepository userRepository;
@@ -29,11 +33,17 @@ public class UserAuthenticationProvider implements AuthenticationProvider {
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         String username = authentication.getName();
         String secret = authentication.getCredentials().toString();
+
+        log.info("{} Authenticating user - {}", LOG_TEXT, username);
+
         User user = userRepository.getUserByName(username);
         if (!ObjectUtils.isEmpty(user) && passwordEncoder.matches(secret, user.getSecret())) {
+            log.info("{} User Authenticated - {}", LOG_TEXT, username);
             return new UsernamePasswordAuthenticationToken(username, secret, RoleUtil.getAuthorities(user));
-        } else
+        } else {
+            log.error("{} Invalid credentials for user - {}", LOG_TEXT, username);
             throw new BadCredentialsException(ApplicationConstants.INVALID_USER);
+        }
     }
 
     @Override
