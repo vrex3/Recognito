@@ -1,8 +1,10 @@
 package org.vrex.recognito.repository;
 
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Repository;
+import org.vrex.recognito.config.ApplicationConstants;
 import org.vrex.recognito.entity.User;
 
 import java.util.List;
@@ -12,6 +14,8 @@ import java.util.List;
 public interface UserRepository extends MongoRepository<User, String> {
 
     @Query("{userName:?0}")
+    @Cacheable(cacheNames = ApplicationConstants.USER_PROFILE_CACHE,
+            unless = "#result!=null")
     public User getUserByName(String username);
 
     @Query("{application.$id:?0}")

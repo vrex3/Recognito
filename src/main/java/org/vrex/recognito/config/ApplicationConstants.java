@@ -35,6 +35,14 @@ public class ApplicationConstants {
     }
 
     /**
+     * CACHE CONSTANTS
+     */
+    public static final String USER_PROFILE_CACHE = "users";
+    public static final Integer INITIAL_CAPACITY = 10;
+    public static final Integer MAX_CAPACITY = 20;
+    public static final Integer EXPIRE_AFTER_WRITE_IN_MINUTES = 5;
+
+    /**
      * CRYPTO CONSTANTS
      */
     public static final String USER_KEY_GENERATOR_INSTANCE = "AES";

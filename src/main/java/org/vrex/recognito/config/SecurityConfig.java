@@ -14,6 +14,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.crypto.scrypt.SCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.vrex.recognito.entity.Role;
 import org.vrex.recognito.security.UserAuthenticationProvider;
 import org.vrex.recognito.utility.RoleUtil;
 
@@ -47,6 +48,8 @@ public class SecurityConfig {
                     .authorizeRequests()
 
                     .antMatchers(HttpMethod.POST, "/application").permitAll()
+                    .antMatchers(HttpMethod.POST, "/application/invite").hasAnyAuthority(RoleUtil.wrapRoles(Role.SYS_ADMIN, Role.SYS_DEVELOPER))
+
                     .antMatchers(HttpMethod.POST, "/user").permitAll()
                     .antMatchers("/user/token/generate").hasAnyAuthority(RoleUtil.ALL_AUTHORITIES)
                     .antMatchers("/user/token/authorize").hasAnyAuthority(RoleUtil.ALL_AUTHORITIES)
@@ -73,7 +76,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public AuthenticationProvider userAuthenticationProvider(){
+    public AuthenticationProvider userAuthenticationProvider() {
         return new UserAuthenticationProvider();
     }
 

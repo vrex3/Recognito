@@ -51,4 +51,19 @@ public class RoleUtil {
     public static Collection<? extends GrantedAuthority> getAuthorities(User user) {
         return Arrays.asList(new SimpleGrantedAuthority(user.getRole()));
     }
+
+    /**
+     * Wraps any number of role enums in a string array
+     *
+     * @param roles
+     * @return
+     */
+    public static String[] wrapRoles(Role... roles) {
+        int i, len = roles.length;
+        String[] output = new String[len];
+        for (i = 0; i < len; i++)
+            output[i] = roles[i].name();
+
+        return output;
+    }
 }
