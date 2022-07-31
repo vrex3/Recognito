@@ -2,6 +2,7 @@ package org.vrex.recognito.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,39 +19,23 @@ import javax.validation.Valid;
 import java.util.Map;
 
 @RestController
-@RequestMapping(value = "/user")
+@RequestMapping(value = "/app/user")
 @SuppressWarnings("unused")
-public class UserController {
+public class StatefulUserController {
 
     @Autowired
     private UserService userService;
 
     /**
-     * Accepts username, email and app identifier
-     * AppIdentifier -> appUUID or appName
-     * Returns saved user data + secret (ONLY time this is returned)
+     * Login API for APP users
      *
-     * @param request
+     * @param username
      * @return
      * @throws Exception
      */
-    @PostMapping
-    public ResponseEntity<?> createUser(@Valid @RequestBody InsertUserRequest request) throws Exception {
-        return userService.createUser(request);
-    }
-
-    /**
-     * Accepts either appName or appUUID
-     * Throws exception if neither are provided
-     * Attempts to locate user details for app otherwise
-     *
-     * @param appIdentifierParam
-     * @return
-     * @throws Exception
-     */
-    @GetMapping(value = "/application")
-    public ResponseEntity<?> getUsersForApplication(@RequestParam Map<String,String> appIdentifierParam) throws Exception {
-        return userService.getUsersForApplication(new ApplicationIdentifier(appIdentifierParam));
+    @GetMapping(value = "/login")
+    public ResponseEntity<?> loginUser(@AuthenticationPrincipal String username) throws Exception {
+        return userService.findUserInformation(username);
     }
 
     /**
@@ -63,7 +48,7 @@ public class UserController {
      * @throws Exception
      */
     @GetMapping(value = "/token/generate")
-    public ResponseEntity<String> generateToken(@RequestParam String username) throws Exception {
+    public ResponseEntity<String> generateToken(@AuthenticationPrincipal String username) throws Exception {
         return userService.generateTokenForUser(username);
     }
 

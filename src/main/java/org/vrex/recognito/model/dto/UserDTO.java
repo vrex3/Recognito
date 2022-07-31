@@ -56,4 +56,11 @@ public class UserDTO implements Serializable {
             this.role = payload.getRole();
         }
     }
+
+    /**
+     * Destroys the user secret in this entity
+     */
+    public void hideSecret() {
+        this.secret = null;
+    }
 }

@@ -16,7 +16,7 @@ import org.vrex.recognito.repository.UserRepository;
 import org.vrex.recognito.utility.RoleUtil;
 
 @Slf4j
-//@Component
+@Component
 @SuppressWarnings("unused")
 public class UserAuthenticationProvider implements AuthenticationProvider {
 

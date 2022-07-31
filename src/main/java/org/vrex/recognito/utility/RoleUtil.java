@@ -66,4 +66,22 @@ public class RoleUtil {
 
         return output;
     }
+
+    /**
+     * Wraps and returns only SYSTEM roles as Authorities
+     *
+     * @return
+     */
+    public static String[] getSystemRoles() {
+        return wrapRoles(Role.SYS_ADMIN, Role.SYS_DEVELOPER, Role.SYS_USER);
+    }
+
+    /**
+     * Wraps and returns only APP USER roles as Authorities
+     *
+     * @return
+     */
+    public static String[] getUserRoles() {
+        return wrapRoles(Role.APP_ADMIN, Role.APP_USER, Role.APP_DEVELOPER);
+    }
 }

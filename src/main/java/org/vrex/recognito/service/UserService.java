@@ -50,6 +50,21 @@ public class UserService {
     private PasswordEncoder passwordEncoder;
 
     /**
+     * Fetches information of logged in user
+     *
+     * @param username
+     * @return
+     */
+    public ResponseEntity<UserDTO> findUserInformation(String username) {
+        UserDTO response = findUser(username);
+
+        return ObjectUtils.isEmpty(response) ?
+                new ResponseEntity<>(HttpStatus.NOT_FOUND) :
+                new ResponseEntity<>(response, HttpStatus.OK);
+
+    }
+
+    /**
      * Accepts an UNIQUE username, existing application (UUID or name)
      * Generates secret for user
      * Persists user
@@ -355,5 +370,37 @@ public class UserService {
 
         return users != null ? users : new LinkedList<>();
 
+    }
+
+    /**
+     * ALWAYS USE THIS METHOD TO FETCH USER DTO
+     * Wraps user in userDTO object
+     * Drops user secret
+     * <p>
+     * SHOULD BE MADE REDUNDANT AFTER SECRET/PASSWORD EMAIL TRIGGER
+     *
+     * @param username
+     * @return
+     */
+    private UserDTO findUser(String username) {
+        log.info("{} Finding user : {}", LOG_TEXT, username);
+        User user = userRepository.getUserByName(username);
+        UserDTO userWrapper = null;
+
+        if (ObjectUtils.isEmpty(user)) {
+            log.error("{} USER NOT FOUND - {}", LOG_TEXT_ERROR, username);
+            throw ApplicationException.builder().
+                    errorMessage(ApplicationConstants.INVALID_USER).
+                    status(HttpStatus.BAD_REQUEST).
+                    build();
+        } else {
+            log.info("{} USER FOUND - {}", LOG_TEXT, user);
+            userWrapper = new UserDTO(user);
+            userWrapper.hideSecret();
+
+            log.info("{} USER WRAPPER PACKAGE READY - {}", LOG_TEXT, user);
+        }
+
+        return userWrapper;
     }
 }
