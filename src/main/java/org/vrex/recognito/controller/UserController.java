@@ -3,7 +3,6 @@ package org.vrex.recognito.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -78,7 +77,7 @@ public class UserController {
      * @return
      * @throws Exception
      */
-    @GetMapping(value = "/token/authenticate")
+    @GetMapping(value = "/token/authorize")
     public ResponseEntity<UserDTO> authenticateToken(
             @RequestHeader(name = "x-app-uuid") String appUUID,
             @RequestHeader(name = "x-auth-token") String token) throws Exception {

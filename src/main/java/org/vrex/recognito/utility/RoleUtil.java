@@ -20,6 +20,7 @@ public class RoleUtil {
     }
 
     private static final String SYSTEM_ROLE_IDENTIFIER = "SYS_";
+    public static final String[] ALL_AUTHORITIES = Arrays.stream(Role.values()).map(Enum::name).toArray(String[]::new);
 
     /**
      * Checks whether a role is an accepted role or not
