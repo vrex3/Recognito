@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -19,15 +20,13 @@ import org.vrex.recognito.utility.RoleUtil;
 @Slf4j
 @Configuration
 @EnableWebSecurity
+@SuppressWarnings("unused")
 public class SecurityConfig {
 
     private static final String LOG_TEXT = "Security-Setup : ";
     private static final String LOG_TEXT_ERROR = "Security-Setup - Encountered Exception - ";
 
     private AuthenticationManager authenticationManager;
-
-    @Autowired
-    private UserAuthenticationProvider userAuthenticationProvider;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -36,7 +35,7 @@ public class SecurityConfig {
             log.info("{} Setting up Authentication Manager", LOG_TEXT);
 
             AuthenticationManagerBuilder authenticationManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
-            authenticationManagerBuilder.authenticationProvider(userAuthenticationProvider);
+            authenticationManagerBuilder.authenticationProvider(userAuthenticationProvider());
             authenticationManager = authenticationManagerBuilder.build();
 
             log.info("{} Set up Authentication Manager with custom authentication provider", LOG_TEXT);
@@ -63,7 +62,7 @@ public class SecurityConfig {
         }
 
         log.info("{} HTTP REQEUST READY TO BUILD.", LOG_TEXT);
-        
+
         return http.build();
     }
 
@@ -71,6 +70,11 @@ public class SecurityConfig {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new SCryptPasswordEncoder();
+    }
+
+    @Bean
+    public AuthenticationProvider userAuthenticationProvider(){
+        return new UserAuthenticationProvider();
     }
 
 }
