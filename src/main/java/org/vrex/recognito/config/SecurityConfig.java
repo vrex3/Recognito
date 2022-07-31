@@ -21,6 +21,9 @@ import org.vrex.recognito.utility.RoleUtil;
 @EnableWebSecurity
 public class SecurityConfig {
 
+    private static final String LOG_TEXT = "Security-Setup : ";
+    private static final String LOG_TEXT_ERROR = "Security-Setup - Encountered Exception - ";
+
     private AuthenticationManager authenticationManager;
 
     @Autowired
@@ -29,24 +32,38 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
-        AuthenticationManagerBuilder authenticationManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
-        authenticationManagerBuilder.authenticationProvider(userAuthenticationProvider);
-        authenticationManager = authenticationManagerBuilder.build();
+        try {
+            log.info("{} Setting up Authentication Manager", LOG_TEXT);
 
-        http.cors().and().csrf().disable()
-                .authenticationManager(authenticationManager)
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-                .authorizeRequests()
+            AuthenticationManagerBuilder authenticationManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
+            authenticationManagerBuilder.authenticationProvider(userAuthenticationProvider);
+            authenticationManager = authenticationManagerBuilder.build();
 
-                .antMatchers(HttpMethod.POST, "/application").permitAll()
-                .antMatchers(HttpMethod.POST, "/user").permitAll()
-                .antMatchers("/user/token/generate").hasAnyAuthority(RoleUtil.ALL_AUTHORITIES)
-                .antMatchers("/user/token/authorize").hasAnyAuthority(RoleUtil.ALL_AUTHORITIES)
-                .anyRequest().authenticated()
+            log.info("{} Set up Authentication Manager with custom authentication provider", LOG_TEXT);
 
-                .and().formLogin()
-                .and().httpBasic();
+            log.info("{} Setting up http request security parsing", LOG_TEXT);
+            http.cors().and().csrf().disable()
+                    .authenticationManager(authenticationManager)
+                    .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
+                    .authorizeRequests()
 
+                    .antMatchers(HttpMethod.POST, "/application").permitAll()
+                    .antMatchers(HttpMethod.POST, "/user").permitAll()
+                    .antMatchers("/user/token/generate").hasAnyAuthority(RoleUtil.ALL_AUTHORITIES)
+                    .antMatchers("/user/token/authorize").hasAnyAuthority(RoleUtil.ALL_AUTHORITIES)
+                    .anyRequest().authenticated()
+
+                    .and().formLogin()
+                    .and().httpBasic();
+
+            log.info("{} Set up http request security parsing", LOG_TEXT);
+
+        } catch (Exception exception) {
+            log.error("{} {}", LOG_TEXT_ERROR, exception.getMessage(), exception);
+        }
+
+        log.info("{} HTTP REQEUST READY TO BUILD.", LOG_TEXT);
+        
         return http.build();
     }
 
