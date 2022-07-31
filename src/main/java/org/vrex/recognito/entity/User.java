@@ -10,6 +10,7 @@ import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.vrex.recognito.config.ApplicationConstants;
 
 import java.io.Serializable;
@@ -95,6 +96,15 @@ public class User implements Serializable {
      */
     private String getNextVersion() {
         return "v" + ((version != null ? Integer.parseInt(version.substring(1)) : 0) + 1);
+    }
+
+    /**
+     * Encodes a user secret with a passed encoder
+     *
+     * @param encoder
+     */
+    public void encodeSecret(PasswordEncoder encoder) {
+        this.secret = this.secret != null ? encoder.encode(this.secret) : null;
     }
 
 }

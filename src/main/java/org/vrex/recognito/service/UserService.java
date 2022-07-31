@@ -6,6 +6,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.vrex.recognito.config.ApplicationConstants;
 import org.vrex.recognito.entity.Application;
@@ -45,6 +46,9 @@ public class UserService {
     @Autowired
     private TokenUtil tokenUtil;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     /**
      * Accepts an UNIQUE username, existing application (UUID or name)
      * Generates secret for user
@@ -81,10 +85,20 @@ public class UserService {
         } else {
             log.info("{} Building and persisting user {} for application {}", LOG_TEXT, username, appIdentifier);
             try {
-                User user = userRepository.save(buildUserEntity(request));
+                User user = buildUserEntity(request);
+
+                /**
+                 * Set response without encoded secret
+                 * Then encode secret before persisting user to database
+                 */
+                UserDTO response = new UserDTO(user);
+                user.encodeSecret(passwordEncoder);
+
+                userRepository.save(user);
+
                 log.info("{} Created user {} for application {}", LOG_TEXT, username, appIdentifier);
 
-                return new ResponseEntity<>(Message.builder().data(new UserDTO(user)).build(), HttpStatus.OK);
+                return new ResponseEntity<>(Message.builder().data(response).build(), HttpStatus.OK);
 
             } catch (ApplicationException exception) {
                 throw exception;
