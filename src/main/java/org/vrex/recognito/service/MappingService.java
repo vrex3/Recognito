@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
 import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -143,7 +144,7 @@ public class MappingService {
         log.info("{} Fetching role-resource mappings for appUUID - {}", appUUID);
 
         Set<String> allowedRoles = selectedRoles.length > 0 ? new HashSet<>(Arrays.asList(selectedRoles)) : new HashSet<>();
-        final boolean allRoles = allowedRoles.size()==0;
+        final boolean allRoles = allowedRoles.size() == 0;
 
         List<ResourceAppMap> mappings = mappingRepository.findRoleResourceMappingsByAppUUID(appUUID);
         RoleResourceMapping response = new RoleResourceMapping(appUUID);
@@ -177,13 +178,46 @@ public class MappingService {
         return response;
     }
 
-    public boolean doesRoleOwnResourceForApp(String role, String resource, String appUUID){
-        ResourceAppMap mapping = mappingRepository.findByAppAndResource(appUUID,resource);
+    /**
+     * Checks whether role for appUUID owns resource or not
+     *
+     * @param role
+     * @param resource
+     * @param appUUID
+     * @return
+     */
+    @Cacheable(cacheNames = ApplicationConstants.ROLE_RESOURCE_MAPPING_CACHE)
+    public boolean doesRoleOwnResourceForApp(String role, String resource, String appUUID) {
+        log.info("{} ROLE-RESOURCE MAP CHECKER : Checking if Role {} owns Resource {} for App {}",
+                LOG_TEXT,
+                role,
+                resource,
+                appUUID);
+
+        ResourceAppMap mapping = mappingRepository.findByAppAndResource(appUUID, resource);
         boolean allowed = false;
 
-        if(!ObjectUtils.isEmpty(mapping)){
+        if (!ObjectUtils.isEmpty(mapping)) {
+            log.info("{} ROLE-RESOURCE MAP CHECKER : Found mapping for Role {} owning Resource {} for App {}",
+                    LOG_TEXT,
+                    role,
+                    resource,
+                    appUUID);
             allowed = mapping.belongsToRole(role);
+        } else {
+            log.error("{} ROLE-RESOURCE MAP CHECKER : Found NO mapping for Role {} owning Resource {} for App {}",
+                    LOG_TEXT,
+                    role,
+                    resource,
+                    appUUID);
         }
+
+        log.info("{} ROLE-RESOURCE MAP CHECKER RESULT: Role {} DOES{} own Resource {} for App {}",
+                LOG_TEXT,
+                role,
+                allowed ? "" : " NOT",
+                resource,
+                appUUID);
 
         return allowed;
     }

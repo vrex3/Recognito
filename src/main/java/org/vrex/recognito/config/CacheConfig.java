@@ -25,8 +25,9 @@ public class CacheConfig {
     public CacheManager cacheManager(Caffeine caffeine) {
         CaffeineCacheManager caffeineCacheManager = new CaffeineCacheManager(
                 ApplicationConstants.USER_PROFILE_CACHE,
-                ApplicationConstants.APPLICATION_CACHE
-                );
+                ApplicationConstants.APPLICATION_CACHE,
+                ApplicationConstants.ROLE_RESOURCE_MAPPING_CACHE
+        );
         caffeineCacheManager.setCaffeine(caffeine);
         return caffeineCacheManager;
     }
