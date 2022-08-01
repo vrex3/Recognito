@@ -40,6 +40,7 @@ public class ApplicationConstants {
     public static final String USER_PROFILE_CACHE = "users";
     public static final String APPLICATION_CACHE = "apps";
     public static final String ROLE_RESOURCE_MAPPING_CACHE = "roles";
+    public static final String USER_CREDENTIALS_CACHE = "credentials";
 
 
     public static final Integer INITIAL_CAPACITY = 10;

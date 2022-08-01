@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 import org.vrex.recognito.config.ApplicationConstants;
 import org.vrex.recognito.entity.User;
 import org.vrex.recognito.repository.UserRepository;
+import org.vrex.recognito.utility.AuthUtil;
 import org.vrex.recognito.utility.RoleUtil;
 
 @Slf4j
@@ -24,10 +25,7 @@ public class UserAuthenticationProvider implements AuthenticationProvider {
     private static final String LOG_TEXT_ERROR = "Auth-Service - Encountered Exception - ";
 
     @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private AuthUtil authUtil;
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
@@ -36,8 +34,8 @@ public class UserAuthenticationProvider implements AuthenticationProvider {
 
         log.info("{} Authenticating user - {}", LOG_TEXT, username);
 
-        User user = userRepository.getUserByName(username);
-        if (!ObjectUtils.isEmpty(user) && passwordEncoder.matches(secret, user.getSecret())) {
+        User user = authUtil.authenticateUserCredentials(username, secret);
+        if (user != null) {
             log.info("{} User Authenticated - {}", LOG_TEXT, username);
             return new UsernamePasswordAuthenticationToken(username, secret, RoleUtil.getAuthorities(user));
         } else {
