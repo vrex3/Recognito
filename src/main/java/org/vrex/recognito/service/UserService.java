@@ -50,18 +50,35 @@ public class UserService {
     private PasswordEncoder passwordEncoder;
 
     /**
-     * Fetches information of logged in user
+     * ALWAYS USE THIS METHOD TO FETCH USER DTO
+     * Wraps user in userDTO object
+     * Drops user secret
+     * <p>
+     * SHOULD BE MADE REDUNDANT AFTER SECRET/PASSWORD EMAIL TRIGGER
      *
      * @param username
      * @return
      */
-    public ResponseEntity<UserDTO> findUserInformation(String username) {
-        UserDTO response = findUser(username);
+    public UserDTO findUser(String username) {
+        log.info("{} Finding user : {}", LOG_TEXT, username);
+        User user = userRepository.getUserByName(username);
+        UserDTO userWrapper = null;
 
-        return ObjectUtils.isEmpty(response) ?
-                new ResponseEntity<>(HttpStatus.NOT_FOUND) :
-                new ResponseEntity<>(response, HttpStatus.OK);
+        if (ObjectUtils.isEmpty(user)) {
+            log.error("{} USER NOT FOUND - {}", LOG_TEXT_ERROR, username);
+            throw ApplicationException.builder().
+                    errorMessage(ApplicationConstants.INVALID_USER).
+                    status(HttpStatus.BAD_REQUEST).
+                    build();
+        } else {
+            log.info("{} USER FOUND - {}", LOG_TEXT, user);
+            userWrapper = new UserDTO(user);
+            userWrapper.hideSecret();
 
+            log.info("{} USER WRAPPER PACKAGE READY - {}", LOG_TEXT, user);
+        }
+
+        return userWrapper;
     }
 
     /**
@@ -81,7 +98,8 @@ public class UserService {
      * @param request
      * @return
      */
-    public ResponseEntity<?> createUser(InsertUserRequest request) {
+    public UserDTO createUser(InsertUserRequest request) {
+        UserDTO response = null;
         String username = request != null ? request.getUsername() : null;
         String appIdentifier = request != null ? request.getAppIdentifier() : null;
 
@@ -106,14 +124,14 @@ public class UserService {
                  * Set response without encoded secret
                  * Then encode secret before persisting user to database
                  */
-                UserDTO response = new UserDTO(user);
+                response = new UserDTO(user);
                 user.encodeSecret(passwordEncoder);
 
                 userRepository.save(user);
 
                 log.info("{} Created user {} for application {}", LOG_TEXT, username, appIdentifier);
 
-                return new ResponseEntity<>(Message.builder().data(response).build(), HttpStatus.OK);
+                return response;
 
             } catch (ApplicationException exception) {
                 throw exception;
@@ -137,7 +155,9 @@ public class UserService {
      * @param appId
      * @return
      */
-    public ResponseEntity<ApplicationUserListDTO> getUsersForApplication(ApplicationIdentifier appId) {
+    public ApplicationUserListDTO getUsersForApplication(ApplicationIdentifier appId) {
+
+        ApplicationUserListDTO response = null;
 
         boolean id = !StringUtils.isEmpty(appId.getAppUUID());
         String identifier = id ? appId.getAppUUID() : appId.getAppName();
@@ -146,9 +166,7 @@ public class UserService {
         log.info("{} Fetching users for application with {} - {}", LOG_TEXT, logIdentifier, identifier);
 
         try {
-            return new ResponseEntity<>(
-                    new ApplicationUserListDTO(identifier, fetchUsersForApp(id, identifier)),
-                    HttpStatus.OK);
+            response = new ApplicationUserListDTO(identifier, fetchUsersForApp(id, identifier));
 
         } catch (Exception exception) {
             log.error("{} Fetching users for application with {} - {}", LOG_TEXT_ERROR, logIdentifier, identifier, exception);
@@ -157,6 +175,8 @@ public class UserService {
                     status(HttpStatus.INTERNAL_SERVER_ERROR).
                     build();
         }
+
+        return response;
     }
 
     /**
@@ -169,7 +189,7 @@ public class UserService {
      * @param username
      * @return
      */
-    public ResponseEntity<String> generateTokenForUser(String username) {
+    public String generateTokenForUser(String username) {
         log.info("{} Token Generator - Received request to generate token for user - {}", LOG_TEXT, username);
 
         String token = null;
@@ -199,10 +219,7 @@ public class UserService {
                     build();
         }
 
-        return new ResponseEntity<>(
-                token,
-                token != null ? HttpStatus.OK : HttpStatus.INTERNAL_SERVER_ERROR
-        );
+        return token;
     }
 
     /**
@@ -213,11 +230,10 @@ public class UserService {
      * @param token
      * @return
      */
-    public ResponseEntity<UserDTO> authenticateUser(String appUUID, String token) {
+    public UserDTO authenticateUser(String appUUID, String token) {
         log.info("{} Token Generator - Extracting token for appUUID {}", LOG_TEXT, appUUID);
 
-        UserDTO user = extractUserFromToken(appUUID, token);
-        return new ResponseEntity<>(user, user != null ? HttpStatus.OK : HttpStatus.UNAUTHORIZED);
+        return extractUserFromToken(appUUID, token);
     }
 
     /**
@@ -371,35 +387,5 @@ public class UserService {
 
     }
 
-    /**
-     * ALWAYS USE THIS METHOD TO FETCH USER DTO
-     * Wraps user in userDTO object
-     * Drops user secret
-     * <p>
-     * SHOULD BE MADE REDUNDANT AFTER SECRET/PASSWORD EMAIL TRIGGER
-     *
-     * @param username
-     * @return
-     */
-    private UserDTO findUser(String username) {
-        log.info("{} Finding user : {}", LOG_TEXT, username);
-        User user = userRepository.getUserByName(username);
-        UserDTO userWrapper = null;
 
-        if (ObjectUtils.isEmpty(user)) {
-            log.error("{} USER NOT FOUND - {}", LOG_TEXT_ERROR, username);
-            throw ApplicationException.builder().
-                    errorMessage(ApplicationConstants.INVALID_USER).
-                    status(HttpStatus.BAD_REQUEST).
-                    build();
-        } else {
-            log.info("{} USER FOUND - {}", LOG_TEXT, user);
-            userWrapper = new UserDTO(user);
-            userWrapper.hideSecret();
-
-            log.info("{} USER WRAPPER PACKAGE READY - {}", LOG_TEXT, user);
-        }
-
-        return userWrapper;
-    }
 }

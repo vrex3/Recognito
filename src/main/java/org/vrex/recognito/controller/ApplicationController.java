@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.vrex.recognito.model.dto.ApplicationIdentifier;
 import org.vrex.recognito.model.dto.UpsertApplicationRequest;
 import org.vrex.recognito.service.ApplicationService;
+import org.vrex.recognito.utility.HttpResponseUtil;
 
 import javax.validation.Valid;
 import java.util.Map;
@@ -35,7 +36,9 @@ public class ApplicationController {
      */
     @GetMapping
     public ResponseEntity<?> getApplication(@RequestParam Map<String, String> appIdentifierParam) throws Exception {
-        return applicationService.getApplication(new ApplicationIdentifier(appIdentifierParam));
+        return HttpResponseUtil.wrapInHttpStatusOkResponse(
+                applicationService.getApplication(new ApplicationIdentifier(appIdentifierParam))
+        );
     }
 
     /**
@@ -48,7 +51,9 @@ public class ApplicationController {
      */
     @PostMapping
     public ResponseEntity<?> upsertApplication(@RequestBody UpsertApplicationRequest request) throws Exception {
-        return applicationService.upsertApplication(request);
+        return HttpResponseUtil.wrapInHttpStatusOkResponse(
+                applicationService.upsertApplication(request)
+        );
     }
 
     /**
@@ -62,6 +67,8 @@ public class ApplicationController {
      */
     @GetMapping(value = "/invite")
     public ResponseEntity<String> getAppInvite(@RequestParam String appUUID) throws Exception {
-        return applicationService.findApplicationSecret(appUUID);
+        return HttpResponseUtil.wrapInHttpStatusOkResponse(
+                applicationService.findApplicationSecret(appUUID)
+        );
     }
 }

@@ -42,7 +42,8 @@ public class ApplicationService {
      * @param appId
      * @return
      */
-    public ResponseEntity<?> getApplication(ApplicationIdentifier appId) {
+    public ApplicationDTO getApplication(ApplicationIdentifier appId) {
+        ApplicationDTO response = null;
 
         boolean id = StringUtils.isEmpty(appId.getAppUUID()) ? false : true;
         String identifier = id ? appId.getAppUUID() : appId.getAppName();
@@ -51,12 +52,9 @@ public class ApplicationService {
         log.info("{} Fetching application with {} - {}", LOG_TEXT, logIdentifier, identifier);
 
         try {
-            return new ResponseEntity<>(Message.builder().
-                    data(new ApplicationDTO(id ?
-                            applicationRepository.findApplicationByUUID(identifier) :
-                            applicationRepository.findApplicationByName(identifier))).
-                    build(),
-                    HttpStatus.OK);
+            response = new ApplicationDTO(id ?
+                    applicationRepository.findApplicationByUUID(identifier) :
+                    applicationRepository.findApplicationByName(identifier));
         } catch (Exception exception) {
             log.error("{} Fetching application with {} - {}", LOG_TEXT_ERROR, logIdentifier, identifier, exception);
             throw ApplicationException.builder().
@@ -64,6 +62,8 @@ public class ApplicationService {
                     status(HttpStatus.INTERNAL_SERVER_ERROR).
                     build();
         }
+
+        return response;
     }
 
     /**
@@ -72,7 +72,7 @@ public class ApplicationService {
      * @param appUUID
      * @return
      */
-    public ResponseEntity<String> findApplicationSecret(String appUUID) {
+    public String findApplicationSecret(String appUUID) {
 
         if (StringUtils.isEmpty(appUUID)) {
             log.error("{} Cannot fetch secret for empty appUUID.", LOG_TEXT_ERROR);
@@ -93,7 +93,7 @@ public class ApplicationService {
         }
 
         log.info("{} Fetched secret invite for app {}", LOG_TEXT, appUUID);
-        return new ResponseEntity<String>(application.getAppSecret(), HttpStatus.OK);
+        return application.getAppSecret();
     }
 
     /**
@@ -106,10 +106,13 @@ public class ApplicationService {
      */
     @Transactional
     @Retryable(maxAttempts = 5, backoff = @Backoff(delay = 500))
-    public ResponseEntity<?> upsertApplication(UpsertApplicationRequest request) {
+    public ApplicationDTO upsertApplication(UpsertApplicationRequest request) {
         if (ObjectUtils.isEmpty(request)) {
             log.error("{} Request empty", LOG_TEXT_ERROR);
-            return new ResponseEntity(Message.builder().text(LOG_TEXT_ERROR).build(), HttpStatus.BAD_REQUEST);
+            throw ApplicationException.builder().
+                    errorMessage(ApplicationConstants.EMPTY_APPLICATION_REQUEST).
+                    status(HttpStatus.BAD_REQUEST).
+                    build();
         }
 
         String name = request.getName();
@@ -146,10 +149,7 @@ public class ApplicationService {
                     build();
         }
 
-        return new ResponseEntity(Message.builder().
-                data(new ApplicationDTO(application)).
-                build(),
-                HttpStatus.OK);
+        return new ApplicationDTO(application);
 
     }
 

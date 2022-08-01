@@ -1,6 +1,7 @@
 package org.vrex.recognito.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,6 +15,7 @@ import org.vrex.recognito.model.dto.ApplicationIdentifier;
 import org.vrex.recognito.model.dto.InsertUserRequest;
 import org.vrex.recognito.model.dto.UserDTO;
 import org.vrex.recognito.service.UserService;
+import org.vrex.recognito.utility.HttpResponseUtil;
 
 import javax.validation.Valid;
 import java.util.Map;
@@ -38,7 +40,11 @@ public class StatelessUserController {
      */
     @GetMapping
     public ResponseEntity<?> findUser(@AuthenticationPrincipal String username) throws Exception {
-        return userService.findUserInformation(username);
+        return HttpResponseUtil.returnRawPackageWithStatusOrElse(
+                userService.findUser(username),
+                HttpStatus.OK,
+                HttpStatus.NOT_FOUND
+        );
     }
 
 
@@ -53,7 +59,9 @@ public class StatelessUserController {
      */
     @PostMapping
     public ResponseEntity<?> createUser(@Valid @RequestBody InsertUserRequest request) throws Exception {
-        return userService.createUser(request);
+        return HttpResponseUtil.wrapInHttpStatusOkResponse(
+                userService.createUser(request)
+        );
     }
 
     /**
@@ -67,7 +75,9 @@ public class StatelessUserController {
      */
     @GetMapping(value = "/application")
     public ResponseEntity<?> getUsersForApplication(@RequestParam Map<String, String> appIdentifierParam) throws Exception {
-        return userService.getUsersForApplication(new ApplicationIdentifier(appIdentifierParam));
+        return HttpResponseUtil.wrapInHttpStatusOkResponse(
+                userService.getUsersForApplication(new ApplicationIdentifier(appIdentifierParam))
+        );
     }
 
 }

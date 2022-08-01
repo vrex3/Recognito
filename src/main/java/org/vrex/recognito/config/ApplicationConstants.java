@@ -71,7 +71,7 @@ public class ApplicationConstants {
     public static final String INVALID_TOKEN_ISSUER = "Token issuer could not be recognized";
     public static final String EXPIRED_TOKEN = "Token is no longer valid";
 
-
+    public static final String EMPTY_APPLICATION_REQUEST = "Empty application upsert request";
     public static final String EMPTY_APPLICATION_NAME = "Application name cannot be empty";
     public static final String EMPTY_APPLICATION_IDENTIFIER = "Either app name or UUID needs to be provided";
     public static final String APPLICATION_NOT_FOUND = "Application could not be found";
