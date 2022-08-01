@@ -22,6 +22,7 @@ public class ApplicationDTO implements Serializable {
     private String appUUID;
     private LocalDateTime onboardedOn;
     private LocalDateTime updatedOn;
+    private RoleResourceMapping roleMappings;
 
     public ApplicationDTO(Application application) {
         if (!ObjectUtils.isEmpty(application)) {

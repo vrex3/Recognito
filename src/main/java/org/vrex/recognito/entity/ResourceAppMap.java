@@ -16,7 +16,6 @@ import org.vrex.recognito.utility.RoleUtil;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -43,7 +42,7 @@ public class ResourceAppMap implements Serializable {
     @Field("updatedOn")
     private LocalDateTime updatedOn;
 
-    public ResourceAppMap(Application application, String resourceId, String description, List<String> roles) {
+    public ResourceAppMap(Application application, String resourceId, String description, Set<String> roles) {
 
         if (application.isResourcesEnabled()) {
             this.id = new ResourceIndex(application.getAppUUID(), resourceId);
@@ -73,7 +72,7 @@ public class ResourceAppMap implements Serializable {
      *
      * @param roles
      */
-    public void addRoles(List<String> roles) {
+    public void addRoles(Set<String> roles) {
         for (String role : roles) {
             if (validateRole(role)) {
                 roles.add(role);

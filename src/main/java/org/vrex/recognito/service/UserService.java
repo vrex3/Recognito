@@ -137,7 +137,7 @@ public class UserService {
      * @param appId
      * @return
      */
-    public ResponseEntity<?> getUsersForApplication(ApplicationIdentifier appId) {
+    public ResponseEntity<ApplicationUserListDTO> getUsersForApplication(ApplicationIdentifier appId) {
 
         boolean id = !StringUtils.isEmpty(appId.getAppUUID());
         String identifier = id ? appId.getAppUUID() : appId.getAppName();
@@ -146,9 +146,8 @@ public class UserService {
         log.info("{} Fetching users for application with {} - {}", LOG_TEXT, logIdentifier, identifier);
 
         try {
-            return new ResponseEntity<>(Message.builder().
-                    data(new ApplicationUserListDTO(identifier, fetchUsersForApp(id, identifier))).
-                    build(),
+            return new ResponseEntity<>(
+                    new ApplicationUserListDTO(identifier, fetchUsersForApp(id, identifier)),
                     HttpStatus.OK);
 
         } catch (Exception exception) {
