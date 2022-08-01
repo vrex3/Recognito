@@ -7,6 +7,7 @@ import org.vrex.recognito.entity.ResourceAppMap;
 import org.vrex.recognito.entity.ResourceIndex;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface MappingRepository extends MongoRepository<ResourceAppMap, ResourceIndex> {
@@ -16,4 +17,18 @@ public interface MappingRepository extends MongoRepository<ResourceAppMap, Resou
 
     @Query("{resourceId.$appUUID:?0}")
     public List<ResourceAppMap> findRoleResourceMappingsByAppUUID(String appUUID);
+
+    public Optional<ResourceAppMap> findById(ResourceIndex index);
+
+    /**
+     * Uses findById to return mapping with all allowed roles for an app and resource
+     *
+     * @param appUUID
+     * @param resource
+     * @return
+     */
+    default ResourceAppMap findByAppAndResource(String appUUID, String resource) {
+        Optional<ResourceAppMap> optionalMapping = findById(new ResourceIndex(appUUID, resource));
+        return optionalMapping.isPresent() ? optionalMapping.get() : null;
+    }
 }

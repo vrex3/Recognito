@@ -4,7 +4,9 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.vrex.recognito.config.ApplicationConstants;
 
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
@@ -16,6 +18,7 @@ import java.util.Set;
 @Data
 public class RoleResourceMapping implements Serializable {
 
+    @NotNull(message = ApplicationConstants.EMPTY_APPLICATION_IDENTIFIER)
     private String appUUID;
     private List<RoleResourceMap> mappings;
 

@@ -5,14 +5,12 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.vrex.recognito.config.ApplicationConstants;
 import org.vrex.recognito.entity.Application;
 import org.vrex.recognito.entity.User;
 import org.vrex.recognito.model.ApplicationException;
-import org.vrex.recognito.model.Message;
 import org.vrex.recognito.model.dto.ApplicationIdentifier;
 import org.vrex.recognito.model.dto.ApplicationUserListDTO;
 import org.vrex.recognito.model.dto.InsertUserRequest;
@@ -23,7 +21,6 @@ import org.vrex.recognito.utility.TokenUtil;
 import org.vrex.recognito.utility.KeyUtil;
 import org.vrex.recognito.utility.RoleUtil;
 
-import java.util.Base64;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -48,6 +45,9 @@ public class UserService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private MappingService mappingService;
 
     /**
      * ALWAYS USE THIS METHOD TO FETCH USER DTO
@@ -224,16 +224,38 @@ public class UserService {
 
     /**
      * Authenticates user information encoded in token
-     * Returns HTTP response accordingly
+     * Returns userDTO
      *
      * @param appUUID
      * @param token
+     * @param resource
      * @return
      */
-    public UserDTO authenticateUser(String appUUID, String token) {
+    public UserDTO authorizeUser(String appUUID, String token, String resource) {
         log.info("{} Token Generator - Extracting token for appUUID {}", LOG_TEXT, appUUID);
+        if (resource != null)
+            log.info("{} Token Generator - Registered resource {} to check against token for appUUID {}", LOG_TEXT, resource, appUUID);
 
-        return extractUserFromToken(appUUID, token);
+        UserDTO authenticatedUser = extractUserFromToken(appUUID, token);
+        log.info("{} Token Generator - Extracted user from token for appUUID {}", LOG_TEXT, appUUID);
+
+
+        if (authenticatedUser.isResourcesEnabled()) {
+            log.info("{} Token Generator - Checking access to resource {} for authenticated user for appUUID {}", LOG_TEXT, resource, appUUID);
+            if (StringUtils.isEmpty(resource) ||
+                    !mappingService.doesRoleOwnResourceForApp(authenticatedUser.getRole(), resource, appUUID)) {
+
+                log.error("{} Token Generator - User with role {} denied access to resource {} for appUUID {}", LOG_TEXT, authenticatedUser.getRole(), resource, appUUID);
+                throw ApplicationException.builder().
+                        errorMessage(ApplicationConstants.ROLE_NOT_ALLOWED_RESOURCE).
+                        status(HttpStatus.UNAUTHORIZED).
+                        build();
+            }
+        }
+
+        log.info("{} Token Generator - Authorized user from token for appUUID {}", LOG_TEXT, appUUID);
+
+        return authenticatedUser;
     }
 
     /**

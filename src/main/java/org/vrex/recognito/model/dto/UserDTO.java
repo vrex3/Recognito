@@ -25,6 +25,7 @@ public class UserDTO implements Serializable {
     private String version;
     private LocalDateTime onboardedOn;
     private LocalDateTime updatedOn;
+    private boolean resourcesEnabled;
 
     //TO BE REMOVED
     private String secret;
@@ -54,6 +55,7 @@ public class UserDTO implements Serializable {
             this.email = payload.getEmail();
             this.version = payload.getProfileVersion();
             this.role = payload.getRole();
+            this.resourcesEnabled = payload.isResourcesEnabled();
         }
     }
 

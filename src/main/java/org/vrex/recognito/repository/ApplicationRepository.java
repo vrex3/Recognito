@@ -1,8 +1,10 @@
 package org.vrex.recognito.repository;
 
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Repository;
+import org.vrex.recognito.config.ApplicationConstants;
 import org.vrex.recognito.entity.Application;
 
 @Repository
@@ -10,6 +12,8 @@ import org.vrex.recognito.entity.Application;
 public interface ApplicationRepository extends MongoRepository<Application, String> {
 
     @Query("{appUUID:?0}")
+    @Cacheable(cacheNames = ApplicationConstants.APPLICATION_CACHE,
+            unless = "#result!=null")
     public Application findApplicationByUUID(String UUID);
 
     @Query("{appName:?0}")

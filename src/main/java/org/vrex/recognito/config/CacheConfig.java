@@ -23,7 +23,10 @@ public class CacheConfig {
 
     @Bean
     public CacheManager cacheManager(Caffeine caffeine) {
-        CaffeineCacheManager caffeineCacheManager = new CaffeineCacheManager(ApplicationConstants.USER_PROFILE_CACHE);
+        CaffeineCacheManager caffeineCacheManager = new CaffeineCacheManager(
+                ApplicationConstants.USER_PROFILE_CACHE,
+                ApplicationConstants.APPLICATION_CACHE
+                );
         caffeineCacheManager.setCaffeine(caffeine);
         return caffeineCacheManager;
     }

@@ -50,6 +50,7 @@ public class TokenUtil {
     public static final String EMAIL = "email";
     public static final String PROFILE_VERSION = "profileVersion";
     public static final String ROLE = "authority";
+    public static final String RESOURCES_ENABLED = "resourcesEnabled";
     private static final String JWT_ISSUER = "recognito";
     private static final Integer JWT_LIFESPAN_MINUTES = 30;
 
@@ -102,7 +103,7 @@ public class TokenUtil {
                     new JWSHeader.
                             Builder(JWSAlgorithm.RS256).
                             build(),
-                    generateClaims(user));
+                    generateClaims(user, application));
 
             log.info("{} Signing token with app private key for user {} - {}", LOG_TEXT, username, appName);
 
@@ -228,9 +229,10 @@ public class TokenUtil {
      * Creates claims with respect to a provided user entity
      *
      * @param user
+     * @param application
      * @return
      */
-    private JWTClaimsSet generateClaims(User user) {
+    private JWTClaimsSet generateClaims(User user, Application application) {
         log.debug("{} Generating claims for user {}", LOG_TEXT, user.getUsername());
 
         JWTClaimsSet.Builder claims = new JWTClaimsSet.Builder();
@@ -241,6 +243,7 @@ public class TokenUtil {
 
         claims.claim(EMAIL, user.getEmail());
         claims.claim(PROFILE_VERSION, user.getVersion());
+        claims.claim(RESOURCES_ENABLED, application.isResourcesEnabled());
 
         if (user.getApplication().isResourcesEnabled())
             claims.claim(ROLE, user.getRole());

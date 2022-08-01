@@ -58,8 +58,8 @@ public class SecurityConfig {
                     .authorizeRequests()
 
                     .antMatchers(HttpMethod.GET, "/login").hasAnyAuthority(RoleUtil.getUserRoles())
-                    .antMatchers("/token/generate").hasAnyAuthority(RoleUtil.ALL_AUTHORITIES)
-                    .antMatchers("/token/authorize").hasAnyAuthority(RoleUtil.ALL_AUTHORITIES)
+                    .antMatchers(HttpMethod.GET, "/token/generate").hasAnyAuthority(RoleUtil.ALL_AUTHORITIES)
+                    .antMatchers(HttpMethod.GET, "/token/authorize").hasAnyAuthority(RoleUtil.ALL_AUTHORITIES)
 
                     .anyRequest().authenticated()
 
@@ -96,10 +96,15 @@ public class SecurityConfig {
                     .authorizeRequests()
 
                     .antMatchers(HttpMethod.POST, "/application").permitAll()
-                    .antMatchers(HttpMethod.POST, "/application/invite").hasAnyAuthority(RoleUtil.wrapRoles(Role.SYS_ADMIN, Role.SYS_DEVELOPER))
+                    .antMatchers(HttpMethod.GET, "/application/invite").hasAnyAuthority(RoleUtil.wrapRoles(Role.SYS_ADMIN, Role.SYS_DEVELOPER))
+                    .antMatchers(HttpMethod.GET, "/application").hasAnyAuthority(RoleUtil.getSystemRoles())
+
+                    .antMatchers(HttpMethod.POST, "/app/role/mapping").hasAnyAuthority(RoleUtil.wrapRoles(Role.SYS_ADMIN, Role.SYS_DEVELOPER))
+                    .antMatchers(HttpMethod.GET, "/app/role/mapping").hasAnyAuthority(RoleUtil.getSystemRoles())
 
                     .antMatchers(HttpMethod.POST, "/user").permitAll()
                     .antMatchers(HttpMethod.GET, "/user").hasAnyAuthority(RoleUtil.getSystemRoles())
+                    .antMatchers(HttpMethod.GET, "/user/application").hasAnyAuthority(RoleUtil.getSystemRoles())
 
                     .anyRequest().authenticated()
 

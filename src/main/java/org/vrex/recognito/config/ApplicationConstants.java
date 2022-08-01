@@ -38,6 +38,8 @@ public class ApplicationConstants {
      * CACHE CONSTANTS
      */
     public static final String USER_PROFILE_CACHE = "users";
+    public static final String APPLICATION_CACHE = "apps";
+
     public static final Integer INITIAL_CAPACITY = 10;
     public static final Integer MAX_CAPACITY = 20;
     public static final Integer EXPIRE_AFTER_WRITE_IN_MINUTES = 5;
@@ -88,4 +90,5 @@ public class ApplicationConstants {
     public static final String INVALID_RESOURCE = "Resource string must be unique for role, and no more than 15 characters";
     public static final String SYSTEM_ROLE_RESOURCE_MAPPING_ATTEMPT = "System roles cannot have mapped resources.";
     public static final String INVALID_APP_FOR_RESOURCES = "Application does not allow resource creation for it's roles";
+    public static final String ROLE_NOT_ALLOWED_RESOURCE = "User role is not allowed permission to access resource. Please provide valid resource ID";
 }

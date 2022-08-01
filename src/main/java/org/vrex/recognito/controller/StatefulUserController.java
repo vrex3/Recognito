@@ -7,8 +7,8 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.vrex.recognito.model.dto.UserDTO;
 import org.vrex.recognito.service.UserService;
 import org.vrex.recognito.utility.HttpResponseUtil;
 
@@ -46,7 +46,7 @@ public class StatefulUserController {
      * @throws Exception
      */
     @GetMapping(value = "/token/generate")
-    public ResponseEntity<String> generateToken(@AuthenticationPrincipal String username) throws Exception {
+    public ResponseEntity<?> generateToken(@AuthenticationPrincipal String username) throws Exception {
         return HttpResponseUtil.returnRawPackageWithStatusOrElse(
                 userService.generateTokenForUser(username),
                 HttpStatus.OK,
@@ -64,12 +64,13 @@ public class StatefulUserController {
      * @throws Exception
      */
     @GetMapping(value = "/token/authorize")
-    public ResponseEntity<UserDTO> authenticateToken(
+    public ResponseEntity<?> authorizeToken(
             @RequestHeader(name = "x-app-uuid") String appUUID,
-            @RequestHeader(name = "x-auth-token") String token) throws Exception {
+            @RequestHeader(name = "x-auth-token") String token,
+            @RequestParam(required = false) String resource) throws Exception {
 
         return HttpResponseUtil.returnRawPackageWithStatusOrElse(
-                userService.authenticateUser(appUUID, token),
+                userService.authorizeUser(appUUID, token, resource),
                 HttpStatus.OK,
                 HttpStatus.UNAUTHORIZED
         );

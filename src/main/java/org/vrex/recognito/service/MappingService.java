@@ -177,5 +177,15 @@ public class MappingService {
         return response;
     }
 
+    public boolean doesRoleOwnResourceForApp(String role, String resource, String appUUID){
+        ResourceAppMap mapping = mappingRepository.findByAppAndResource(appUUID,resource);
+        boolean allowed = false;
+
+        if(!ObjectUtils.isEmpty(mapping)){
+            allowed = mapping.belongsToRole(role);
+        }
+
+        return allowed;
+    }
 
 }

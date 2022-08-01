@@ -24,6 +24,7 @@ public class TokenPayload implements Serializable {
     private String email;
     private String role;
     private String profileVersion;
+    private boolean resourcesEnabled;
     private Date issuedAt;
     private Date expiryOn;
 
@@ -42,6 +43,7 @@ public class TokenPayload implements Serializable {
                 this.profileVersion = claims.getClaim(TokenUtil.PROFILE_VERSION).toString();
                 this.issuedAt = claims.getIssueTime();
                 this.expiryOn = claims.getExpirationTime();
+                this.resourcesEnabled = Boolean.getBoolean(claims.getClaim(TokenUtil.RESOURCES_ENABLED).toString());
 
                 Object claimRole = claims.getClaim(TokenUtil.ROLE);
                 this.role = claimRole != null ? claimRole.toString() : null;

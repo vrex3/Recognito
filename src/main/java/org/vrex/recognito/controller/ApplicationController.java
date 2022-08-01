@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.vrex.recognito.model.dto.ApplicationDTO;
 import org.vrex.recognito.model.dto.ApplicationIdentifier;
 import org.vrex.recognito.model.dto.UpsertApplicationRequest;
 import org.vrex.recognito.service.ApplicationService;
@@ -66,7 +67,7 @@ public class ApplicationController {
      * @throws Exception
      */
     @GetMapping(value = "/invite")
-    public ResponseEntity<String> getAppInvite(@RequestParam String appUUID) throws Exception {
+    public ResponseEntity<?> getAppInvite(@RequestParam String appUUID) throws Exception {
         return HttpResponseUtil.wrapInHttpStatusOkResponse(
                 applicationService.findApplicationSecret(appUUID)
         );
