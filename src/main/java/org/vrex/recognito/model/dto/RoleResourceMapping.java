@@ -11,6 +11,7 @@ import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -39,7 +40,20 @@ public class RoleResourceMapping implements Serializable {
         this.mappings.add(new RoleResourceMap(role, resources));
     }
 
+    /**
+     * Fetch all the ResourceIndex for db query
+     *
+     * @return
+     */
     public List<ResourceIndex> getResourceIndices() {
-        return mappings != null ? mappings.stream().map(mapping -> new ResourceIndex(appUUID, mapping.getRole())).collect(Collectors.toList()) : new LinkedList<>();
+        List<ResourceIndex> indices = new LinkedList<>();
+        if (mappings != null) {
+            mappings.stream().forEach(mapping -> {
+                Map<String, String> resources = mapping.getResources();
+                if (resources != null)
+                    resources.keySet().stream().forEach(resource -> indices.add(new ResourceIndex(appUUID, resource)));
+            });
+        }
+        return indices;
     }
 }

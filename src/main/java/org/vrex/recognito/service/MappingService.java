@@ -43,6 +43,8 @@ public class MappingService {
     /**
      * Accepts an appUUID and role->[resource] mapping
      * Creates new resource->role mapping schema entries
+     * Modifies exisiting resource-app entries
+     * i.e. adds Role to resource if this role now owns this resource
      * Throws BAD REQUEST if application does not exist or does not allow resource mapping
      *
      * @param request
@@ -115,6 +117,12 @@ public class MappingService {
                     Iterable<ResourceAppMap> iterableMappings = mappingRepository.findAllById(request.getResourceIndices());
                     List<ResourceAppMap> existingMappings = iterableMappings != null ? StreamSupport.stream(iterableMappings.spliterator(), false)
                             .collect(Collectors.toList()) : new LinkedList<>();
+
+                    /*List<ResourceAppMap> existingMappings = request.getResourceIndices()
+                            .stream()
+                            .map(index -> mappingRepository.findByAppAndResource(index.getAppUUID(), index.getResourceId()))
+                            .filter(mapping -> mapping != null)
+                            .collect(Collectors.toList());*/
 
                     Map<String, ResourceAppMap> resourceMapping = new HashMap<>();
                     existingMappings.stream().forEach(mapping -> resourceMapping.put(mapping.getId().getResourceId(), mapping));
