@@ -27,7 +27,7 @@ import java.util.Set;
 public class ResourceAppMap implements Serializable {
 
     @Id
-    @Field("resourceId")
+    @EqualsAndHashCode.Include
     private ResourceIndex id;
 
     @Field("description")
@@ -75,7 +75,7 @@ public class ResourceAppMap implements Serializable {
     public void addRoles(Set<String> roles) {
         for (String role : roles) {
             if (validateRole(role)) {
-                roles.add(role);
+                this.roles.add(role);
             }
         }
 

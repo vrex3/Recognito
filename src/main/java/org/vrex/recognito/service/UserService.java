@@ -346,21 +346,11 @@ public class UserService {
             }
 
             String userRole = request.getRole();
-            String roleEnabled = application.isResourcesEnabled() ? "yes" : "no";
-            log.info("{} User Builder - App : {} - Verifying Role : {} - Roles Enabled for App ? {}.",
-                    LOG_TEXT,
-                    appIdentifier,
-                    userRole,
-                    roleEnabled
-            );
-
-            if (application.isResourcesEnabled() && !RoleUtil.isValidRole(userRole)) {
-                log.error("{} User Builder - App : {} - COULD NOT VERIFY Role : {} - Roles Enabled for App ? {}.",
-                        LOG_TEXT_ERROR,
-                        appIdentifier,
-                        userRole,
-                        roleEnabled);
-
+            if (RoleUtil.isValidRole(userRole)) {
+                user = new User(username, keyUtil.generateUserSecret(), request.getEmail(), application, userRole);
+                log.info("{} User Builder - Built user entity for user {} with role {} linked to application {}", LOG_TEXT, username, userRole, appIdentifier);
+            } else {
+                log.error("{} User Builder - App : {} - COULD NOT VERIFY Role : {} ", LOG_TEXT_ERROR, appIdentifier, userRole);
                 throw ApplicationException.builder().
                         errorMessage(ApplicationConstants.INVALID_ROLE).
                         status(HttpStatus.BAD_REQUEST).
@@ -368,14 +358,6 @@ public class UserService {
             }
 
 
-            user = new User(
-                    username,
-                    keyUtil.generateUserSecret(),
-                    request.getEmail(),
-                    application,
-                    userRole
-            );
-            log.info("{} User Builder - Built user entity for user {} linked to application {}", LOG_TEXT, username, appIdentifier);
         } else {
             log.error("{} User Builder - Could not locate application {}", LOG_TEXT_ERROR, appIdentifier);
             throw ApplicationException.builder().

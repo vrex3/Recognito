@@ -25,7 +25,6 @@ import java.util.UUID;
 public class Application implements Serializable {
 
     @Id
-    @Field("appId")
     private String id;
 
     @EqualsAndHashCode.Include

@@ -25,8 +25,8 @@ public interface ApplicationRepository extends MongoRepository<Application, Stri
     @Query(value = "{appName: ?0}", count = true)
     public long countApplication(String appName);
 
-    @Query(value = "{appName: ?0}", fields = "{appSecret : 1, _id : 0}")
-    public Application findApplicationSecret(String appUUID);
+    @Query(value = "{appUUID: ?0}", fields = "{appSecret : 1, _id : 0}")
+    public Application findApplicationSecretForAppUUID(String appUUID);
 
     /**
      * Checks whether an application is existing or not

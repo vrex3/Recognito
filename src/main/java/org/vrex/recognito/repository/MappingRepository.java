@@ -15,8 +15,8 @@ public interface MappingRepository extends MongoRepository<ResourceAppMap, Resou
     @Query("{resourceId.$res_identifier:?0}")
     public ResourceAppMap findByResourceString(String resource);
 
-    @Query("{resourceId.$appUUID:?0}")
-    public List<ResourceAppMap> findRoleResourceMappingsByAppUUID(String appUUID);
+    //@Query("{id.appUUID:?0}")
+    public List<ResourceAppMap> findByIdAppUUID(String appUUID);
 
     public Optional<ResourceAppMap> findById(ResourceIndex index);
 

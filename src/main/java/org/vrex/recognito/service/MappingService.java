@@ -2,18 +2,15 @@ package org.vrex.recognito.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
-import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.vrex.recognito.config.ApplicationConstants;
 import org.vrex.recognito.entity.Application;
 import org.vrex.recognito.entity.ResourceAppMap;
 import org.vrex.recognito.model.ApplicationException;
-import org.vrex.recognito.model.Message;
 import org.vrex.recognito.model.dto.ApplicationDTO;
 import org.vrex.recognito.model.dto.RoleResourceMap;
 import org.vrex.recognito.model.dto.RoleResourceMapping;
@@ -56,75 +53,86 @@ public class MappingService {
         ApplicationDTO response = null;
         String appUUID = request.getAppUUID();
 
-        log.info("{} MAPPING CREATOR : Received role-resource mapping request for appUUID - {}", appUUID);
+        try {
 
-        Application application = applicationRepository.findApplicationByUUID(appUUID);
-        List<ResourceAppMap> newMappings = new LinkedList<>();
+            log.info("{} MAPPING CREATOR : Received role-resource mapping request for appUUID - {}", appUUID);
 
-        if (!ObjectUtils.isEmpty(application) && application.isResourcesEnabled()) {
-            log.info("{} MAPPING CREATOR : Extracted app with appUUID - {}", appUUID);
+            Application application = applicationRepository.findApplicationByUUID(appUUID);
+            List<ResourceAppMap> newMappings = new LinkedList<>();
 
-            response = new ApplicationDTO(application);
+            if (!ObjectUtils.isEmpty(application) && application.isResourcesEnabled()) {
+                log.info("{} MAPPING CREATOR : Extracted app with appUUID - {}", appUUID);
 
-            /**
-             * resourceRoleMap : resource -> [role]  <--> built to input new role resource mappings into db
-             * resourceDescriptionMap : resource -> [description]  <--> collects all descriptions of a resource,
-             *                                                          if multiple provided for multiple roles.
-             *
-             */
-            Map<String, Set<String>> resourceRoleMap = new HashMap<>();
-            Map<String, Set<String>> resourceDescriptionMap = new HashMap<>();
+                response = new ApplicationDTO(application);
 
-            List<RoleResourceMap> mappings = request.getMappings();
-            log.info("{} MAPPING CREATOR : Mapping roles to resources for appUUID - {}", appUUID);
+                /**
+                 * resourceRoleMap : resource -> [role]  <--> built to input new role resource mappings into db
+                 * resourceDescriptionMap : resource -> [description]  <--> collects all descriptions of a resource,
+                 *                                                          if multiple provided for multiple roles.
+                 *
+                 */
+                Map<String, Set<String>> resourceRoleMap = new HashMap<>();
+                Map<String, Set<String>> resourceDescriptionMap = new HashMap<>();
 
-            if (mappings != null && mappings.size() > 0) {
+                List<RoleResourceMap> mappings = request.getMappings();
+                log.info("{} MAPPING CREATOR : Mapping roles to resources for appUUID - {}", appUUID);
 
-                mappings.stream().forEach(mapping -> {
+                if (mappings != null && mappings.size() > 0) {
 
-                    /**
-                     * resourceDescMap : resource -> resource description
-                     */
-                    Map<String, String> resourceDescMap = mapping.getResources();
-                    String role = mapping.getRole();
+                    mappings.stream().forEach(mapping -> {
 
-                    Set<String> resources = resourceDescMap != null ? resourceDescMap.keySet() : new HashSet<>();
-                    resources.stream().forEach(resource -> {
-                        resourceRoleMap.putIfAbsent(resource, new HashSet<>());
-                        resourceRoleMap.get(resource).add(role);
+                        /**
+                         * resourceDescMap : resource -> resource description
+                         */
+                        Map<String, String> resourceDescMap = mapping.getResources();
+                        String role = mapping.getRole();
 
-                        resourceDescriptionMap.putIfAbsent(resource, new HashSet<>());
-                        resourceDescriptionMap.get(resource).add(resourceDescMap.get(resource).trim());
+                        Set<String> resources = resourceDescMap != null ? resourceDescMap.keySet() : new HashSet<>();
+                        resources.stream().forEach(resource -> {
+                            resourceRoleMap.putIfAbsent(resource, new HashSet<>());
+                            resourceRoleMap.get(resource).add(role);
+
+                            resourceDescriptionMap.putIfAbsent(resource, new HashSet<>());
+                            resourceDescriptionMap.get(resource).add(resourceDescMap.get(resource).trim());
+                        });
                     });
-                });
 
-                resourceRoleMap.forEach(
-                        (resource, roles) -> newMappings.add(
-                                new ResourceAppMap(
-                                        application,
-                                        resource,
-                                        resourceDescriptionMap.get(resource).stream().collect(Collectors.joining(". ")),
-                                        roles
-                                )));
+                    resourceRoleMap.forEach(
+                            (resource, roles) -> newMappings.add(
+                                    new ResourceAppMap(
+                                            application,
+                                            resource,
+                                            resourceDescriptionMap.get(resource).stream().collect(Collectors.joining(". ")),
+                                            roles
+                                    )));
 
-                log.info("{} MAPPING CREATOR : Mapped roles to resources for appUUID - {}", appUUID);
+                    log.info("{} MAPPING CREATOR : Mapped roles to resources for appUUID - {}", appUUID);
 
+                }
+            } else {
+                log.error("{} MAPPING CREATOR : COULD NOT EXTRACT app with appUUID - {}", appUUID);
+                throw ApplicationException.builder().
+                        errorMessage(ApplicationConstants.APPLICATION_NOT_FOUND).
+                        status(HttpStatus.BAD_REQUEST).
+                        build();
             }
-        } else {
-            log.error("{} MAPPING CREATOR : COULD NOT EXTRACT app with appUUID - {}", appUUID);
+
+            if (newMappings.size() > 0) {
+                log.info("{} MAPPING CREATOR : Updating mappings for appUUID - {} . [New mappings : {}]", appUUID, newMappings.size());
+
+                mappingRepository.saveAll(newMappings);
+                //response.setRoleMappings(getRoleResourceMappingForApplication(appUUID));
+            } else {
+                log.info("{} MAPPING CREATOR : No mappings to update for appUUID - {} . [New mappings : {}]", appUUID);
+            }
+        } catch (ApplicationException exception) {
+            throw exception;
+        } catch (Exception exception) {
+            log.error("{} Encountered exception updating mappings", LOG_TEXT_ERROR, exception);
             throw ApplicationException.builder().
-                    errorMessage(ApplicationConstants.APPLICATION_NOT_FOUND).
-                    status(HttpStatus.BAD_REQUEST).
+                    errorMessage(exception.getMessage()).
+                    status(HttpStatus.INTERNAL_SERVER_ERROR).
                     build();
-        }
-
-        if (newMappings.size() > 0) {
-            log.info("{} MAPPING CREATOR : Updating mappings for appUUID - {} . [New mappings : {}]", appUUID, newMappings.size());
-
-            mappingRepository.saveAll(newMappings);
-            response.setRoleMappings(getRoleResourceMappingForApplication(appUUID));
-        } else {
-            log.info("{} MAPPING CREATOR : No mappings to update for appUUID - {} . [New mappings : {}]", appUUID);
         }
 
         return response;
@@ -141,41 +149,49 @@ public class MappingService {
      * @return
      */
     public RoleResourceMapping getRoleResourceMappingForApplication(String appUUID, String... selectedRoles) {
-        log.info("{} Fetching role-resource mappings for appUUID - {}", appUUID);
+        log.info("{} Fetching role-resource mappings for appUUID - {}", LOG_TEXT, appUUID);
 
         Set<String> allowedRoles = selectedRoles.length > 0 ? new HashSet<>(Arrays.asList(selectedRoles)) : new HashSet<>();
         final boolean allRoles = allowedRoles.size() == 0;
 
-        List<ResourceAppMap> mappings = mappingRepository.findRoleResourceMappingsByAppUUID(appUUID);
-        RoleResourceMapping response = new RoleResourceMapping(appUUID);
+        try {
+            List<ResourceAppMap> mappings = mappingRepository.findByIdAppUUID(appUUID);
+            RoleResourceMapping response = new RoleResourceMapping(appUUID);
 
-        if (mappings != null && mappings.size() > 0) {
-            log.info("{} Fetched role-resource mappings for appUUID - {}. [New mappings : {}]", appUUID, mappings.size());
+            if (mappings != null && mappings.size() > 0) {
+                log.info("{} Fetched role-resource mappings for appUUID - {}. [New mappings : {}]", LOG_TEXT, appUUID, mappings.size());
 
-            /**
-             * role -> set of resources
-             */
-            Map<String, Set<String>> roleResourceMap = new HashMap<>();
+                /**
+                 * role -> set of resources
+                 */
+                Map<String, Set<String>> roleResourceMap = new HashMap<>();
 
 
-            mappings.stream().forEach(mapping -> {
-                String resource = mapping.getId().getResourceId();
-                Set<String> roles = mapping.getRoles();
-                roles.stream().forEach(role -> {
-                    if (allRoles || allowedRoles.contains(role)) {
-                        roleResourceMap.putIfAbsent(role, new HashSet<>());
-                        roleResourceMap.get(role).add(resource);
-                    }
+                mappings.stream().forEach(mapping -> {
+                    String resource = mapping.getId().getResourceId();
+                    Set<String> roles = mapping.getRoles();
+                    roles.stream().forEach(role -> {
+                        if (allRoles || allowedRoles.contains(role)) {
+                            roleResourceMap.putIfAbsent(role, new HashSet<>());
+                            roleResourceMap.get(role).add(resource);
+                        }
+                    });
                 });
-            });
 
-            roleResourceMap.forEach((role, resources) -> response.addMapping(role, resources));
-            log.info("{} Mapped role-resource mappings for appUUID - {}. [New mappings : {}]", appUUID, mappings.size());
+                roleResourceMap.forEach((role, resources) -> response.addMapping(role, resources));
+                log.info("{} Mapped role-resource mappings for appUUID - {}. [New mappings : {}]", LOG_TEXT, appUUID, mappings.size());
 
-        } else
-            log.info("{} Fetched NO role-resource mappings for appUUID - {}", appUUID);
+            } else
+                log.info("{} Fetched NO role-resource mappings for appUUID - {}", LOG_TEXT, appUUID);
 
-        return response;
+            return response;
+        } catch (Exception exception) {
+            log.error("{} Encountered exception fetching mappings", LOG_TEXT_ERROR, exception);
+            throw ApplicationException.builder().
+                    errorMessage(exception.getMessage()).
+                    status(HttpStatus.INTERNAL_SERVER_ERROR).
+                    build();
+        }
     }
 
     /**

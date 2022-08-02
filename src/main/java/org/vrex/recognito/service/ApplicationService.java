@@ -5,7 +5,6 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
@@ -13,7 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.vrex.recognito.config.ApplicationConstants;
 import org.vrex.recognito.entity.Application;
 import org.vrex.recognito.model.ApplicationException;
-import org.vrex.recognito.model.Message;
 import org.vrex.recognito.model.dto.ApplicationDTO;
 import org.vrex.recognito.model.dto.ApplicationIdentifier;
 import org.vrex.recognito.model.dto.UpsertApplicationRequest;
@@ -83,7 +81,7 @@ public class ApplicationService {
         }
 
         log.info("{} Fetching secret invite for app {}", LOG_TEXT, appUUID);
-        Application application = applicationRepository.findApplicationSecret(appUUID);
+        Application application = applicationRepository.findApplicationSecretForAppUUID(appUUID);
         if (ObjectUtils.isEmpty(application)) {
             log.error("{} Could not locate application {}", LOG_TEXT_ERROR, appUUID);
             throw ApplicationException.builder().

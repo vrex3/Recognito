@@ -19,7 +19,7 @@ import java.util.regex.Pattern;
 @SuppressWarnings("unused")
 public class ResourceIndex implements Serializable {
 
-    private static final String RESOURCE_STRING_REGEX = "/^[a-zA-Z0-9_]{0,40}$/";
+    private static final String RESOURCE_STRING_REGEX = "^[a-zA-Z0-9_]{0,15}$";
     private static final Pattern RESOURCE_PATTERN = Pattern.compile(RESOURCE_STRING_REGEX);
 
     @Field("appUUID")

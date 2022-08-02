@@ -25,7 +25,6 @@ import java.time.LocalDateTime;
 public class User implements Serializable {
 
     @Id
-    @Field("userId")
     private String id;
 
     @EqualsAndHashCode.Include
@@ -78,7 +77,7 @@ public class User implements Serializable {
         this.onboardedOn = ApplicationConstants.currentTime();
         this.updatedOn = onboardedOn;
         this.application = application;
-        this.role = application.isResourcesEnabled() ? role : null;
+        this.role = role;
     }
 
     /**
