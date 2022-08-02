@@ -7,181 +7,478 @@
 	},
 	"item": [
 		{
-			"name": "Upsert App",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"name\": \"test_app_1\",\n    \"description\": \"test data application\"\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://localhost:8040/application",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8040",
-					"path": [
-						"application"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Get App",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "http://localhost:8040/application?appName=test_app_2",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8040",
-					"path": [
-						"application"
-					],
-					"query": [
-						{
-							"key": "appName",
-							"value": "test_app_2"
+			"name": "System APIs",
+			"item": [
+				{
+					"name": "User",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "lgkQ2g6mwnXMte7vPDNCLRbyl+5uZj6bEEI6mZO0RKI=",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "recognito_dev_1",
+									"type": "string"
+								}
+							]
 						},
-						{
-							"key": "appUUID",
-							"value": null,
-							"disabled": true
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{activeHost}}/app/user",
+							"host": [
+								"{{activeHost}}"
+							],
+							"path": [
+								"app",
+								"user"
+							]
 						}
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Get users for app",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "http://localhost:8040/user/application?appUUID=865c02c4-97d2-41ab-8824-ae7ec1af24da",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8040",
-					"path": [
-						"user",
-						"application"
-					],
-					"query": [
-						{
-							"key": "appName",
-							"value": "test_app_1",
-							"disabled": true
-						},
-						{
-							"key": "appUUID",
-							"value": "865c02c4-97d2-41ab-8824-ae7ec1af24da"
-						}
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Create User",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"username\": \"test_user_1\",\n    \"email\": \"test_email@gmail.com\",\n    \"appIdentifier\": \"test_app_1\"\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://localhost:8040/user/",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8040",
-					"path": [
-						"user",
-						""
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Generate Token",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "http://localhost:8040/user/token/generate?username=test_user_1",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8040",
-					"path": [
-						"user",
-						"token",
-						"generate"
-					],
-					"query": [
-						{
-							"key": "username",
-							"value": "test_user_1"
-						}
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Authenticate Token",
-			"request": {
-				"method": "GET",
-				"header": [
-					{
-						"key": "x-auth-token",
-						"value": "eyJjdHkiOiJKV1QiLCJlbmMiOiJBMjU2R0NNIiwiYWxnIjoiUlNBLU9BRVAtMjU2In0.kSX0IK0PtpA3BfPJOyHFSfjM4AwxCDwSxFWlNLnzNomYG3WDurjjUdu2Zc9cNnaBjcPurOla3TqSL2sbGFVR1fXwUeK00tissKe_31R-XP3FPZvjQC4uaKL0QC-X9EgGTOmaBuxXBZn7tBYuHxm0Zj-G9dhS8Tcq0v-RVdFb5KgbXkOOoLp81bkQ5q5iwt8ko7BVHfcAviLIciYrnvGDlzjEJhjbIcL8NKWpajabL8KYfxHkERHA3vmM3VyD5cpcDxk7aRZ0vUC-si-pReO8xMhdJZe3pYowuzqXDB-nyRFzWejEWfR3QilF8U2IFxDuMbYOLa4Gfo9hGJm2-CRl9A.uOHErad8vd9sWqNv.mnUKPAP849dqqHNcZUMvAE4icvTEaN746cf871O4WcIa0e8zauxSw_ddbmXdZ2G2nCKYWL5s4ugf83Zg0cBFxqwyOImwx90joYLayHm0xMl5RZREapNXsZzJA-eBAXwHzGOTdbxyUUJP6GP8N9YQCG_RQUczYopyPuOHV9bGAUne1WXTdBuj3RJDA1NCclYQPij0_fiEbA89YCsNdQJuLqYsPYIUeFPWH3wIusIZnOfbZiGaJggDk3GoIqQTroQy8zEcyV4MoDWX8K16qpywQHmyG_dQLO01FRRtIxCGDQdV0PvU5Ptp3vJJy1plyVk_2uvPIF04PR8mU_QGDF0z8gTIVwOywILjOkhWn40c-ct9VDbaTYmUDPL9ab6fubdfSB1EXeCY8_vd_wt5WOakSzueOXdmZnT3rcfxgD1wO7XDvg_u71EZDswGCnksTc14gQfK791xW6DJ8WaZoj3uYRUK-4Fm_qPwvb0LselLGP6hU_1AR-8vK5qZqDApYyM6Fq8x7EzkCFzSPcVr-p-tsw1oZr6snvLnhXs4BbrE2EXOe5T1f8NiABpYCAbR2SrQjaEVWQv-T-yr12_zouUVSDOXv9KOB7ZQNfQi4qngE_vw4c9CWkvK0zfRhen68rF-BYtG475EZ4XU5aGWXRIxDQJe79x6k4_gb668pABorccNk0jXGk3DqqZGuC1lVAc2F-g8abJkxbkRfVVjbcnnpPEHgcqh1M-y4TijIHIPvn-N2v25zexC_sm42Z6nX26RS3hbvSV3o4i6GHUrFGZaqNk_4Q22R6zp_8TFR7XY36yFyj5CocPJ.baoRw_IuPvR_IQSED7iUmg",
-						"type": "text"
 					},
-					{
-						"key": "x-app-uuid",
-						"value": "865c02c4-97d2-41ab-8824-ae7ec1af24da",
-						"type": "text"
-					}
-				],
-				"url": {
-					"raw": "http://localhost:8040/user/token/authenticate",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8040",
-					"path": [
-						"user",
-						"token",
-						"authenticate"
-					]
+					"response": []
+				},
+				{
+					"name": "Create System User",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"admin\",\n    \"email\": \"test_email@gmail.com\",\n    \"appIdentifier\": \"recognito\",\n    \"role\": \"SYS_ADMIN\",\n    \"appInvite\": \"BSklEZ4Sn9v0ufY/7PN0X6hlYZGehZcu5oF/itcex1AIlXeMLwg+reeZKDKZRnvYU9cepvccDmDwD2ywwy7T3LiPpslTpgFw3CGG506JxM46QYhoeQTspl7vxn538l7dSPZNd0xncNbNT4quMBnrBsMMsBlJPnoNXiZZEEIDHNqTJbECUAGbQoQiqZ/57NzD7nvflKsd2EVyObssHBAXD4TZ1R/aW+z4t1w0/I0t0RJpWe0BSFXjbdvxqqaExE0IvOAt6/GTtgk+g7iGmM1+/1hG1y5cgmzMz/NG/VKqOLZqIL2uzGtIJgyNJm7BVLfKyxzq6wn51Hkr+lB+mOEaFg==\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{activeHost}}/user",
+							"host": [
+								"{{activeHost}}"
+							],
+							"path": [
+								"user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "App",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "QVYciZqD+JYqG2vVmTVRPvhPKekAdjYauKD9ssIyqmA=",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "admin",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{activeHost}}/application?appName=recognito",
+							"host": [
+								"{{activeHost}}"
+							],
+							"path": [
+								"application"
+							],
+							"query": [
+								{
+									"key": "appName",
+									"value": "recognito"
+								},
+								{
+									"key": "appUUID",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Upsert App",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"test_app_2\",\n    \"description\": \"test data application\",\n    \"resourcesEnabled\": true\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{activeHost}}/application",
+							"host": [
+								"{{activeHost}}"
+							],
+							"path": [
+								"application"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Users for app",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{activeHost}}/user/application?appUUID=865c02c4-97d2-41ab-8824-ae7ec1af24da",
+							"host": [
+								"{{activeHost}}"
+							],
+							"path": [
+								"user",
+								"application"
+							],
+							"query": [
+								{
+									"key": "appName",
+									"value": "test_app_1",
+									"disabled": true
+								},
+								{
+									"key": "appUUID",
+									"value": "865c02c4-97d2-41ab-8824-ae7ec1af24da"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "App Invite",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "QVYciZqD+JYqG2vVmTVRPvhPKekAdjYauKD9ssIyqmA=",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "admin",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{activeHost}}/application/invite?appUUID=ebe0a04c-0361-4d9b-8bde-aec521f56b96",
+							"host": [
+								"{{activeHost}}"
+							],
+							"path": [
+								"application",
+								"invite"
+							],
+							"query": [
+								{
+									"key": "appUUID",
+									"value": "ebe0a04c-0361-4d9b-8bde-aec521f56b96"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Role Resource Mapping",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "QVYciZqD+JYqG2vVmTVRPvhPKekAdjYauKD9ssIyqmA=",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "admin",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"appUUID\": \"955e732a-0e80-45b6-aba4-16db72c5332f\",\n    \"mappings\": [\n        {\n            \"role\": \"APP_DEVELOPER\",\n            \"resources\": {\n                \"res1\": \"resourceDescription1\",\n                \"res2\": \"resourceDescription2\",\n                \"res3\": \"resourceDescription3\"\n            }\n        }\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{activeHost}}/app/role/mapping",
+							"host": [
+								"{{activeHost}}"
+							],
+							"path": [
+								"app",
+								"role",
+								"mapping"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Role",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "QVYciZqD+JYqG2vVmTVRPvhPKekAdjYauKD9ssIyqmA=",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "admin",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{activeHost}}/app/role/mapping?appUUID=955e732a-0e80-45b6-aba4-16db72c5332f",
+							"host": [
+								"{{activeHost}}"
+							],
+							"path": [
+								"app",
+								"role",
+								"mapping"
+							],
+							"query": [
+								{
+									"key": "role",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "appUUID",
+									"value": "955e732a-0e80-45b6-aba4-16db72c5332f"
+								}
+							]
+						}
+					},
+					"response": []
 				}
-			},
-			"response": []
+			]
+		},
+		{
+			"name": "Client APIs",
+			"item": [
+				{
+					"name": "Create Client User",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"admin_client_1\",\n    \"email\": \"test_email_1@gmail.com\",\n    \"appIdentifier\": \"test_app_1\",\n    \"role\": \"APP_DEVELOPER\",\n    \"appInvite\": \"fi4PDA1GBkILUOO3UhiHw0OP8s7ANu409D9wSxrVAT6joF+GHB1S4XZAAU/i6Dywc9s2VhgkDCWKALZoCbBrDoxLjaM0L8FFnfJt5PG5AauWoS5RR0Bxyon8hSmnsK0y/ydm6B3xf1kKfz/BSMxK138WB1YqPIe27XueUA4VUEqcnr8BbSmHU70joDcdej5oboAsMBGKqKhr3t3OtMVa1fqOvO+/B/SHl1adfenbL47xPRBvfJd6m3YowNmUQv8vuQFXWP/8U6xJI2S9XGtLNNAnynxmF5grcDu10L9kxAjn9MRdLkiqDupk20fOT0zsatZaT3kxsLhmU+lqOMrNmg==\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{activeHost}}/user",
+							"host": [
+								"{{activeHost}}"
+							],
+							"path": [
+								"user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Generate Token",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "g4D5QURAtkXjfUvclhUOvpckfaZZhnIf46Gt9HfpX+I=",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "test_dev_client_2",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{activeHost}}/app/user/token/generate?username=recognito_admin",
+							"host": [
+								"{{activeHost}}"
+							],
+							"path": [
+								"app",
+								"user",
+								"token",
+								"generate"
+							],
+							"query": [
+								{
+									"key": "username",
+									"value": "recognito_admin"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Authorize Token",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "g4D5QURAtkXjfUvclhUOvpckfaZZhnIf46Gt9HfpX+I=",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "test_dev_client_2",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-auth-token",
+								"value": "eyJjdHkiOiJKV1QiLCJlbmMiOiJBMjU2R0NNIiwiYWxnIjoiUlNBLU9BRVAtMjU2In0.FczoaIRYN2jrvfL1kvWnuEUcZkcJbEAJUMpOvsxGnIC6ugAGRoV-eHuhQDCrI39A6fIn7Cibu9G7kG4trNmwKTmlk-0XmHXdkV0xhKc-2cKn5czlxsVLkd4Rck8Ylz2jzcQZnsbVYk9c8-zPNSZ86r19kcNU5DULN2LslXsNaY80ekasCh_vwHhxlqdSLw71Z3zX6buCzJPMgUSoMBO7FJTuzoCbP87izXRN7G-jzjP785g7GdHio6cjvL1iZwW911lIhjuPtKBbqp5e-pTLCbXZWPT4Y_ceMHcw-X568HBjNQQk2fzf59I3HWbk7jdjyY0I_qbyerq2RkKYh2Gvzg.O_nTDCUK3h9Oib2j.mXnmY1LgOgajiXQE88XvYiJPKrSz9llhBx85niSVD2Lqtb_7cWmSeMHWQrCijbaO8QgIbAUdec00o6iw1yi1lDxOs0nwdEarR2NAz034TafsI19AtayI-lc0C3ulw74rZ0xfEkUJnfg3LYcNKTmQNm1_0ZDpXROHgGT--C2zGlAyJ0mifPR3cblsERDUzJqSuPO5wzYSoMmNARSjkiQ2VUoMfks7u_EJGTiDC3bfBDDe3VuQeq7ia6C9r-0JZlYGL4dDFgQQMJNJMjlu5C9s-OkELeByppdmyS33UtToaQB-3-hfgPemqUH7CN33SS_inoA918oH88wxYsx8iK8w21lal0wIEZ1TPP7gS__KHMEM-m6-O_-QgvYUZQSW9VoYRPC7wcKP8Vvy8QQ3ryZhDtcRYzOLTdOW_ugwCQNq2zhSL9O_jDGU2AGcL6cYTcmHkz5D3bj5YrB2w7IjisTsS9sNo6Vt9MHalPGfN5jdsVsEsTQroJsOVBRyDyZ7Mlvbw2CjIAR8Z7wNzApZEG_db0ZayBAncG9-LfQIuIeJx8T8sOgZ1lvMAFzefsiFD0PjOEbK4iTm2uhq4UBO4gI6PIme00qtsXfo8zw4hG6OLYC8RQHBTBIsrNtctI6fgIZjHgILUfUi-rz5LHSDzNOeacTUjf2gEEOmXw5xN5lW3QOEgStgyhEyUEtFJ0wTFHHrfvUaIXxklgg2F5t8eDBZnY1KqCFpcW33XmLPRhchDdkgwT0Vjg1OAZiyLamnN-gZPIBQRJUOnoz9baArgifhREwuho2U3NmoSPWpOB_swjmUcsd4hd98IlzNmvB0574iDnEbGkjGpPfqAYw3Rzg2mP3jLzuX8sge8YQhxy_WdEp5VnjYogT17ifebQuqz_OQmzvweaWXhCBLtSaEx2W8YFDHkAQ.n_b41QVSdgy3E57mKQ5nzw",
+								"type": "text"
+							},
+							{
+								"key": "x-app-uuid",
+								"value": "2308dc5a-6475-4d09-8747-99d379a398a3",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{activeHost}}/app/user/token/authorize?resource=res1",
+							"host": [
+								"{{activeHost}}"
+							],
+							"path": [
+								"app",
+								"user",
+								"token",
+								"authorize"
+							],
+							"query": [
+								{
+									"key": "resource",
+									"value": "res1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login User",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "lgkQ2g6mwnXMte7vPDNCLRbyl+5uZj6bEEI6mZO0RKI=",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "recognito_dev_1",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{activeHost}}/app/user/login",
+							"host": [
+								"{{activeHost}}"
+							],
+							"path": [
+								"app",
+								"user",
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "activeHost",
+			"value": "http://localhost:8040",
+			"type": "string"
 		}
 	]
 }
