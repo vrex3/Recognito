@@ -243,7 +243,7 @@ public class TokenUtil {
 
         claims.claim(EMAIL, user.getEmail());
         claims.claim(PROFILE_VERSION, user.getVersion());
-        claims.claim(RESOURCES_ENABLED, application.isResourcesEnabled());
+        claims.claim(RESOURCES_ENABLED, Boolean.toString(application.isResourcesEnabled()));
 
         if (user.getApplication().isResourcesEnabled())
             claims.claim(ROLE, user.getRole());

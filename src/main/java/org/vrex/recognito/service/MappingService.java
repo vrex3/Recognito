@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @Slf4j
 @Service
@@ -79,11 +80,15 @@ public class MappingService {
 
                 if (mappings != null && mappings.size() > 0) {
 
+                    /**
+                     * Parse the request the build resourceDescMap
+                     * resourceDescMap : resource -> resource description
+                     * The objective of the map is to reverse the mapping from the request (role -> [resource] to resource -> [role])
+                     * This is done so as to match the schema (which is resource + appUUID -> [role]
+                     * appUUID is constant throught this module
+                     */
                     mappings.stream().forEach(mapping -> {
 
-                        /**
-                         * resourceDescMap : resource -> resource description
-                         */
                         Map<String, String> resourceDescMap = mapping.getResources();
                         String role = mapping.getRole();
 
@@ -97,14 +102,38 @@ public class MappingService {
                         });
                     });
 
+                    /**
+                     * Fetch existing mappings (any if found) for appUUID and all provided resources
+                     * Build list of ResourceIndex keeping appUUID constant
+                     * Build resourceMapping : resourceID -> ResourceAppMap
+                     * Use this map to look up for existing entity while parsing resourceRoleMap to build newMappings
+                     * Add any modified ResourceAppMap to newMappings
+                     * Update newMappings to DB
+                     *
+                     */
+
+                    Iterable<ResourceAppMap> iterableMappings = mappingRepository.findAllById(request.getResourceIndices());
+                    List<ResourceAppMap> existingMappings = iterableMappings != null ? StreamSupport.stream(iterableMappings.spliterator(), false)
+                            .collect(Collectors.toList()) : new LinkedList<>();
+
+                    Map<String, ResourceAppMap> resourceMapping = new HashMap<>();
+                    existingMappings.stream().forEach(mapping -> resourceMapping.put(mapping.getId().getResourceId(), mapping));
+
                     resourceRoleMap.forEach(
-                            (resource, roles) -> newMappings.add(
-                                    new ResourceAppMap(
+                            (resource, roles) -> {
+                                ResourceAppMap currentMapping = resourceMapping.getOrDefault(resource, null);
+                                if (currentMapping == null) {
+                                    currentMapping = new ResourceAppMap(
                                             application,
                                             resource,
                                             resourceDescriptionMap.get(resource).stream().collect(Collectors.joining(". ")),
                                             roles
-                                    )));
+                                    );
+                                } else {
+                                    currentMapping.addRoles(roles);
+                                }
+                                newMappings.add(currentMapping);
+                            });
 
                     log.info("{} MAPPING CREATOR : Mapped roles to resources for appUUID - {}", appUUID);
 
@@ -121,7 +150,7 @@ public class MappingService {
                 log.info("{} MAPPING CREATOR : Updating mappings for appUUID - {} . [New mappings : {}]", appUUID, newMappings.size());
 
                 mappingRepository.saveAll(newMappings);
-                //response.setRoleMappings(getRoleResourceMappingForApplication(appUUID));
+                response.setRoleMappings(getRoleResourceMappingForApplication(appUUID));
             } else {
                 log.info("{} MAPPING CREATOR : No mappings to update for appUUID - {} . [New mappings : {}]", appUUID);
             }

@@ -5,12 +5,14 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.vrex.recognito.config.ApplicationConstants;
+import org.vrex.recognito.entity.ResourceIndex;
 
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @AllArgsConstructor
@@ -35,5 +37,9 @@ public class RoleResourceMapping implements Serializable {
      */
     public void addMapping(String role, Set<String> resources) {
         this.mappings.add(new RoleResourceMap(role, resources));
+    }
+
+    public List<ResourceIndex> getResourceIndices() {
+        return mappings != null ? mappings.stream().map(mapping -> new ResourceIndex(appUUID, mapping.getRole())).collect(Collectors.toList()) : new LinkedList<>();
     }
 }
