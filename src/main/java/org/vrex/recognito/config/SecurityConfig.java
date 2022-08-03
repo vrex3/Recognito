@@ -19,9 +19,9 @@ import org.vrex.recognito.security.UserAuthenticationProvider;
 import org.vrex.recognito.utility.RoleUtil;
 
 @Slf4j
+@EnableWebSecurity
 @Configuration
 @SuppressWarnings("unused")
-@EnableWebSecurity
 public class SecurityConfig {
 
     private static final String LOG_TEXT = "Security-Setup : ";
