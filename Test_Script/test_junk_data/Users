@@ -1,0 +1,32 @@
+Users
+
+Recognito Admin
+
+{
+    "username": "admin",
+    "email": "test_email@gmail.com",
+    "appUUID": "ebe0a04c-0361-4d9b-8bde-aec521f56b96",
+    "appName": "recognito",
+    "version": "v1",
+    "onboardedOn": "2022-08-02T12:32:06.048552",
+    "updatedOn": "2022-08-02T12:32:06.048552",
+    "resourcesEnabled": false,
+    "secret": "QVYciZqD+JYqG2vVmTVRPvhPKekAdjYauKD9ssIyqmA="
+}
+
+
+App Admin
+
+{
+    "username": "admin_client_1",
+    "email": "test_email_1@gmail.com",
+    "role": "APP_DEVELOPER",
+    "appUUID": "955e732a-0e80-45b6-aba4-16db72c5332f",
+    "appName": "test_app_1",
+    "version": "v1",
+    "onboardedOn": "2022-08-02T12:38:03.560709",
+    "updatedOn": "2022-08-02T12:38:03.560709",
+    "resourcesEnabled": false,
+    "secret": "Cq5n/AmUuUy4vPWdYP/kYkhMCRkMLb19v+Vfowgl/FI="
+}
+
