@@ -6,9 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import org.vrex.recognito.model.ApplicationException;
-import org.vrex.recognito.model.Message;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;
@@ -27,15 +25,15 @@ public class AppExceptionHandler {
      * @return
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    protected ResponseEntity<Message> handleMethodArgumentNotValid(MethodArgumentNotValidException exception) {
+    protected ResponseEntity<?> handleMethodArgumentNotValid(MethodArgumentNotValidException exception) {
         String validationFailureList = "[" + exception.getAllErrors().stream().map(error -> error.getDefaultMessage()).collect(Collectors.joining(",")) + "]";
 
         log.error(GENERIC_ERROR_MESSAGE + validationFailureList, exception);
 
-        return new ResponseEntity<>(Message.builder().
-                text(GENERIC_ERROR_MESSAGE + validationFailureList).
-                build(),
-                HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(
+                GENERIC_ERROR_MESSAGE + validationFailureList,
+                HttpStatus.INTERNAL_SERVER_ERROR
+        );
     }
 
 
@@ -46,7 +44,7 @@ public class AppExceptionHandler {
      * @return
      */
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<Message> handleGenericException(Exception exception) {
+    public ResponseEntity<?> handleGenericException(Exception exception) {
         if (exception.getMessage() != null)
             log.error(GENERIC_ERROR_MESSAGE, exception);
         else
@@ -56,8 +54,10 @@ public class AppExceptionHandler {
                             map(stackTrace -> stackTrace.toString()).
                             collect(Collectors.joining("\n")), exception);
 
-        return new ResponseEntity<>(Message.builder().text(GENERIC_ERROR_MESSAGE).build(),
-                HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(
+                GENERIC_ERROR_MESSAGE,
+                HttpStatus.INTERNAL_SERVER_ERROR
+        );
     }
 
     /**
@@ -67,10 +67,10 @@ public class AppExceptionHandler {
      * @return
      */
     @ExceptionHandler(ApplicationException.class)
-    public ResponseEntity<Message> handleCustomException(ApplicationException exception) {
+    public ResponseEntity<?> handleCustomException(ApplicationException exception) {
         log.error("{} {} : {}", GENERIC_ERROR_MESSAGE, exception.getErrorMessage(), exception.getStatus() != null ? exception.getStatus() : HttpStatus.INTERNAL_SERVER_ERROR);
         return new ResponseEntity<>(
-                Message.builder().text(exception.getErrorMessage() != null ? exception.getErrorMessage() : GENERIC_ERROR_MESSAGE).build(),
+                exception.getErrorMessage() != null ? exception.getErrorMessage() : GENERIC_ERROR_MESSAGE,
                 exception.getStatus() != null ? exception.getStatus() : HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
