@@ -1,5 +1,7 @@
 package org.vrex.recognito.utility;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.nimbusds.jose.EncryptionMethod;
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JWEAlgorithm;
@@ -27,18 +29,14 @@ import org.vrex.recognito.entity.User;
 import org.vrex.recognito.model.ApplicationException;
 import org.vrex.recognito.model.TokenPayload;
 import org.vrex.recognito.model.UserToken;
+import org.vrex.recognito.repository.ApplicationRepository;
 
+import javax.annotation.PostConstruct;
 import java.security.interfaces.RSAPublicKey;
 import java.security.spec.InvalidKeySpecException;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.UUID;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import org.vrex.recognito.repository.ApplicationRepository;
-
-import javax.annotation.PostConstruct;
 
 @Slf4j
 @Component
@@ -72,16 +70,16 @@ public class TokenUtil {
      * Extracts application from user entity
      * Token signed by application RSA private key
      * Token encrypted by application RSA public key
-     * Token encoded in wrapper containing appUUID and jsonified
+     * Token encoded in wrapper containing appUUID
      *
      * @param user
      * @return
      */
-    public String generateToken(User user) {
+    public UserToken generateToken(User user) {
         String username = user.getUsername();
         log.info("{} Generating token for user {}", LOG_TEXT, username);
 
-        String token = null;
+        UserToken userToken = null;
         try {
             Application application = user.getApplication();
 
@@ -120,7 +118,7 @@ public class TokenUtil {
             tokenWrapper.encrypt(new RSAEncrypter((RSAPublicKey) keyUtil.extractPublicKey(application)));
 
             log.info("{} Encoding token with appUUID information for user {} - [{}:{}]", LOG_TEXT, username, application.getAppUUID(), appName);
-            token = gson.toJson(new UserToken(application, tokenWrapper));
+            userToken = new UserToken(application, tokenWrapper);
 
         } catch (InvalidKeySpecException exception) {
             log.error("{} Encountered InvalidKeySpecException generating token for user {}", LOG_TEXT_ERROR, username, exception);
@@ -139,7 +137,7 @@ public class TokenUtil {
         }
 
         log.debug("{} Generated token for user {}", LOG_TEXT, username);
-        return token;
+        return userToken;
     }
 
     /**

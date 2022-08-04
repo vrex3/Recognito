@@ -11,15 +11,16 @@ import org.vrex.recognito.config.ApplicationConstants;
 import org.vrex.recognito.entity.Application;
 import org.vrex.recognito.entity.User;
 import org.vrex.recognito.model.ApplicationException;
+import org.vrex.recognito.model.UserToken;
 import org.vrex.recognito.model.dto.ApplicationIdentifier;
 import org.vrex.recognito.model.dto.ApplicationUserListDTO;
 import org.vrex.recognito.model.dto.InsertUserRequest;
 import org.vrex.recognito.model.dto.UserDTO;
 import org.vrex.recognito.repository.ApplicationRepository;
 import org.vrex.recognito.repository.UserRepository;
-import org.vrex.recognito.utility.TokenUtil;
 import org.vrex.recognito.utility.KeyUtil;
 import org.vrex.recognito.utility.RoleUtil;
+import org.vrex.recognito.utility.TokenUtil;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -189,10 +190,10 @@ public class UserService {
      * @param username
      * @return
      */
-    public String generateTokenForUser(String username) {
+    public UserToken generateTokenForUser(String username) {
         log.info("{} Token Generator - Received request to generate token for user - {}", LOG_TEXT, username);
 
-        String token = null;
+        UserToken token = null;
         try {
             log.info("{} Token Generator - Extracting user details from repository - {}", LOG_TEXT, username);
             User user = userRepository.getUserByName(username);
