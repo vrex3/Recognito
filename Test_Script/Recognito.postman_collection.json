@@ -299,78 +299,6 @@
 			"name": "Client APIs",
 			"item": [
 				{
-					"name": "TPA Demo",
-					"item": [
-						{
-							"name": "Authorization_check_1",
-							"request": {
-								"auth": {
-									"type": "basic",
-									"basic": [
-										{
-											"key": "password",
-											"value": "OBW4Xe7FQHloQxc6w9cXPjm6N3GGXiY3gUPr8vdWcSE=",
-											"type": "string"
-										},
-										{
-											"key": "username",
-											"value": "test_user_1",
-											"type": "string"
-										}
-									]
-								},
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{clientAppHost}}/user/authorize/resource1",
-									"host": [
-										"{{clientAppHost}}"
-									],
-									"path": [
-										"user",
-										"authorize",
-										"resource1"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Login User",
-							"request": {
-								"auth": {
-									"type": "basic",
-									"basic": [
-										{
-											"key": "password",
-											"value": "OBW4Xe7FQHloQxc6w9cXPjm6N3GGXiY3gUPr8vdWcSE=",
-											"type": "string"
-										},
-										{
-											"key": "username",
-											"value": "test_user_1",
-											"type": "string"
-										}
-									]
-								},
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{clientAppHost}}/user/login",
-									"host": [
-										"{{clientAppHost}}"
-									],
-									"path": [
-										"user",
-										"login"
-									]
-								}
-							},
-							"response": []
-						}
-					]
-				},
-				{
 					"name": "Generate Token",
 					"request": {
 						"auth": {
@@ -494,6 +422,78 @@
 							],
 							"path": [
 								"client",
+								"user",
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Third Party App Client",
+			"item": [
+				{
+					"name": "Authorization_check_1",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "OBW4Xe7FQHloQxc6w9cXPjm6N3GGXiY3gUPr8vdWcSE=",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "test_user_1",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{clientAppHost}}/user/authorize/resource1",
+							"host": [
+								"{{clientAppHost}}"
+							],
+							"path": [
+								"user",
+								"authorize",
+								"resource1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login User",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "OBW4Xe7FQHloQxc6w9cXPjm6N3GGXiY3gUPr8vdWcSE=",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "test_user_1",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{clientAppHost}}/user/login",
+							"host": [
+								"{{clientAppHost}}"
+							],
+							"path": [
 								"user",
 								"login"
 							]
