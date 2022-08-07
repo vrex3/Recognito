@@ -54,6 +54,8 @@ public class UserService {
      * ALWAYS USE THIS METHOD TO FETCH USER DTO
      * Wraps user in userDTO object
      * Drops user secret
+     * MUST BE CALLED FROM AUTHENTICATED POINT
+     *
      * <p>
      * SHOULD BE MADE REDUNDANT AFTER SECRET/PASSWORD EMAIL TRIGGER
      *
