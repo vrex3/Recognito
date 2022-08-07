@@ -40,6 +40,7 @@ public class UserDTO implements Serializable {
             this.appName = ObjectUtils.isEmpty(user.getApplication()) ? null : user.getApplication().getName();
             this.appUUID = ObjectUtils.isEmpty(user.getApplication()) ? null : user.getApplication().getAppUUID();
             this.role = ObjectUtils.isEmpty(user.getApplication()) || !user.getApplication().isResourcesEnabled() ? null : user.getRole();
+            this.resourcesEnabled = ObjectUtils.isEmpty(user.getApplication()) ? false : user.getApplication().isResourcesEnabled();
             this.version = user.getVersion();
             this.onboardedOn = user.getOnboardedOn();
             this.updatedOn = user.getUpdatedOn();
