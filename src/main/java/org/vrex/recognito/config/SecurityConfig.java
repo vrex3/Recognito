@@ -90,9 +90,12 @@ public class SecurityConfig {
             log.info("{} Set up [STATELESS] Authentication Manager with custom authentication provider", LOG_TEXT);
 
             log.info("{} Setting up [STATELESS] http request security parsing", LOG_TEXT);
-            http.cors().and().csrf().disable()
+            http.cors()
+                    .and()
+                    .csrf().disable()
                     .authenticationManager(authenticationManager)
-                    .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
+                    .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                    .and()
                     .authorizeRequests()
 
                     .antMatchers(HttpMethod.POST, "/application").permitAll()
@@ -108,8 +111,10 @@ public class SecurityConfig {
 
                     .anyRequest().authenticated()
 
-                    .and().formLogin()
-                    .and().httpBasic();
+                    .and()
+                    .formLogin()
+                    .and()
+                    .httpBasic();
 
             log.info("{} Set up [STATELESS] http request security parsing", LOG_TEXT);
 
