@@ -1,0 +1,53 @@
+Test Run
+
+App
+
+{
+    "id": "test_app_3",
+    "name": "test_app_3",
+    "description": "test data application",
+    "appUUID": "9965ffea-8ae0-41c9-9ed9-fcc9e87620b8",
+    "onboardedOn": "2022-08-04T12:47:26.350277",
+    "updatedOn": "2022-08-04T12:47:26.350277"
+}
+
+
+Invite secret : 3kuMK1mhNDL4BkXCSMqVi5MMruBBgoUT5SVVwp7tCnn1YfhfEpumHo2+V2e+Ob8lhMhownMMwbOF9toNcLan1FEQ9gIB1cnurxTXfN4SSNkhKqcY8mfd3nNnOddN1LhWUkWhMBifDrpaJENkvmIpwiP57LXT9LvLU92JVb/8G3Svde0w33wAjmo9HCAV79CAHmyeIKPhisBJA5HHjqCyXBTJ3BKC559jC14k3g2CjEXHsLHrmaNZG4GL3Jn+IM7B5wGcKXN8vux69VQ9vgB9MzdVnLjwdfseSt8/u2pbNh3dG59/3JGFNed8LTxHdxDFWs8XwuguUVWOYOJ7ejwzvQ==
+
+
+User [Developer]
+
+{
+    "username": "test_user_1",
+    "email": "test_email_1@gmail.com",
+    "role": "APP_DEVELOPER",
+    "appUUID": "9965ffea-8ae0-41c9-9ed9-fcc9e87620b8",
+    "appName": "test_app_3",
+    "version": "v1",
+    "onboardedOn": "2022-08-04T12:48:56.179379",
+    "updatedOn": "2022-08-04T12:48:56.179379",
+    "resourcesEnabled": false,
+    "secret": "OBW4Xe7FQHloQxc6w9cXPjm6N3GGXiY3gUPr8vdWcSE="
+}
+
+
+User [Admin]
+
+{
+    "username": "test_user_2",
+    "email": "test_email_1@gmail.com",
+    "role": "APP_ADMIN",
+    "appUUID": "9965ffea-8ae0-41c9-9ed9-fcc9e87620b8",
+    "appName": "test_app_3",
+    "version": "v1",
+    "onboardedOn": "2022-08-04T12:49:23.404798",
+    "updatedOn": "2022-08-04T12:49:23.404798",
+    "resourcesEnabled": false,
+    "secret": "B5mrNx03tuJSpmaoYV9IjnQz2t/IrfqJf1Rwh0LV2DM="
+}
+
+
+
+response jsession example
+Set-Cookie : JSESSIONID=21559FED9D6B164731B6554F75DFC036; Path=/; HttpOnly
+

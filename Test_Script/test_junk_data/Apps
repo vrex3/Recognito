@@ -1,0 +1,25 @@
+Apps
+
+Recognito
+
+{
+    "id": "recognito",
+    "name": "recognito",
+    "description": "host application",
+    "appUUID": "ebe0a04c-0361-4d9b-8bde-aec521f56b96",
+    "onboardedOn": "2022-08-02T12:10:13.810269",
+    "updatedOn": "2022-08-02T12:10:13.810269"
+}
+
+
+Test App
+
+{
+    "id": "test_app_1",
+    "name": "test_app_1",
+    "description": "test application",
+    "appUUID": "955e732a-0e80-45b6-aba4-16db72c5332f",
+    "onboardedOn": "2022-08-02T12:10:54.273821",
+    "updatedOn": "2022-08-02T12:10:54.273821"
+}
+

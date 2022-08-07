@@ -1,0 +1,539 @@
+{
+	"info": {
+		"_postman_id": "ad3964d6-99a5-4f5c-984b-0cffa9322f48",
+		"name": "Recognito",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "3896502"
+	},
+	"item": [
+		{
+			"name": "System APIs",
+			"item": [
+				{
+					"name": "User",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "OBW4Xe7FQHloQxc6w9cXPjm6N3GGXiY3gUPr8vdWcSE=",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "test_user_1",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{activeHost}}/system/user",
+							"host": [
+								"{{activeHost}}"
+							],
+							"path": [
+								"system",
+								"user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create System User",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"admin\",\n    \"email\": \"test_email@gmail.com\",\n    \"appIdentifier\": \"recognito\",\n    \"role\": \"SYS_ADMIN\",\n    \"appInvite\": \"BSklEZ4Sn9v0ufY/7PN0X6hlYZGehZcu5oF/itcex1AIlXeMLwg+reeZKDKZRnvYU9cepvccDmDwD2ywwy7T3LiPpslTpgFw3CGG506JxM46QYhoeQTspl7vxn538l7dSPZNd0xncNbNT4quMBnrBsMMsBlJPnoNXiZZEEIDHNqTJbECUAGbQoQiqZ/57NzD7nvflKsd2EVyObssHBAXD4TZ1R/aW+z4t1w0/I0t0RJpWe0BSFXjbdvxqqaExE0IvOAt6/GTtgk+g7iGmM1+/1hG1y5cgmzMz/NG/VKqOLZqIL2uzGtIJgyNJm7BVLfKyxzq6wn51Hkr+lB+mOEaFg==\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{activeHost}}/system/user",
+							"host": [
+								"{{activeHost}}"
+							],
+							"path": [
+								"system",
+								"user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "App",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "QVYciZqD+JYqG2vVmTVRPvhPKekAdjYauKD9ssIyqmA=",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "admin",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{activeHost}}/application?appName=recognito",
+							"host": [
+								"{{activeHost}}"
+							],
+							"path": [
+								"application"
+							],
+							"query": [
+								{
+									"key": "appName",
+									"value": "recognito"
+								},
+								{
+									"key": "appUUID",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Upsert App",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"test_app_2\",\n    \"description\": \"test data application\",\n    \"resourcesEnabled\": true\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{activeHost}}/application",
+							"host": [
+								"{{activeHost}}"
+							],
+							"path": [
+								"application"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Users for app",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{activeHost}}/user/application?appUUID=865c02c4-97d2-41ab-8824-ae7ec1af24da",
+							"host": [
+								"{{activeHost}}"
+							],
+							"path": [
+								"user",
+								"application"
+							],
+							"query": [
+								{
+									"key": "appName",
+									"value": "test_app_1",
+									"disabled": true
+								},
+								{
+									"key": "appUUID",
+									"value": "865c02c4-97d2-41ab-8824-ae7ec1af24da"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "App Invite",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "QVYciZqD+JYqG2vVmTVRPvhPKekAdjYauKD9ssIyqmA=",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "admin",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{activeHost}}/application/invite?appUUID=ebe0a04c-0361-4d9b-8bde-aec521f56b96",
+							"host": [
+								"{{activeHost}}"
+							],
+							"path": [
+								"application",
+								"invite"
+							],
+							"query": [
+								{
+									"key": "appUUID",
+									"value": "ebe0a04c-0361-4d9b-8bde-aec521f56b96"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Role Resource Mapping",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "QVYciZqD+JYqG2vVmTVRPvhPKekAdjYauKD9ssIyqmA=",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "admin",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"appUUID\": \"955e732a-0e80-45b6-aba4-16db72c5332f\",\n    \"mappings\": [\n        {\n            \"role\": \"APP_DEVELOPER\",\n            \"resources\": {\n                \"res1\": \"resourceDescription1\",\n                \"res2\": \"resourceDescription2\",\n                \"res3\": \"resourceDescription3\"\n            }\n        }\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{activeHost}}/app/role/mapping",
+							"host": [
+								"{{activeHost}}"
+							],
+							"path": [
+								"app",
+								"role",
+								"mapping"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Role",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "QVYciZqD+JYqG2vVmTVRPvhPKekAdjYauKD9ssIyqmA=",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "admin",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{activeHost}}/app/role/mapping?role=APP_DEVELOPER&appUUID=2308dc5a-6475-4d09-8747-99d379a398a3",
+							"host": [
+								"{{activeHost}}"
+							],
+							"path": [
+								"app",
+								"role",
+								"mapping"
+							],
+							"query": [
+								{
+									"key": "role",
+									"value": "APP_DEVELOPER"
+								},
+								{
+									"key": "appUUID",
+									"value": "2308dc5a-6475-4d09-8747-99d379a398a3"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Client APIs",
+			"item": [
+				{
+					"name": "Generate Token",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "g4D5QURAtkXjfUvclhUOvpckfaZZhnIf46Gt9HfpX+I=",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "test_dev_client_2",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{activeHost}}/client/user/token/generate?username=recognito_admin&tokenAsJson=false",
+							"host": [
+								"{{activeHost}}"
+							],
+							"path": [
+								"client",
+								"user",
+								"token",
+								"generate"
+							],
+							"query": [
+								{
+									"key": "username",
+									"value": "recognito_admin"
+								},
+								{
+									"key": "tokenAsJson",
+									"value": "false"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Authorize Token",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "g4D5QURAtkXjfUvclhUOvpckfaZZhnIf46Gt9HfpX+I=",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "test_dev_client_2",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-auth-token",
+								"value": "eyJjdHkiOiJKV1QiLCJlbmMiOiJBMjU2R0NNIiwiYWxnIjoiUlNBLU9BRVAtMjU2In0.FczoaIRYN2jrvfL1kvWnuEUcZkcJbEAJUMpOvsxGnIC6ugAGRoV-eHuhQDCrI39A6fIn7Cibu9G7kG4trNmwKTmlk-0XmHXdkV0xhKc-2cKn5czlxsVLkd4Rck8Ylz2jzcQZnsbVYk9c8-zPNSZ86r19kcNU5DULN2LslXsNaY80ekasCh_vwHhxlqdSLw71Z3zX6buCzJPMgUSoMBO7FJTuzoCbP87izXRN7G-jzjP785g7GdHio6cjvL1iZwW911lIhjuPtKBbqp5e-pTLCbXZWPT4Y_ceMHcw-X568HBjNQQk2fzf59I3HWbk7jdjyY0I_qbyerq2RkKYh2Gvzg.O_nTDCUK3h9Oib2j.mXnmY1LgOgajiXQE88XvYiJPKrSz9llhBx85niSVD2Lqtb_7cWmSeMHWQrCijbaO8QgIbAUdec00o6iw1yi1lDxOs0nwdEarR2NAz034TafsI19AtayI-lc0C3ulw74rZ0xfEkUJnfg3LYcNKTmQNm1_0ZDpXROHgGT--C2zGlAyJ0mifPR3cblsERDUzJqSuPO5wzYSoMmNARSjkiQ2VUoMfks7u_EJGTiDC3bfBDDe3VuQeq7ia6C9r-0JZlYGL4dDFgQQMJNJMjlu5C9s-OkELeByppdmyS33UtToaQB-3-hfgPemqUH7CN33SS_inoA918oH88wxYsx8iK8w21lal0wIEZ1TPP7gS__KHMEM-m6-O_-QgvYUZQSW9VoYRPC7wcKP8Vvy8QQ3ryZhDtcRYzOLTdOW_ugwCQNq2zhSL9O_jDGU2AGcL6cYTcmHkz5D3bj5YrB2w7IjisTsS9sNo6Vt9MHalPGfN5jdsVsEsTQroJsOVBRyDyZ7Mlvbw2CjIAR8Z7wNzApZEG_db0ZayBAncG9-LfQIuIeJx8T8sOgZ1lvMAFzefsiFD0PjOEbK4iTm2uhq4UBO4gI6PIme00qtsXfo8zw4hG6OLYC8RQHBTBIsrNtctI6fgIZjHgILUfUi-rz5LHSDzNOeacTUjf2gEEOmXw5xN5lW3QOEgStgyhEyUEtFJ0wTFHHrfvUaIXxklgg2F5t8eDBZnY1KqCFpcW33XmLPRhchDdkgwT0Vjg1OAZiyLamnN-gZPIBQRJUOnoz9baArgifhREwuho2U3NmoSPWpOB_swjmUcsd4hd98IlzNmvB0574iDnEbGkjGpPfqAYw3Rzg2mP3jLzuX8sge8YQhxy_WdEp5VnjYogT17ifebQuqz_OQmzvweaWXhCBLtSaEx2W8YFDHkAQ.n_b41QVSdgy3E57mKQ5nzw",
+								"type": "text"
+							},
+							{
+								"key": "x-app-uuid",
+								"value": "2308dc5a-6475-4d09-8747-99d379a398a3",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{activeHost}}/client/user/token/authorize?x-resource=res1",
+							"host": [
+								"{{activeHost}}"
+							],
+							"path": [
+								"client",
+								"user",
+								"token",
+								"authorize"
+							],
+							"query": [
+								{
+									"key": "x-resource",
+									"value": "res1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login User",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "OBW4Xe7FQHloQxc6w9cXPjm6N3GGXiY3gUPr8vdWcSE=",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "test_user_1",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{activeHost}}/client/user/login",
+							"host": [
+								"{{activeHost}}"
+							],
+							"path": [
+								"client",
+								"user",
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Third Party App Client",
+			"item": [
+				{
+					"name": "Authorization_check_1",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "OBW4Xe7FQHloQxc6w9cXPjm6N3GGXiY3gUPr8vdWcSE=",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "test_user_1",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{clientAppHost}}/user/authorize/resource1",
+							"host": [
+								"{{clientAppHost}}"
+							],
+							"path": [
+								"user",
+								"authorize",
+								"resource1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login User",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "OBW4Xe7FQHloQxc6w9cXPjm6N3GGXiY3gUPr8vdWcSE=",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "test_user_1",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{clientAppHost}}/user/login",
+							"host": [
+								"{{clientAppHost}}"
+							],
+							"path": [
+								"user",
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "activeHost",
+			"value": "http://localhost:8040",
+			"type": "string"
+		},
+		{
+			"key": "clientAppHost",
+			"value": "http://localhost:8080",
+			"type": "string"
+		}
+	]
+}

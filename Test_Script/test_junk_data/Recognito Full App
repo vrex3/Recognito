@@ -1,0 +1,33 @@
+Recognito Full App
+
+{
+  "_id": "recognito",
+  "appName": "recognito",
+  "description": "host application",
+  "appUUID": "ebe0a04c-0361-4d9b-8bde-aec521f56b96",
+  "appSecret": "BSklEZ4Sn9v0ufY/7PN0X6hlYZGehZcu5oF/itcex1AIlXeMLwg+reeZKDKZRnvYU9cepvccDmDwD2ywwy7T3LiPpslTpgFw3CGG506JxM46QYhoeQTspl7vxn538l7dSPZNd0xncNbNT4quMBnrBsMMsBlJPnoNXiZZEEIDHNqTJbECUAGbQoQiqZ/57NzD7nvflKsd2EVyObssHBAXD4TZ1R/aW+z4t1w0/I0t0RJpWe0BSFXjbdvxqqaExE0IvOAt6/GTtgk+g7iGmM1+/1hG1y5cgmzMz/NG/VKqOLZqIL2uzGtIJgyNJm7BVLfKyxzq6wn51Hkr+lB+mOEaFg==",
+  "resourcesEnabled": false,
+  "publicKey": {
+    "$binary": {
+      "base64": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwwVGYIOmq8r/8Vntq6hegWW8f8+TTGW501dfEMqUwHsts8eYw1GvG4CwMe9FE6uJcv0CXkFWA8AH9KwUMlm9cfugF+g5j2qAF8SPLnXkKZLxgzP/o/Iw0JKFUfIgO7hR3iHBXLU2n0M+6/9ZZI1e99WHI5UpOo8KaxERQpIM+Sn6Y1SVS+Ce4CitLxRmW7ziyEYk/mbZ/RL+SuRLgto5k2lgDmLtuky2gwtCbbAh6z/SAXXxLMv7m5zNoZqib+p7jJc8WvhqOcDN6gv1y4QZESyETnPStLIfPd5SbN54b95ByfzUX0G8mMNNZokHl2QTPZKzXWO4Ojypegte/rvi2QIDAQAB",
+      "subType": "00"
+    }
+  },
+  "privateKey": {
+    "$binary": {
+      "base64": "MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDDBUZgg6aryv/xWe2rqF6BZbx/z5NMZbnTV18QypTAey2zx5jDUa8bgLAx70UTq4ly/QJeQVYDwAf0rBQyWb1x+6AX6DmPaoAXxI8udeQpkvGDM/+j8jDQkoVR8iA7uFHeIcFctTafQz7r/1lkjV731YcjlSk6jwprERFCkgz5KfpjVJVL4J7gKK0vFGZbvOLIRiT+Ztn9Ev5K5EuC2jmTaWAOYu26TLaDC0JtsCHrP9IBdfEsy/ubnM2hmqJv6nuMlzxa+Go5wM3qC/XLhBkRLIROc9K0sh893lJs3nhv3kHJ/NRfQbyYw01miQeXZBM9krNdY7g6PKl6C17+u+LZAgMBAAECggEAC8uJIOO9hCTsO3D0tL3jb2CTmMhZcJSze0KMy6NxAT5B+p5fESsi099B6Nc/nouwrb17M++wL9xgrs3sj8oJMPhmy6NePdwTYLyg606yjMgoJscRll0a0jaWbSkfhXUlsHFqtDx6kAHdb6EbSz9Yp9UojgCixHmrx+N5n4TdV4F0/TEdqHAqVGElGLFls5vyqA1PEVBMDf7iAa9LxqPeXM84Rtqcf87gZZqE9CjLVymanliL7EkrBL3Opgh8jbfBDAcPhKq3AdUH1B4WDrX0ieyBZPUopy0ia4qAuqhajg8k7sFzxW7TVRkhDPhFfW/EUZ/cXiI+/1FY3lSUwh71zQKBgQDGcaSFV+rygCJ1fQf52QdSjCIlOlwHSPQxNNQySMUb5V6tDOfO21pjhb3pmaSzFN3BiHT78+IG/9J3NT7W1GcKbunId1AOL3LNJMFp2KZ6gx0t93olV7/h1qOHf/HzSc87C8j+C904PWJXhtGg7vw1u9pG5L3nnPzozs6uOI3IjQKBgQD7lXQB932wWB0+aB1qp0E+iNaBUOU6DbAiUXpcLHY4QufVcO4bqbhcnSwdOH23d2XXMFGG331aD9AgBT1KEYXxjtL1KIG1y22wGBQz9t6B5ysrS8hPjCO43OSWDVMA1cxwfeIJxn5Zo4HCmljd6tTN3jHov/mOs2luLpc3nX5OfQKBgQCNANzc3p6T1tYlU0Uik8JvNiFhAHm5t23DtPz+CdT8wFsobR4dTqGIS9SossJjePUk+ffduuok/QuoJo5TCbN5p1u4VIbuvWo+N9qygf2w2Y8XRVxmQlaWevPRaOkbbJuyIeqcEQQMXRmOhb5YMtfEuokbjJcfht3x8ljLVGXyVQKBgQCcT/R/EFWAjo7E6o10aazo/L5CJI/37O9Fs1gSEvH07OT8Qak/eMj6ihERqrq5li6pb/UHlq5cmbyXWIoHDjIprrK17dABsv5Yze0niDghgA7bXL99ZTYAswY3kNnEiBH4xs39gt2YNjX2Qk36u+AydN6PnU+h8SkNc1czD+CdRQKBgG9eqzl8B+Nz/dBQ09K39xXN8eHj/9ZtBYqjMk6+yE7vfNzA1gdtR7EyskJBEOLuIddXg/+wWzkBGcxftKko4PycJ1hZYdv3PsdLJCkeEie55Yq2BNspo9P/gBLaHoYsKu41iUjfNkeY6ZD60lBp/IS2uuy6NrVONV+WGVxx4zwM",
+      "subType": "00"
+    }
+  },
+  "onboardedOn": {
+    "$date": {
+      "$numberLong": "1659422413810"
+    }
+  },
+  "updatedOn": {
+    "$date": {
+      "$numberLong": "1659422413810"
+    }
+  },
+  "_class": "org.vrex.recognito.entity.Application"
+}
