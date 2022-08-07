@@ -51,7 +51,7 @@ public class SecurityConfig {
             log.info("{} Set up [STATEFUL] Authentication Manager with custom authentication provider", LOG_TEXT);
 
             log.info("{} Setting up [STATEFUL] http request security parsing", LOG_TEXT);
-            http.antMatcher("/app/user/**").cors().and().csrf().disable()
+            http.antMatcher("/client/user/**").cors().and().csrf().disable()
                     .authenticationManager(authenticationManager)
                     .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.ALWAYS).and()
 
@@ -102,9 +102,9 @@ public class SecurityConfig {
                     .antMatchers(HttpMethod.POST, "/app/role/mapping").hasAnyAuthority(RoleUtil.wrapRoles(Role.SYS_ADMIN, Role.SYS_DEVELOPER))
                     .antMatchers(HttpMethod.GET, "/app/role/mapping").hasAnyAuthority(RoleUtil.getSystemRoles())
 
-                    .antMatchers(HttpMethod.POST, "/user").permitAll()
-                    .antMatchers(HttpMethod.GET, "/user").hasAnyAuthority(RoleUtil.getSystemRoles())
-                    .antMatchers(HttpMethod.GET, "/user/application").hasAnyAuthority(RoleUtil.getSystemRoles())
+                    .antMatchers(HttpMethod.POST, "/system/user").permitAll()
+                    .antMatchers(HttpMethod.GET, "/system/user").hasAnyAuthority(RoleUtil.getSystemRoles())
+                    .antMatchers(HttpMethod.GET, "/system/user/application").hasAnyAuthority(RoleUtil.getSystemRoles())
 
                     .anyRequest().authenticated()
 

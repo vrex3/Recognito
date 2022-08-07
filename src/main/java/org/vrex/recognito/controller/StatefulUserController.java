@@ -18,7 +18,7 @@ import org.vrex.recognito.utility.HttpResponseUtil;
 import javax.annotation.PostConstruct;
 
 @RestController
-@RequestMapping(value = "/app/user")
+@RequestMapping(value = "/client/user")
 @SuppressWarnings("unused")
 public class StatefulUserController {
 
