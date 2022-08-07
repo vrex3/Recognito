@@ -45,3 +45,9 @@ User [Admin]
     "resourcesEnabled": false,
     "secret": "B5mrNx03tuJSpmaoYV9IjnQz2t/IrfqJf1Rwh0LV2DM="
 }
+
+
+
+response jsession example
+Set-Cookie : JSESSIONID=21559FED9D6B164731B6554F75DFC036; Path=/; HttpOnly
+

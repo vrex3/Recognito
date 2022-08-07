@@ -90,7 +90,7 @@ public class StatefulUserController {
     public ResponseEntity<?> authorizeToken(
             @RequestHeader(name = "x-app-uuid") String appUUID,
             @RequestHeader(name = "x-auth-token") String token,
-            @RequestParam(required = false) String resource) throws Exception {
+            @RequestParam(name = "x-resource", required = false) String resource) throws Exception {
 
         return HttpResponseUtil.returnRawPackageWithStatusOrElse(
                 userService.authorizeUser(appUUID, token, resource),
