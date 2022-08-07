@@ -21,7 +21,7 @@ import javax.validation.Valid;
 import java.util.Map;
 
 @RestController
-@RequestMapping(value = "/user")
+@RequestMapping(value = "/system/user")
 @SuppressWarnings("unused")
 public class StatelessUserController {
 

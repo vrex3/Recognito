@@ -17,12 +17,12 @@
 							"basic": [
 								{
 									"key": "password",
-									"value": "lgkQ2g6mwnXMte7vPDNCLRbyl+5uZj6bEEI6mZO0RKI=",
+									"value": "OBW4Xe7FQHloQxc6w9cXPjm6N3GGXiY3gUPr8vdWcSE=",
 									"type": "string"
 								},
 								{
 									"key": "username",
-									"value": "recognito_dev_1",
+									"value": "test_user_1",
 									"type": "string"
 								}
 							]
@@ -30,12 +30,12 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{activeHost}}/app/user",
+							"raw": "{{activeHost}}/system/user",
 							"host": [
 								"{{activeHost}}"
 							],
 							"path": [
-								"app",
+								"system",
 								"user"
 							]
 						}
@@ -57,11 +57,12 @@
 							}
 						},
 						"url": {
-							"raw": "{{activeHost}}/user",
+							"raw": "{{activeHost}}/system/user",
 							"host": [
 								"{{activeHost}}"
 							],
 							"path": [
+								"system",
 								"user"
 							]
 						}
@@ -269,7 +270,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{activeHost}}/app/role/mapping?appUUID=955e732a-0e80-45b6-aba4-16db72c5332f",
+							"raw": "{{activeHost}}/app/role/mapping?role=APP_DEVELOPER&appUUID=2308dc5a-6475-4d09-8747-99d379a398a3",
 							"host": [
 								"{{activeHost}}"
 							],
@@ -281,12 +282,11 @@
 							"query": [
 								{
 									"key": "role",
-									"value": "",
-									"disabled": true
+									"value": "APP_DEVELOPER"
 								},
 								{
 									"key": "appUUID",
-									"value": "955e732a-0e80-45b6-aba4-16db72c5332f"
+									"value": "2308dc5a-6475-4d09-8747-99d379a398a3"
 								}
 							]
 						}
@@ -299,30 +299,76 @@
 			"name": "Client APIs",
 			"item": [
 				{
-					"name": "Create Client User",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"username\": \"admin_client_1\",\n    \"email\": \"test_email_1@gmail.com\",\n    \"appIdentifier\": \"test_app_1\",\n    \"role\": \"APP_DEVELOPER\",\n    \"appInvite\": \"fi4PDA1GBkILUOO3UhiHw0OP8s7ANu409D9wSxrVAT6joF+GHB1S4XZAAU/i6Dywc9s2VhgkDCWKALZoCbBrDoxLjaM0L8FFnfJt5PG5AauWoS5RR0Bxyon8hSmnsK0y/ydm6B3xf1kKfz/BSMxK138WB1YqPIe27XueUA4VUEqcnr8BbSmHU70joDcdej5oboAsMBGKqKhr3t3OtMVa1fqOvO+/B/SHl1adfenbL47xPRBvfJd6m3YowNmUQv8vuQFXWP/8U6xJI2S9XGtLNNAnynxmF5grcDu10L9kxAjn9MRdLkiqDupk20fOT0zsatZaT3kxsLhmU+lqOMrNmg==\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
+					"name": "TPA Demo",
+					"item": [
+						{
+							"name": "Authorization_check_1",
+							"request": {
+								"auth": {
+									"type": "basic",
+									"basic": [
+										{
+											"key": "password",
+											"value": "OBW4Xe7FQHloQxc6w9cXPjm6N3GGXiY3gUPr8vdWcSE=",
+											"type": "string"
+										},
+										{
+											"key": "username",
+											"value": "test_user_1",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{clientAppHost}}/user/authorize/resource1",
+									"host": [
+										"{{clientAppHost}}"
+									],
+									"path": [
+										"user",
+										"authorize",
+										"resource1"
+									]
 								}
-							}
+							},
+							"response": []
 						},
-						"url": {
-							"raw": "{{activeHost}}/user",
-							"host": [
-								"{{activeHost}}"
-							],
-							"path": [
-								"user"
-							]
+						{
+							"name": "Login User",
+							"request": {
+								"auth": {
+									"type": "basic",
+									"basic": [
+										{
+											"key": "password",
+											"value": "OBW4Xe7FQHloQxc6w9cXPjm6N3GGXiY3gUPr8vdWcSE=",
+											"type": "string"
+										},
+										{
+											"key": "username",
+											"value": "test_user_1",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{clientAppHost}}/user/login",
+									"host": [
+										"{{clientAppHost}}"
+									],
+									"path": [
+										"user",
+										"login"
+									]
+								}
+							},
+							"response": []
 						}
-					},
-					"response": []
+					]
 				},
 				{
 					"name": "Generate Token",
@@ -345,12 +391,12 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{activeHost}}/app/user/token/generate?username=recognito_admin",
+							"raw": "{{activeHost}}/client/user/token/generate?username=recognito_admin&tokenAsJson=false",
 							"host": [
 								"{{activeHost}}"
 							],
 							"path": [
-								"app",
+								"client",
 								"user",
 								"token",
 								"generate"
@@ -359,6 +405,10 @@
 								{
 									"key": "username",
 									"value": "recognito_admin"
+								},
+								{
+									"key": "tokenAsJson",
+									"value": "false"
 								}
 							]
 						}
@@ -397,19 +447,19 @@
 							}
 						],
 						"url": {
-							"raw": "{{activeHost}}/app/user/token/authorize?resource=res1",
+							"raw": "{{activeHost}}/client/user/token/authorize?x-resource=res1",
 							"host": [
 								"{{activeHost}}"
 							],
 							"path": [
-								"app",
+								"client",
 								"user",
 								"token",
 								"authorize"
 							],
 							"query": [
 								{
-									"key": "resource",
+									"key": "x-resource",
 									"value": "res1"
 								}
 							]
@@ -425,12 +475,12 @@
 							"basic": [
 								{
 									"key": "password",
-									"value": "lgkQ2g6mwnXMte7vPDNCLRbyl+5uZj6bEEI6mZO0RKI=",
+									"value": "OBW4Xe7FQHloQxc6w9cXPjm6N3GGXiY3gUPr8vdWcSE=",
 									"type": "string"
 								},
 								{
 									"key": "username",
-									"value": "recognito_dev_1",
+									"value": "test_user_1",
 									"type": "string"
 								}
 							]
@@ -438,12 +488,12 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{activeHost}}/app/user/login",
+							"raw": "{{activeHost}}/client/user/login",
 							"host": [
 								"{{activeHost}}"
 							],
 							"path": [
-								"app",
+								"client",
 								"user",
 								"login"
 							]
@@ -478,6 +528,11 @@
 		{
 			"key": "activeHost",
 			"value": "http://localhost:8040",
+			"type": "string"
+		},
+		{
+			"key": "clientAppHost",
+			"value": "http://localhost:8080",
 			"type": "string"
 		}
 	]
