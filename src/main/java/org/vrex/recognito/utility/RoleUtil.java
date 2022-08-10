@@ -20,6 +20,7 @@ public class RoleUtil {
     }
 
     private static final String SYSTEM_ROLE_IDENTIFIER = "SYS_";
+    private static final String CLIENT_ROLE_IDENTIFIER = "APP_";
     public static final String[] ALL_AUTHORITIES = Arrays.stream(Role.values()).map(Enum::name).toArray(String[]::new);
 
     /**
@@ -40,6 +41,16 @@ public class RoleUtil {
      */
     public static boolean isSystemRole(String role) {
         return StringUtils.isEmpty(role) ? false : role.startsWith(SYSTEM_ROLE_IDENTIFIER);
+    }
+
+    /**
+     * Checks whether a role is a system role
+     *
+     * @param role
+     * @return
+     */
+    public static boolean isClientRole(String role) {
+        return StringUtils.isEmpty(role) ? false : role.startsWith(CLIENT_ROLE_IDENTIFIER);
     }
 
     /**

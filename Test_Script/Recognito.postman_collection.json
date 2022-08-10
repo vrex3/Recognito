@@ -428,6 +428,25 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Register User",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{activeHost}}/client/user/register",
+							"host": [
+								"{{activeHost}}"
+							],
+							"path": [
+								"client",
+								"user",
+								"register"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -496,6 +515,41 @@
 							"path": [
 								"user",
 								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Register User",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{clientAppHost}}/user/register?username=demo_user_6&email=test_email_6@test.com&role=APP_USER",
+							"host": [
+								"{{clientAppHost}}"
+							],
+							"path": [
+								"user",
+								"register"
+							],
+							"query": [
+								{
+									"key": "username",
+									"value": "demo_user_6"
+								},
+								{
+									"key": "email",
+									"value": "test_email_6@test.com"
+								},
+								{
+									"key": "role",
+									"value": "APP_USER"
+								}
 							]
 						}
 					},
