@@ -51,20 +51,27 @@ public class SecurityConfig {
             log.info("{} Set up [STATEFUL] Authentication Manager with custom authentication provider", LOG_TEXT);
 
             log.info("{} Setting up [STATEFUL] http request security parsing", LOG_TEXT);
-            http.antMatcher("/client/user/**").cors().and().csrf().disable()
+            http.antMatcher("/client/user/**")
+                    .cors()
+                    .and()
+                    .csrf().disable()
                     .authenticationManager(authenticationManager)
-                    .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.ALWAYS).and()
+                    .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
+                    .and()
 
                     .authorizeRequests()
 
-                    .antMatchers(HttpMethod.GET, "/login").hasAnyAuthority(RoleUtil.getUserRoles())
-                    .antMatchers(HttpMethod.GET, "/token/generate").hasAnyAuthority(RoleUtil.ALL_AUTHORITIES)
-                    .antMatchers(HttpMethod.GET, "/token/authorize").hasAnyAuthority(RoleUtil.ALL_AUTHORITIES)
+                    .antMatchers(HttpMethod.POST, "/client/user/register").permitAll()
+                    .antMatchers(HttpMethod.GET, "/client/user/login").hasAnyAuthority(RoleUtil.getUserRoles())
+                    .antMatchers(HttpMethod.GET, "/client/user/token/generate").hasAnyAuthority(RoleUtil.ALL_AUTHORITIES)
+                    .antMatchers(HttpMethod.GET, "/client/user/token/authorize").hasAnyAuthority(RoleUtil.ALL_AUTHORITIES)
 
                     .anyRequest().authenticated()
 
-                    .and().formLogin()
-                    .and().httpBasic();
+                    .and()
+                    .formLogin()
+                    .and()
+                    .httpBasic();
 
             log.info("{} Set up [STATEFUL] http request security parsing", LOG_TEXT);
 

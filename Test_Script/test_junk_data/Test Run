@@ -46,6 +46,18 @@ User [Admin]
     "secret": "B5mrNx03tuJSpmaoYV9IjnQz2t/IrfqJf1Rwh0LV2DM="
 }
 
+{
+    "username": "demo_user_3",
+    "email": "test_email_2@gmail.com",
+    "role": "APP_ADMIN",
+    "appUUID": "9965ffea-8ae0-41c9-9ed9-fcc9e87620b8",
+    "appName": "test_app_3",
+    "version": "v1",
+    "onboardedOn": "2022-08-10T16:14:53.025994",
+    "updatedOn": "2022-08-10T16:14:53.025994",
+    "resourcesEnabled": true,
+    "secret": "taBH6Hf/HwjqWhtElWkHmenpOQDsWh/mzvIrHykeZCg="
+}
 
 
 response jsession example
