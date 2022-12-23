@@ -19,5 +19,5 @@
 ```
 
 **Flow**
-![Label](https://github.com/vrex3/Recognito/blob/master/Architecture/Upsert_Application.drawio.svg)
+![Alt text](https://github.com/vrex3/Recognito/blob/master/Architecture/Upsert_Application.drawio.png)
 
