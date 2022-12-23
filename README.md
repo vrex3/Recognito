@@ -22,3 +22,4 @@
 
 ![image](https://github.com/vrex3/Recognito/blob/master/Architecture/Upsert_Application.drawio.png?raw=true)
 
+![Upsert_Application drawio](https://user-images.githubusercontent.com/29248886/209365537-450a875f-f489-4e26-8f49-9e36193a8ea2.png)
