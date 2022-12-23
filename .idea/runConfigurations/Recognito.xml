@@ -1,0 +1,14 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Recognito" type="Application" factoryName="Application">
+    <envs>
+      <env name="RECOGNITO_DB" value="recognito" />
+      <env name="RECOGNITO_USER" value="recognito_admin" />
+      <env name="RECOGNITO_PWD" value="rec_itr1" />
+    </envs>
+    <option name="MAIN_CLASS_NAME" value="org.vrex.recognito.RecognitoApplication" />
+    <module name="recognito" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>
