@@ -12,12 +12,12 @@
 **Request Body**
 ```
 {
-    "name": *Application name*
-    "description": *Application description*
-    "resourcesEnabled": *true/false whether to allow resource locking to roles*
+    "name": Application name
+    "description": Application description
+    "resourcesEnabled": true/false whether to allow resource locking to roles
 }
 ```
 
 **Flow**
-![Label](relative link)
+![Label](https://github.com/vrex3/Recognito/blob/master/Architecture/Upsert_Application.drawio.svg)
 
