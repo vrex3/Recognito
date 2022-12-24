@@ -12,6 +12,11 @@ public class ApplicationConstants {
     }
 
     /**
+     * GENERIC CONSTANTS
+     */
+    public static final String ROOT_USER = "root_";
+
+    /**
      * DateTime CONSTANTS
      */
     public static final String DEFAULT_TIMEZONE = "UTC";

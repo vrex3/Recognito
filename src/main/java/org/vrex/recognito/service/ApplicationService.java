@@ -11,10 +11,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.vrex.recognito.config.ApplicationConstants;
 import org.vrex.recognito.entity.Application;
+import org.vrex.recognito.entity.Role;
 import org.vrex.recognito.model.ApplicationException;
 import org.vrex.recognito.model.dto.ApplicationDTO;
 import org.vrex.recognito.model.dto.ApplicationIdentifier;
+import org.vrex.recognito.model.dto.InsertUserRequest;
 import org.vrex.recognito.model.dto.UpsertApplicationRequest;
+import org.vrex.recognito.model.dto.UserDTO;
 import org.vrex.recognito.repository.ApplicationRepository;
 import org.vrex.recognito.utility.KeyUtil;
 
@@ -30,6 +33,9 @@ public class ApplicationService {
 
     @Autowired
     private ApplicationRepository applicationRepository;
+
+    @Autowired
+    private UserService userService;
 
     /**
      * AppUUID preffered to appName (IF BOTH PROVIDED)
@@ -118,17 +124,21 @@ public class ApplicationService {
         log.info("{} Attempting to create application {}", LOG_TEXT, name);
 
         Application application = null;
+        UserDTO rootUser = null;
 
         try {
             log.info("{} Checking existence of application {}", LOG_TEXT, name);
             application = applicationRepository.findApplicationByName(name);
 
             boolean altered = false;
+            boolean rootUserCreated = false;
+
             if (ObjectUtils.isEmpty(application)) {
                 log.info("{} Application does not exist. Creating new - {}", LOG_TEXT, name);
                 application = new Application(request);
                 keyUtil.populateApplicationSecrets(application);
                 altered = true;
+                rootUserCreated = true;
             } else {
                 log.info("{} Application does exist. Comparing data to request - {}", LOG_TEXT, name);
                 altered = areAppDetailsAltered(application, request);
@@ -136,6 +146,10 @@ public class ApplicationService {
             if (altered) {
                 log.info("{} Persisting Application in schema - {}", LOG_TEXT, name);
                 application = applicationRepository.save(application);
+            }
+            if (rootUserCreated) {
+                log.info("{} Persisting Root User in schema for app - {}", LOG_TEXT, name);
+                rootUser = userService.createUser(createRootUserRequest(request.getEmail(), application));
             }
         } catch (ApplicationException exception) {
             throw exception;
@@ -147,8 +161,24 @@ public class ApplicationService {
                     build();
         }
 
-        return new ApplicationDTO(application);
+        return new ApplicationDTO(application, rootUser);
 
+    }
+
+    /**
+     * Builds root user insert request with supplied user app admin email and app details
+     *
+     * @param email
+     * @param application
+     * @return
+     */
+    private InsertUserRequest createRootUserRequest(String email, Application application) {
+        return new InsertUserRequest(
+                ApplicationConstants.ROOT_USER + application.getAppUUID(),
+                email,
+                Role.APP_ADMIN.name(),
+                application.getName(),
+                application.getAppSecret());
     }
 
     /**

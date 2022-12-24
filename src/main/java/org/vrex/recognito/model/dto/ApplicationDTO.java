@@ -24,6 +24,8 @@ public class ApplicationDTO implements Serializable {
     private LocalDateTime updatedOn;
     private RoleResourceMapping roleMappings;
 
+    private UserDTO rootUser;
+
     public ApplicationDTO(Application application) {
         if (!ObjectUtils.isEmpty(application)) {
             this.id = application.getId();
@@ -32,6 +34,18 @@ public class ApplicationDTO implements Serializable {
             this.description = application.getDescription();
             this.onboardedOn = application.getOnboardedOn();
             this.updatedOn = application.getUpdatedOn();
+        }
+    }
+
+    public ApplicationDTO(Application application, UserDTO rootUser) {
+        if (!ObjectUtils.isEmpty(application)) {
+            this.id = application.getId();
+            this.appUUID = application.getAppUUID();
+            this.name = application.getName();
+            this.description = application.getDescription();
+            this.onboardedOn = application.getOnboardedOn();
+            this.updatedOn = application.getUpdatedOn();
+            this.rootUser = rootUser;
         }
     }
 

@@ -22,4 +22,6 @@ public class UpsertApplicationRequest implements Serializable {
 
     private boolean resourcesEnabled = true;
 
+    private String email;
+
 }
