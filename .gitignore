@@ -1,3 +1,8 @@
 
 .idea/compiler.xml
 target/classes/application.properties
+target/classes/org/vrex/recognito/config/ApplicationConstants.class
+target/classes/org/vrex/recognito/config/SecurityConfig.class
+target/classes/org/vrex/recognito/model/dto/ApplicationDTO.class
+target/classes/org/vrex/recognito/model/dto/UpsertApplicationRequest.class
+target/classes/org/vrex/recognito/service/ApplicationService.class
