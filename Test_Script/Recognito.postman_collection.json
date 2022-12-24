@@ -119,7 +119,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"name\": \"test_app_2\",\n    \"description\": \"test data application\",\n    \"resourcesEnabled\": true\n}",
+							"raw": "{\n    \"name\": \"test_app_2\",\n    \"description\": \"test data application\",\n    \"resourcesEnabled\": true,\n    \"email\": \"test_email@gmail.com\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -175,12 +175,12 @@
 							"basic": [
 								{
 									"key": "password",
-									"value": "QVYciZqD+JYqG2vVmTVRPvhPKekAdjYauKD9ssIyqmA=",
+									"value": "Q4210i+PNZuOYC95ZWTRhyhfzhEgCa9Fn2YeTZ9+iHU=",
 									"type": "string"
 								},
 								{
 									"key": "username",
-									"value": "admin",
+									"value": "root_eb01e2d2-2423-4be9-8624-02a2c8e79058",
 									"type": "string"
 								}
 							]
@@ -188,7 +188,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{activeHost}}/application/invite?appUUID=ebe0a04c-0361-4d9b-8bde-aec521f56b96",
+							"raw": "{{activeHost}}/application/invite?appUUID=eb01e2d2-2423-4be9-8624-02a2c8e79058",
 							"host": [
 								"{{activeHost}}"
 							],
@@ -199,7 +199,7 @@
 							"query": [
 								{
 									"key": "appUUID",
-									"value": "ebe0a04c-0361-4d9b-8bde-aec521f56b96"
+									"value": "eb01e2d2-2423-4be9-8624-02a2c8e79058"
 								}
 							]
 						}

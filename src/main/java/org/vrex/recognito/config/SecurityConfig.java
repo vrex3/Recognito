@@ -106,7 +106,7 @@ public class SecurityConfig {
                     .authorizeRequests()
 
                     .antMatchers(HttpMethod.POST, "/application").permitAll()
-                    .antMatchers(HttpMethod.GET, "/application/invite").hasAnyAuthority(RoleUtil.wrapRoles(Role.SYS_ADMIN, Role.SYS_DEVELOPER))
+                    .antMatchers(HttpMethod.GET, "/application/invite").hasAnyAuthority(RoleUtil.wrapRoles(Role.SYS_ADMIN, Role.SYS_DEVELOPER, Role.APP_ADMIN))
                     .antMatchers(HttpMethod.GET, "/application").hasAnyAuthority(RoleUtil.getSystemRoles())
 
                     .antMatchers(HttpMethod.POST, "/app/role/mapping").hasAnyAuthority(RoleUtil.wrapRoles(Role.SYS_ADMIN, Role.SYS_DEVELOPER))
