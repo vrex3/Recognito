@@ -23,7 +23,7 @@ public interface UserRepository extends MongoRepository<User, String> {
 
     @Query(value = "{userName: ?0}", count = true)
     public long countUser(String username);
-
+    
     /**
      * Checks whether a username is existing or not
      *

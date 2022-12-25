@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.vrex.recognito.config.ApplicationConstants;
 import org.vrex.recognito.entity.Application;
 import org.vrex.recognito.entity.Role;
+import org.vrex.recognito.entity.User;
 import org.vrex.recognito.model.ApplicationException;
 import org.vrex.recognito.model.dto.ApplicationDTO;
 import org.vrex.recognito.model.dto.ApplicationIdentifier;
@@ -19,6 +20,7 @@ import org.vrex.recognito.model.dto.InsertUserRequest;
 import org.vrex.recognito.model.dto.UpsertApplicationRequest;
 import org.vrex.recognito.model.dto.UserDTO;
 import org.vrex.recognito.repository.ApplicationRepository;
+import org.vrex.recognito.repository.UserRepository;
 import org.vrex.recognito.utility.KeyUtil;
 
 @Slf4j
@@ -33,6 +35,9 @@ public class ApplicationService {
 
     @Autowired
     private ApplicationRepository applicationRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Autowired
     private UserService userService;
@@ -97,6 +102,46 @@ public class ApplicationService {
         }
 
         log.info("{} Fetched secret invite for app {}", LOG_TEXT, appUUID);
+        return application.getAppSecret();
+    }
+
+    /**
+     * Returns the app invite secret for the app linked to a username
+     *
+     * @param username
+     * @return
+     */
+    public String findApplicationSecretForUser(String username) {
+
+        if (StringUtils.isEmpty(username)) {
+            log.error("{} Cannot fetch secret for empty username.", LOG_TEXT_ERROR);
+            throw ApplicationException.builder().
+                    errorMessage(ApplicationConstants.EMPTY_USERNAME).
+                    status(HttpStatus.INTERNAL_SERVER_ERROR).
+                    build();
+        }
+
+        log.info("{} Fetching secret invite for app linked to user {}", LOG_TEXT, username);
+        User user = userRepository.getUserByName(username);
+
+        if (ObjectUtils.isEmpty(user)) {
+            log.error("{} Could not locate user {}", LOG_TEXT_ERROR, username);
+            throw ApplicationException.builder().
+                    errorMessage(ApplicationConstants.INVALID_USER).
+                    status(HttpStatus.BAD_REQUEST).
+                    build();
+        }
+
+        Application application = user.getApplication();
+        if (ObjectUtils.isEmpty(application)) {
+            log.error("{} Could not locate application for user {}", LOG_TEXT_ERROR, username);
+            throw ApplicationException.builder().
+                    errorMessage(ApplicationConstants.APPLICATION_NOT_FOUND).
+                    status(HttpStatus.BAD_REQUEST).
+                    build();
+        }
+
+        log.info("{} Fetched secret invite for app {} linked to user {}", LOG_TEXT, application.getAppUUID(), username);
         return application.getAppSecret();
     }
 
