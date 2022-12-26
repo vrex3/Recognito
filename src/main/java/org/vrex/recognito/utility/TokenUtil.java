@@ -142,8 +142,6 @@ public class TokenUtil {
 
     /**
      * Extracts information from encoded token
-     * Extracts appUUID - uses this to fetch app RSA keys
-     * Throws 401 if app cannot be found
      * Decrypts token with app private key
      * Verifies signature with app public key
      * Populates payload with token claims information
@@ -151,27 +149,17 @@ public class TokenUtil {
      * <p>
      * TBA : User data verification?
      *
-     * @param appId
+     * @param application
      * @param token
      * @return
      */
-    public TokenPayload extractPayload(String appId, String token) {
-        log.info("{} Extracting user info from token for appId {}", LOG_TEXT, appId);
-
+    public TokenPayload extractPayload(Application application, String token) {
         TokenPayload payload = new TokenPayload();
+        String appId = application.getAppUUID();
+        log.info("{} Extracting user info from token for appId {}", LOG_TEXT, appId);
 
         try {
 
-            log.info("{} Extracting application details - {}", LOG_TEXT, appId);
-            Application application = applicationRepository.findApplicationByUUID(appId);
-
-            if (ObjectUtils.isEmpty(application)) {
-                log.error("{} Could not verify application identifier encoded in token - {}", appId);
-                throw ApplicationException.builder().
-                        errorMessage(ApplicationConstants.UNVERIFIED_APPLICATION_IN_TOKEN).
-                        status(HttpStatus.UNAUTHORIZED).
-                        build();
-            }
             log.info("{} Extracted application details - {}", LOG_TEXT, appId);
 
             log.info("{} Parsing token for app - {}", LOG_TEXT, appId);

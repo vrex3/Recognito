@@ -174,13 +174,13 @@
 							"type": "basic",
 							"basic": [
 								{
-									"key": "password",
-									"value": "Q4210i+PNZuOYC95ZWTRhyhfzhEgCa9Fn2YeTZ9+iHU=",
+									"key": "username",
+									"value": "admin",
 									"type": "string"
 								},
 								{
-									"key": "username",
-									"value": "root_eb01e2d2-2423-4be9-8624-02a2c8e79058",
+									"key": "password",
+									"value": "CVokgJShcvL2baVossqEdniV3zXHsLS4ZNDjUYIfKTU=",
 									"type": "string"
 								}
 							]
@@ -188,7 +188,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{activeHost}}/application/invite?appUUID=eb01e2d2-2423-4be9-8624-02a2c8e79058",
+							"raw": "{{activeHost}}/application/invite",
 							"host": [
 								"{{activeHost}}"
 							],
@@ -199,7 +199,8 @@
 							"query": [
 								{
 									"key": "appUUID",
-									"value": "eb01e2d2-2423-4be9-8624-02a2c8e79058"
+									"value": "5fdb1e83-84a4-49c6-8ecf-1f6968c9016c",
+									"disabled": true
 								}
 							]
 						}
@@ -306,12 +307,12 @@
 							"basic": [
 								{
 									"key": "password",
-									"value": "g4D5QURAtkXjfUvclhUOvpckfaZZhnIf46Gt9HfpX+I=",
+									"value": "eiVVEmvRhmqf8lypifH2nZkraf+gmc2hyj6VY6VKLds=",
 									"type": "string"
 								},
 								{
 									"key": "username",
-									"value": "test_dev_client_2",
+									"value": "user_31",
 									"type": "string"
 								}
 							]
@@ -319,7 +320,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{activeHost}}/client/user/token/generate?username=recognito_admin&tokenAsJson=false",
+							"raw": "{{activeHost}}/client/user/token/generate?tokenAsJson=false",
 							"host": [
 								"{{activeHost}}"
 							],
@@ -330,10 +331,6 @@
 								"generate"
 							],
 							"query": [
-								{
-									"key": "username",
-									"value": "recognito_admin"
-								},
 								{
 									"key": "tokenAsJson",
 									"value": "false"
@@ -351,12 +348,12 @@
 							"basic": [
 								{
 									"key": "password",
-									"value": "g4D5QURAtkXjfUvclhUOvpckfaZZhnIf46Gt9HfpX+I=",
+									"value": "d5JEPkovS4ZRYKjmoqEWULQqwcSzFvfc+HXHTZeYj1E=",
 									"type": "string"
 								},
 								{
 									"key": "username",
-									"value": "test_dev_client_2",
+									"value": "user_32",
 									"type": "string"
 								}
 							]
@@ -365,12 +362,7 @@
 						"header": [
 							{
 								"key": "x-auth-token",
-								"value": "eyJjdHkiOiJKV1QiLCJlbmMiOiJBMjU2R0NNIiwiYWxnIjoiUlNBLU9BRVAtMjU2In0.FczoaIRYN2jrvfL1kvWnuEUcZkcJbEAJUMpOvsxGnIC6ugAGRoV-eHuhQDCrI39A6fIn7Cibu9G7kG4trNmwKTmlk-0XmHXdkV0xhKc-2cKn5czlxsVLkd4Rck8Ylz2jzcQZnsbVYk9c8-zPNSZ86r19kcNU5DULN2LslXsNaY80ekasCh_vwHhxlqdSLw71Z3zX6buCzJPMgUSoMBO7FJTuzoCbP87izXRN7G-jzjP785g7GdHio6cjvL1iZwW911lIhjuPtKBbqp5e-pTLCbXZWPT4Y_ceMHcw-X568HBjNQQk2fzf59I3HWbk7jdjyY0I_qbyerq2RkKYh2Gvzg.O_nTDCUK3h9Oib2j.mXnmY1LgOgajiXQE88XvYiJPKrSz9llhBx85niSVD2Lqtb_7cWmSeMHWQrCijbaO8QgIbAUdec00o6iw1yi1lDxOs0nwdEarR2NAz034TafsI19AtayI-lc0C3ulw74rZ0xfEkUJnfg3LYcNKTmQNm1_0ZDpXROHgGT--C2zGlAyJ0mifPR3cblsERDUzJqSuPO5wzYSoMmNARSjkiQ2VUoMfks7u_EJGTiDC3bfBDDe3VuQeq7ia6C9r-0JZlYGL4dDFgQQMJNJMjlu5C9s-OkELeByppdmyS33UtToaQB-3-hfgPemqUH7CN33SS_inoA918oH88wxYsx8iK8w21lal0wIEZ1TPP7gS__KHMEM-m6-O_-QgvYUZQSW9VoYRPC7wcKP8Vvy8QQ3ryZhDtcRYzOLTdOW_ugwCQNq2zhSL9O_jDGU2AGcL6cYTcmHkz5D3bj5YrB2w7IjisTsS9sNo6Vt9MHalPGfN5jdsVsEsTQroJsOVBRyDyZ7Mlvbw2CjIAR8Z7wNzApZEG_db0ZayBAncG9-LfQIuIeJx8T8sOgZ1lvMAFzefsiFD0PjOEbK4iTm2uhq4UBO4gI6PIme00qtsXfo8zw4hG6OLYC8RQHBTBIsrNtctI6fgIZjHgILUfUi-rz5LHSDzNOeacTUjf2gEEOmXw5xN5lW3QOEgStgyhEyUEtFJ0wTFHHrfvUaIXxklgg2F5t8eDBZnY1KqCFpcW33XmLPRhchDdkgwT0Vjg1OAZiyLamnN-gZPIBQRJUOnoz9baArgifhREwuho2U3NmoSPWpOB_swjmUcsd4hd98IlzNmvB0574iDnEbGkjGpPfqAYw3Rzg2mP3jLzuX8sge8YQhxy_WdEp5VnjYogT17ifebQuqz_OQmzvweaWXhCBLtSaEx2W8YFDHkAQ.n_b41QVSdgy3E57mKQ5nzw",
-								"type": "text"
-							},
-							{
-								"key": "x-app-uuid",
-								"value": "2308dc5a-6475-4d09-8747-99d379a398a3",
+								"value": "eyJjdHkiOiJKV1QiLCJlbmMiOiJBMjU2R0NNIiwiYWxnIjoiUlNBLU9BRVAtMjU2In0.LAMZ5ZxNtqpx11-T2UCDhvB8a_EtYXKgDMc5-KbThS5pGXGSbuGqlzsbHB7zhCqhFOwKgqTFS88YYIJtlCz-q9-3PQG8khrzEON1MSUunzTde8IF9UkeH3VAbjMOJovxOgK41ZrDsNZZ1g9Z80ov-GdoU0PC7oASTIW5x8PFq30bSFeY63GQ3TnZQvEPF5ecdhVC9Y_G5d3lQmIqBb5VSfRTlaDWb63zQBGlaovle23MMPL_n7pGGcf3CgNTApjmu7kIX6nMTuf2Fx3XXbYqkXihac4AbWhn1MFsF85dNh9UyYoLOPUCio5kZZQuPk6awU6adOvZuOc-DZaFgoZ4yA.3gYXIRCa-FCaVHdK.AXksxRhz-47gijHPglXDimYJu-MFK3_nualdMlUaEX2WTVygLhz2k0rHyGsCei_bNMlsRUEIDmXUQliKET_CtuPwNQCxobbrcb7HCpmPMB_ektkyRzrgcUWN3FU1c8zETWtQ9h1DxxqwuwJ0D4IWSnE8dJe42EKdkuBAxmMC4AzMGOIEAVbfSFf86ec0z1c2r-l9od5DShG7PatSkVgqhdg_oSYeMacLDg1k7TU361h-O9pw2wBTvhQ1L3QpowF6qXWrjAwbGAK92LgcoZEYgUEqtL3ofhY0aTkMmVoAnOFK1_IKai7v5rDPTTAVRH_EoNZBgWL0x_COwtST9txGGQxH3oxhfVtTQ1MA3A91G10vHUkLf70sQ-bwopCFVWoNBFWzb5IxxxwnAHhyAdb4w1EEIvMWoP1-fuBGb89ym0DJvAUbQ4CGL9XwDqacPquwUnEI7zf2KChRR_qXlsFF-h9mI2MvfLcuJ_gYMXVzzCSb9o7MSvySTz1mUe7C688e1YaMDvTCPYffuDk--QAT3M6JZST81MA-5lHSmcHfxX0wqm4aqSc8vShq7v9GFcnE7ZcIouxCUcHM2HTDw7crwrXKCsR1-Pi38cIKVebooIe4qM7cKNWM2RbvYsdO0uQMLycKVIKeUaYvrCtYJcqgikhy3RLQN4MpsCnre8HOtU_VGUcTXj5HGC0DvesV5WyLzrT2LRW2aaSZdGRX8eIgq-CfPFwvMULQrJAK-k4gf1sH0_OLI6wgBIbC3NYQrFsYLh12mMFo2tD2I7W77TzOE5gIG2NjIZOoRxj2yDQnz_m38Z9wdPy2H223CHWa_539en51NPgYpKf5N8JSZam0EOK7W1v3c1R9NofuwOlmlSg16zYbUhRDLWaANA4GoqIPvcPPueoxnKn1NTt0-vY.I5nTqXzwqtjZaF_9gRLctQ",
 								"type": "text"
 							}
 						],
@@ -432,8 +424,20 @@
 				{
 					"name": "Register User",
 					"request": {
-						"method": "GET",
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
 						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"user_32\",\n    \"email\": \"test_email_32@gmail.com\",\n    \"appIdentifier\": \"test_app_3\",\n    \"role\": \"APP_DEVELOPER\",\n    \"appInvite\": \"u8bIv9WNkpzpJhy06Y8I6WaDzYmIzWYDXnh5UhrmjlNb7fkWGvouR+b1GEUdsQW4BaNyoBeonPnozd0ZgY8NLneTwJrlnBtGGOGu6AJwm9lgwR6OzT7jhJCRoyKSwcGJ0OjhIrlL1kwc8ImOCUV55h1m/1+JinOooCuum1nb8DfyHY58FDG33LIV5hgiELzcIkYgkPVRu9qitq1aGJsHXqbTV1qQ1MRYgw5X3hIJWJjTA6bgPlBQmcplfg1sTxNK0zrHJIV2QSJ9vmEpM9YhsjlAcMMAnEGVwNw4BxO2pRBGBlsz+iqYw2m8p7tbNPXCo7+8ucxhIbLecygtTGeryQ==\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
 							"raw": "{{activeHost}}/client/user/register",
 							"host": [

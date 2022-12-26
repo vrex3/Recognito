@@ -102,23 +102,23 @@ public class StatefulUserController {
     }
 
     /**
-     * App UUID accepted as part of request header : x-app-uuid
+     * Username gleaned from authentication principal
      * Token accepted as part of request header : x-auth-token
      * If token is authenticated, user info is returned
      *
-     * @param appUUID
+     * @param username
      * @param token
      * @return
      * @throws Exception
      */
     @GetMapping(value = "/token/authorize")
     public ResponseEntity<?> authorizeToken(
-            @RequestHeader(name = "x-app-uuid") String appUUID,
+            @AuthenticationPrincipal String username,
             @RequestHeader(name = "x-auth-token") String token,
             @RequestParam(name = "x-resource", required = false) String resource) throws Exception {
 
         return HttpResponseUtil.returnRawPackageWithStatusOrElse(
-                userService.authorizeUser(appUUID, token, resource),
+                userService.authorizeUser(username, token, resource),
                 HttpStatus.OK,
                 HttpStatus.UNAUTHORIZED
         );
