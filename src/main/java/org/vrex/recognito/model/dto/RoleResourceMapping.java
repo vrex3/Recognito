@@ -1,5 +1,6 @@
 package org.vrex.recognito.model.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -45,6 +46,7 @@ public class RoleResourceMapping implements Serializable {
      *
      * @return
      */
+    @JsonIgnore
     public List<ResourceIndex> getResourceIndices() {
         List<ResourceIndex> indices = new LinkedList<>();
         if (mappings != null) {
