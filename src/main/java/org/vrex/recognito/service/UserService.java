@@ -229,19 +229,40 @@ public class UserService {
      * Authenticates user information encoded in token
      * Returns userDTO
      *
-     * @param appUUID
+     * @param username
      * @param token
      * @param resource
      * @return
      */
-    public UserDTO authorizeUser(String appUUID, String token, String resource) {
-        log.info("{} Token Generator - Extracting token for appUUID {}", LOG_TEXT, appUUID);
+    public UserDTO authorizeUser(String username, String token, String resource) {
+        log.info("{} Token Generator - Extracting token for user {}", LOG_TEXT, username);
         if (resource != null)
-            log.info("{} Token Generator - Registered resource {} to check against token for appUUID {}", LOG_TEXT, resource, appUUID);
+            log.info("{} Token Generator - Registered resource {} to check against token for username {}", LOG_TEXT, resource, username);
 
-        UserDTO authenticatedUser = extractUserFromToken(appUUID, token);
+        log.info("{} Extracting saved data for logged in user {}", LOG_TEXT, username);
+        User user = userRepository.getUserByName(username);
+        Application application = user.getApplication();
+        if (ObjectUtils.isEmpty(application)) {
+            log.error("{} Unable to find any linked application for logged in user {}", LOG_TEXT, username);
+            throw ApplicationException.builder().
+                    errorMessage(ApplicationConstants.APPLICATION_NOT_FOUND).
+                    status(HttpStatus.NOT_FOUND).
+                    build();
+        }
+
+        String appUUID = application.getAppUUID();
+        UserDTO authenticatedUser = extractUserFromToken(application, token);
         log.info("{} Token Generator - Extracted user from token for appUUID {}", LOG_TEXT, appUUID);
 
+        log.info("{} Verifying token ownership for logged in user {}", username);
+        if (!username.equals(authenticatedUser.getUsername())) {
+            log.error("{} Unable to verify token ownership for logged in user {}", LOG_TEXT, username);
+            throw ApplicationException.builder().
+                    errorMessage(ApplicationConstants.INVALID_TOKEN_OWNERSHIP).
+                    status(HttpStatus.FORBIDDEN).
+                    build();
+        }
+        log.info("{} Verified token ownership for logged in user {}", username);
 
         if (authenticatedUser.isResourcesEnabled()) {
             log.info("{} Token Generator - Checking access to resource {} for authenticated user for appUUID {}", LOG_TEXT, resource, appUUID);
@@ -251,7 +272,7 @@ public class UserService {
                 log.error("{} Token Generator - User with role {} denied access to resource {} for appUUID {}", LOG_TEXT, authenticatedUser.getRole(), resource, appUUID);
                 throw ApplicationException.builder().
                         errorMessage(ApplicationConstants.ROLE_NOT_ALLOWED_RESOURCE).
-                        status(HttpStatus.UNAUTHORIZED).
+                        status(HttpStatus.FORBIDDEN).
                         build();
             }
         }
@@ -268,22 +289,23 @@ public class UserService {
      * <p>
      * OPTIONAL : Add validation of user data later
      *
-     * @param appUUID
+     * @param application
      * @param token
      * @return
      */
-    public UserDTO extractUserFromToken(String appUUID, String token) {
+    public UserDTO extractUserFromToken(Application application, String token) {
         UserDTO user = null;
         try {
 
-            if (StringUtils.isEmpty(appUUID)) {
-                log.error("{} Token Generator - Encountered empty appUUID ", LOG_TEXT_ERROR, appUUID);
+            if (ObjectUtils.isEmpty(application)) {
+                log.error("{} Token Generator - Encountered empty application", LOG_TEXT_ERROR);
                 throw ApplicationException.builder().
                         errorMessage(ApplicationConstants.EMPTY_APPLICATION_IDENTIFIER).
                         status(HttpStatus.UNAUTHORIZED).
                         build();
             }
 
+            String appUUID = application.getAppUUID();
             if (StringUtils.isEmpty(token)) {
                 log.error("{} Token Generator - Encountered empty token for appUUID {} ", LOG_TEXT_ERROR, appUUID);
                 throw ApplicationException.builder().
@@ -292,7 +314,7 @@ public class UserService {
                         build();
             }
 
-            user = new UserDTO(tokenUtil.extractPayload(appUUID, token));
+            user = new UserDTO(tokenUtil.extractPayload(application, token));
             log.info("{} Token Generator - Extracted payload from token for appUUID {}", LOG_TEXT, appUUID);
 
         } catch (ApplicationException exception) {
