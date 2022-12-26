@@ -16,6 +16,7 @@ import org.vrex.recognito.model.dto.RoleResourceMap;
 import org.vrex.recognito.model.dto.RoleResourceMapping;
 import org.vrex.recognito.repository.ApplicationRepository;
 import org.vrex.recognito.repository.MappingRepository;
+import org.vrex.recognito.repository.UserRepository;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -40,127 +41,157 @@ public class MappingService {
     @Autowired
     private MappingRepository mappingRepository;
 
+    @Autowired
+    private UserRepository userRepository;
+
     /**
-     * Accepts an appUUID and role->[resource] mapping
+     * Adds role-resource mappings for appUUID mentioned in request
+     * Intended to be used only from stateless mapping controller
+     * Request is presumed to be validated by controller
+     *
+     * @param request
+     * @return
+     */
+    public ApplicationDTO addRoleResourceMapping(RoleResourceMapping request) {
+        log.info("{} MAPPING CREATOR : Received role-resource mapping request for appUUID - {}", LOG_TEXT, request.getAppUUID());
+        return mapResourcesToRoleForApp(applicationRepository.findApplicationByUUID(request.getAppUUID()), request);
+    }
+
+    /**
+     * Adds role-resource mappings for appUUID linked to username
+     * Intended to be used from stateful user mapping controller
+     * Username is of logged in user
+     *
+     * @param username
+     * @param request
+     * @return
+     */
+    public ApplicationDTO addRoleResourceMapping(String username, RoleResourceMapping request) {
+        log.info("{} MAPPING CREATOR : Received role-resource mapping request for app linked to user - {}", LOG_TEXT, username);
+        return mapResourcesToRoleForApp(userRepository.getUserByName(username).getApplication(), request);
+    }
+
+    /**
+     * Accepts an application and role->[resource] mapping
      * Creates new resource->role mapping schema entries
      * Modifies exisiting resource-app entries
      * i.e. adds Role to resource if this role now owns this resource
      * Throws BAD REQUEST if application does not exist or does not allow resource mapping
      *
+     * @param application
      * @param request
      * @return
      */
     @Transactional
-    public ApplicationDTO addRoleResourceMapping(RoleResourceMapping request) {
+    private ApplicationDTO mapResourcesToRoleForApp(Application application, RoleResourceMapping request) {
+
+        if (ObjectUtils.isEmpty(application)) {
+            log.error("{} Unable to find application to register mappings", LOG_TEXT);
+            throw ApplicationException.builder().
+                    errorMessage(ApplicationConstants.APPLICATION_NOT_FOUND).
+                    status(HttpStatus.BAD_REQUEST).
+                    build();
+        }
 
         ApplicationDTO response = null;
-        String appUUID = request.getAppUUID();
+        String appUUID = application.getAppUUID();
+
+        if (!application.isResourcesEnabled()) {
+            log.error("{} Resource mapping for roles not allowed for appUUID {}", LOG_TEXT, appUUID);
+            throw ApplicationException.builder().
+                    errorMessage(ApplicationConstants.INVALID_APP_FOR_RESOURCES).
+                    status(HttpStatus.BAD_REQUEST).
+                    build();
+        }
 
         try {
 
-            log.info("{} MAPPING CREATOR : Received role-resource mapping request for appUUID - {}", appUUID);
-
-            Application application = applicationRepository.findApplicationByUUID(appUUID);
+            log.info("{} MAPPING CREATOR : Received role-resource mapping request for appUUID - {}", LOG_TEXT, appUUID);
             List<ResourceAppMap> newMappings = new LinkedList<>();
 
-            if (!ObjectUtils.isEmpty(application) && application.isResourcesEnabled()) {
-                log.info("{} MAPPING CREATOR : Extracted app with appUUID - {}", appUUID);
+            response = new ApplicationDTO(application);
 
-                response = new ApplicationDTO(application);
+            /**
+             * resourceRoleMap : resource -> [role]  <--> built to input new role resource mappings into db
+             * resourceDescriptionMap : resource -> [description]  <--> collects all descriptions of a resource,
+             *                                                          if multiple provided for multiple roles.
+             *
+             */
+            Map<String, Set<String>> resourceRoleMap = new HashMap<>();
+            Map<String, Set<String>> resourceDescriptionMap = new HashMap<>();
+
+            List<RoleResourceMap> mappings = request.getMappings();
+            log.info("{} MAPPING CREATOR : Mapping roles to resources for appUUID - {}", LOG_TEXT, appUUID);
+
+            if (mappings != null && mappings.size() > 0) {
 
                 /**
-                 * resourceRoleMap : resource -> [role]  <--> built to input new role resource mappings into db
-                 * resourceDescriptionMap : resource -> [description]  <--> collects all descriptions of a resource,
-                 *                                                          if multiple provided for multiple roles.
+                 * Parse the request the build resourceDescMap
+                 * resourceDescMap : resource -> resource description
+                 * The objective of the map is to reverse the mapping from the request (role -> [resource] to resource -> [role])
+                 * This is done so as to match the schema (which is resource + appUUID -> [role]
+                 * appUUID is constant throught this module
+                 */
+                mappings.stream().forEach(mapping -> {
+
+                    Map<String, String> resourceDescMap = mapping.getResources();
+                    String role = mapping.getRole();
+
+                    Set<String> resources = resourceDescMap != null ? resourceDescMap.keySet() : new HashSet<>();
+                    resources.stream().forEach(resource -> {
+                        resourceRoleMap.putIfAbsent(resource, new HashSet<>());
+                        resourceRoleMap.get(resource).add(role);
+
+                        resourceDescriptionMap.putIfAbsent(resource, new HashSet<>());
+                        resourceDescriptionMap.get(resource).add(resourceDescMap.get(resource).trim());
+                    });
+                });
+
+                /**
+                 * Fetch existing mappings (any if found) for appUUID and all provided resources
+                 * Build list of ResourceIndex keeping appUUID constant
+                 * Build resourceMapping : resourceID -> ResourceAppMap
+                 * Use this map to look up for existing entity while parsing resourceRoleMap to build newMappings
+                 * Add any modified ResourceAppMap to newMappings
+                 * Update newMappings to DB
                  *
                  */
-                Map<String, Set<String>> resourceRoleMap = new HashMap<>();
-                Map<String, Set<String>> resourceDescriptionMap = new HashMap<>();
 
-                List<RoleResourceMap> mappings = request.getMappings();
-                log.info("{} MAPPING CREATOR : Mapping roles to resources for appUUID - {}", appUUID);
+                Iterable<ResourceAppMap> iterableMappings = mappingRepository.findAllById(request.getResourceIndices());
+                List<ResourceAppMap> existingMappings = iterableMappings != null ? StreamSupport.stream(iterableMappings.spliterator(), false)
+                        .collect(Collectors.toList()) : new LinkedList<>();
 
-                if (mappings != null && mappings.size() > 0) {
+                Map<String, ResourceAppMap> resourceMapping = new HashMap<>();
+                existingMappings.stream().forEach(mapping -> resourceMapping.put(mapping.getId().getResourceId(), mapping));
 
-                    /**
-                     * Parse the request the build resourceDescMap
-                     * resourceDescMap : resource -> resource description
-                     * The objective of the map is to reverse the mapping from the request (role -> [resource] to resource -> [role])
-                     * This is done so as to match the schema (which is resource + appUUID -> [role]
-                     * appUUID is constant throught this module
-                     */
-                    mappings.stream().forEach(mapping -> {
-
-                        Map<String, String> resourceDescMap = mapping.getResources();
-                        String role = mapping.getRole();
-
-                        Set<String> resources = resourceDescMap != null ? resourceDescMap.keySet() : new HashSet<>();
-                        resources.stream().forEach(resource -> {
-                            resourceRoleMap.putIfAbsent(resource, new HashSet<>());
-                            resourceRoleMap.get(resource).add(role);
-
-                            resourceDescriptionMap.putIfAbsent(resource, new HashSet<>());
-                            resourceDescriptionMap.get(resource).add(resourceDescMap.get(resource).trim());
+                resourceRoleMap.forEach(
+                        (resource, roles) -> {
+                            ResourceAppMap currentMapping = resourceMapping.getOrDefault(resource, null);
+                            if (currentMapping == null) {
+                                currentMapping = new ResourceAppMap(
+                                        application,
+                                        resource,
+                                        resourceDescriptionMap.get(resource).stream().collect(Collectors.joining(". ")),
+                                        roles
+                                );
+                            } else {
+                                currentMapping.addRoles(roles);
+                            }
+                            newMappings.add(currentMapping);
                         });
-                    });
 
-                    /**
-                     * Fetch existing mappings (any if found) for appUUID and all provided resources
-                     * Build list of ResourceIndex keeping appUUID constant
-                     * Build resourceMapping : resourceID -> ResourceAppMap
-                     * Use this map to look up for existing entity while parsing resourceRoleMap to build newMappings
-                     * Add any modified ResourceAppMap to newMappings
-                     * Update newMappings to DB
-                     *
-                     */
+                log.info("{} MAPPING CREATOR : Mapped roles to resources for appUUID - {}", LOG_TEXT, appUUID);
 
-                    Iterable<ResourceAppMap> iterableMappings = mappingRepository.findAllById(request.getResourceIndices());
-                    List<ResourceAppMap> existingMappings = iterableMappings != null ? StreamSupport.stream(iterableMappings.spliterator(), false)
-                            .collect(Collectors.toList()) : new LinkedList<>();
-
-                    /*List<ResourceAppMap> existingMappings = request.getResourceIndices()
-                            .stream()
-                            .map(index -> mappingRepository.findByAppAndResource(index.getAppUUID(), index.getResourceId()))
-                            .filter(mapping -> mapping != null)
-                            .collect(Collectors.toList());*/
-
-                    Map<String, ResourceAppMap> resourceMapping = new HashMap<>();
-                    existingMappings.stream().forEach(mapping -> resourceMapping.put(mapping.getId().getResourceId(), mapping));
-
-                    resourceRoleMap.forEach(
-                            (resource, roles) -> {
-                                ResourceAppMap currentMapping = resourceMapping.getOrDefault(resource, null);
-                                if (currentMapping == null) {
-                                    currentMapping = new ResourceAppMap(
-                                            application,
-                                            resource,
-                                            resourceDescriptionMap.get(resource).stream().collect(Collectors.joining(". ")),
-                                            roles
-                                    );
-                                } else {
-                                    currentMapping.addRoles(roles);
-                                }
-                                newMappings.add(currentMapping);
-                            });
-
-                    log.info("{} MAPPING CREATOR : Mapped roles to resources for appUUID - {}", appUUID);
-
-                }
-            } else {
-                log.error("{} MAPPING CREATOR : COULD NOT EXTRACT app with appUUID - {}", appUUID);
-                throw ApplicationException.builder().
-                        errorMessage(ApplicationConstants.APPLICATION_NOT_FOUND).
-                        status(HttpStatus.BAD_REQUEST).
-                        build();
             }
 
+
             if (newMappings.size() > 0) {
-                log.info("{} MAPPING CREATOR : Updating mappings for appUUID - {} . [New mappings : {}]", appUUID, newMappings.size());
+                log.info("{} MAPPING CREATOR : Updating mappings for appUUID - {} . [New mappings : {}]", LOG_TEXT, appUUID, newMappings.size());
 
                 mappingRepository.saveAll(newMappings);
                 response.setRoleMappings(getRoleResourceMappingForApplication(appUUID));
             } else {
-                log.info("{} MAPPING CREATOR : No mappings to update for appUUID - {} . [New mappings : {}]", appUUID);
+                log.info("{} MAPPING CREATOR : No mappings to update for appUUID - {} . [New mappings : {}]", LOG_TEXT, appUUID);
             }
         } catch (ApplicationException exception) {
             throw exception;
@@ -174,6 +205,26 @@ public class MappingService {
 
         return response;
 
+    }
+
+    /**
+     * Fetches List of [role -> [resource]] mappings for a app linked to provided username
+     *
+     * @param username
+     * @param selectedRoles
+     * @return
+     */
+    public RoleResourceMapping getRoleResourceMappingForUser(String username, String... selectedRoles) {
+        log.info("{} Fetching role-resource mappings for app linked to user - {}", LOG_TEXT, username);
+        Application application = userRepository.getUserByName(username).getApplication();
+        if (ObjectUtils.isEmpty(application)) {
+            log.error("{} Unable to find application to fetch mappings", LOG_TEXT);
+            throw ApplicationException.builder().
+                    errorMessage(ApplicationConstants.APPLICATION_NOT_FOUND).
+                    status(HttpStatus.BAD_REQUEST).
+                    build();
+        }
+        return getRoleResourceMappingForApplication(application.getAppUUID(), selectedRoles);
     }
 
     /**
