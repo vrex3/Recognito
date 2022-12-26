@@ -65,6 +65,8 @@ public class SecurityConfig {
                     .antMatchers(HttpMethod.GET, "/client/user/login").hasAnyAuthority(RoleUtil.getUserRoles())
                     .antMatchers(HttpMethod.GET, "/client/user/token/generate").hasAnyAuthority(RoleUtil.ALL_AUTHORITIES)
                     .antMatchers(HttpMethod.GET, "/client/user/token/authorize").hasAnyAuthority(RoleUtil.ALL_AUTHORITIES)
+                    .antMatchers(HttpMethod.GET, "/client/role/mapping").hasAnyAuthority(RoleUtil.wrapRoles(Role.APP_ADMIN))
+                    .antMatchers(HttpMethod.POST, "/client/role/mapping").hasAnyAuthority(RoleUtil.wrapRoles(Role.APP_ADMIN, Role.APP_DEVELOPER))
 
                     .anyRequest().authenticated()
 

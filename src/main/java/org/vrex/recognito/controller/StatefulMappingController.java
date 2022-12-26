@@ -3,6 +3,7 @@ package org.vrex.recognito.controller;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,51 +15,50 @@ import org.vrex.recognito.service.MappingService;
 import org.vrex.recognito.utility.HttpResponseUtil;
 import org.vrex.recognito.utility.RoleUtil;
 
-import javax.validation.Valid;
-
 @RestController
-@RequestMapping(value = "/app/role/mapping")
+@RequestMapping(value = "/client/role/mapping")
 @SuppressWarnings("unused")
-public class MappingController {
+public class StatefulMappingController {
 
     @Autowired
     private MappingService mappingService;
 
     /**
-     * Adds resources for roles for speicifiec App
-     * Throws Error if app is invalid or does not allow resource mapping
+     * Adds resources to specific roles for app linked to logged in user
      *
+     * @param username
      * @param request
      * @return
      */
     @PostMapping
-    public ResponseEntity<?> addMapping(@Valid @RequestBody RoleResourceMapping request) {
+    public ResponseEntity<?> addMapping(
+            @AuthenticationPrincipal String username,
+            @RequestBody RoleResourceMapping request) {
         return HttpResponseUtil.wrapInHttpStatusOkResponse(
-                mappingService.addRoleResourceMapping(request)
+                mappingService.addRoleResourceMapping(username, request)
         );
-
     }
 
     /**
-     * Returns the role mappings for an app
-     * If a role is specified OR valid only details of that role is returned
-     * Otherwise details of ALL roles are returned
+     * Views current roles and their mapped resources for app linked to logged in user
      * <p>
-     * TODO:
-     * Service allows for returning data for any number of passed roles
-     * Can be incorporated into request later.
+     * TODO
+     * Accept multiple roles in parameter
      *
-     * @param appUUID
+     * @param username
      * @param role
      * @return
      */
     @GetMapping
-    public ResponseEntity<?> viewRolesForApp(@RequestParam String appUUID,
-                                             @RequestParam(required = false) String role) {
+    public ResponseEntity<?> viewRolesForApp(
+            @AuthenticationPrincipal String username,
+            @RequestParam(required = false) String role) {
         return HttpResponseUtil.wrapInHttpStatusOkResponse(
-                !StringUtils.isEmpty(role) && RoleUtil.isValidRole(role) ?
-                        mappingService.getRoleResourceMappingForApplication(appUUID, role) :
-                        mappingService.getRoleResourceMappingForApplication(appUUID)
+                !StringUtils.isEmpty(role) && RoleUtil.isClientRole(role) ?
+                        mappingService.getRoleResourceMappingForUser(username, role) :
+                        mappingService.getRoleResourceMappingForUser(username)
         );
     }
+
+
 }

@@ -451,6 +451,89 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Client Role",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "d5JEPkovS4ZRYKjmoqEWULQqwcSzFvfc+HXHTZeYj1E=",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "user_32",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{activeHost}}/client/role/mapping?role=APP_USER",
+							"host": [
+								"{{activeHost}}"
+							],
+							"path": [
+								"client",
+								"role",
+								"mapping"
+							],
+							"query": [
+								{
+									"key": "role",
+									"value": "APP_USER"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Client Role Resource Mapping",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "d5JEPkovS4ZRYKjmoqEWULQqwcSzFvfc+HXHTZeYj1E=",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "user_32",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"mappings\": [\n        {\n            \"role\": \"APP_DEVELOPER\",\n            \"resources\": {\n                \"res4\": \"resourceDescription4\",\n                \"res5\": \"resourceDescription5\",\n                \"res6\": \"resourceDescription6\"\n            }\n        },\n        {\n            \"role\": \"APP_USER\",\n            \"resources\": {\n                \"res4\": \"resourceDescription4\",\n                \"res5\": \"resourceDescription5\",\n                \"res6\": \"resourceDescription6\"\n            }\n        }\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{activeHost}}/client/role/mapping",
+							"host": [
+								"{{activeHost}}"
+							],
+							"path": [
+								"client",
+								"role",
+								"mapping"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},

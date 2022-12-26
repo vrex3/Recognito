@@ -85,8 +85,9 @@ public class StatefulUserController {
      * @throws Exception
      */
     @GetMapping(value = "/token/generate")
-    public ResponseEntity<?> generateToken(@AuthenticationPrincipal String username,
-                                           @RequestParam(required = false, defaultValue = "false") String tokenAsJson) throws Exception {
+    public ResponseEntity<?> generateToken(
+            @AuthenticationPrincipal String username,
+            @RequestParam(required = false, defaultValue = "false") String tokenAsJson) throws Exception {
         UserToken token = userService.generateTokenForUser(username);
         boolean jsonify = false;
         try {
