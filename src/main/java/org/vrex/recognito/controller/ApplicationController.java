@@ -18,6 +18,7 @@ import org.vrex.recognito.model.dto.ApplicationIdentifier;
 import org.vrex.recognito.model.dto.UpsertApplicationRequest;
 import org.vrex.recognito.service.ApplicationService;
 import org.vrex.recognito.utility.HttpResponseUtil;
+import org.vrex.recognito.utility.RoleUtil;
 
 import java.util.Map;
 
@@ -74,20 +75,9 @@ public class ApplicationController {
     public ResponseEntity<?> getAppInvite(@AuthenticationPrincipal String username,
                                           @RequestParam(required = false) String appUUID) throws Exception {
         return HttpResponseUtil.wrapInHttpStatusOkResponse(
-                !StringUtils.isEmpty(appUUID) && isSystemAdmin() ?
+                !StringUtils.isEmpty(appUUID) && RoleUtil.isSystemAdmin() ?
                         applicationService.findApplicationSecret(appUUID) :
                         applicationService.findApplicationSecretForUser(username)
         );
-    }
-
-    /**
-     * Checks whether a logged in user is a system admin or not
-     *
-     * @return
-     */
-    private boolean isSystemAdmin() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        return !ObjectUtils.isEmpty(auth) &&
-                auth.getAuthorities().stream().anyMatch(user -> user.getAuthority().equals(Role.SYS_ADMIN.name()));
     }
 }

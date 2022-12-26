@@ -6,3 +6,10 @@ target/classes/org/vrex/recognito/config/SecurityConfig.class
 target/classes/org/vrex/recognito/model/dto/ApplicationDTO.class
 target/classes/org/vrex/recognito/model/dto/UpsertApplicationRequest.class
 target/classes/org/vrex/recognito/service/ApplicationService.class
+target/classes/org/vrex/recognito/config/ApplicationConstants.class
+target/classes/org/vrex/recognito/controller/ApplicationController.class
+target/classes/org/vrex/recognito/controller/StatefulUserController.class
+target/classes/org/vrex/recognito/service/ApplicationService.class
+target/classes/org/vrex/recognito/service/UserService.class
+target/classes/org/vrex/recognito/utility/RoleUtil.class
+target/classes/org/vrex/recognito/utility/TokenUtil.class

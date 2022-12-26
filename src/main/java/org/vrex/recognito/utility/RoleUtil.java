@@ -2,9 +2,12 @@ package org.vrex.recognito.utility;
 
 
 import org.apache.commons.lang3.EnumUtils;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import org.vrex.recognito.entity.Role;
@@ -94,5 +97,16 @@ public class RoleUtil {
      */
     public static String[] getUserRoles() {
         return wrapRoles(Role.APP_ADMIN, Role.APP_USER, Role.APP_DEVELOPER);
+    }
+
+    /**
+     * Checks whether a logged in user is a system admin or not
+     *
+     * @return
+     */
+    public static boolean isSystemAdmin() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        return !ObjectUtils.isEmpty(auth) &&
+                auth.getAuthorities().stream().anyMatch(user -> user.getAuthority().equals(Role.SYS_ADMIN.name()));
     }
 }
