@@ -254,7 +254,7 @@ public class UserService {
         UserDTO authenticatedUser = extractUserFromToken(application, token);
         log.info("{} Token Generator - Extracted user from token for appUUID {}", LOG_TEXT, appUUID);
 
-        log.info("{} Verifying token ownership for logged in user {}", username);
+        log.info("{} Verifying token ownership for logged in user {}", LOG_TEXT, username);
         if (!username.equals(authenticatedUser.getUsername())) {
             log.error("{} Unable to verify token ownership for logged in user {}", LOG_TEXT, username);
             throw ApplicationException.builder().
