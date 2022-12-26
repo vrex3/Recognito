@@ -262,7 +262,7 @@ public class UserService {
                     status(HttpStatus.FORBIDDEN).
                     build();
         }
-        log.info("{} Verified token ownership for logged in user {}", username);
+        log.info("{} Verified token ownership for logged in user {}", LOG_TEXT, username);
 
         if (authenticatedUser.isResourcesEnabled()) {
             log.info("{} Token Generator - Checking access to resource {} for authenticated user for appUUID {}", LOG_TEXT, resource, appUUID);
