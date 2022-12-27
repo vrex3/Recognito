@@ -1,4 +1,4 @@
-package org.vrex.recognito.controller;
+package org.vrex.recognito.controller.stateful;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -28,7 +28,7 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping(value = "/client/user")
 @SuppressWarnings("unused")
-public class StatefulUserController {
+public class ClientUserController {
 
     @Autowired
     private UserService userService;

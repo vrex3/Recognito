@@ -1,4 +1,4 @@
-package org.vrex.recognito.controller;
+package org.vrex.recognito.controller.stateful;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +18,7 @@ import org.vrex.recognito.utility.RoleUtil;
 @RestController
 @RequestMapping(value = "/client/role/mapping")
 @SuppressWarnings("unused")
-public class StatefulMappingController {
+public class ClientMappingController {
 
     @Autowired
     private MappingService mappingService;

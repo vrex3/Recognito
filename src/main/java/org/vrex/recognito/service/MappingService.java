@@ -105,7 +105,7 @@ public class MappingService {
         }
 
         try {
-
+            request.setAppUUID(appUUID);
             log.info("{} MAPPING CREATOR : Received role-resource mapping request for appUUID - {}", LOG_TEXT, appUUID);
             List<ResourceAppMap> newMappings = new LinkedList<>();
 

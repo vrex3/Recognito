@@ -1,4 +1,4 @@
-package org.vrex.recognito.controller;
+package org.vrex.recognito.controller.stateless;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
