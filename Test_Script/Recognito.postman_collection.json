@@ -258,12 +258,12 @@
 							"basic": [
 								{
 									"key": "password",
-									"value": "QVYciZqD+JYqG2vVmTVRPvhPKekAdjYauKD9ssIyqmA=",
+									"value": "p1I5F0T7kzP9bHYnpXtTyPTGwuj+fCi8DaZg4E34Ums=",
 									"type": "string"
 								},
 								{
 									"key": "username",
-									"value": "admin",
+									"value": "admin2",
 									"type": "string"
 								}
 							]
@@ -271,7 +271,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{activeHost}}/app/role/mapping?role=APP_DEVELOPER&appUUID=2308dc5a-6475-4d09-8747-99d379a398a3",
+							"raw": "{{activeHost}}/app/role/mapping?roles=APP_DEVELOPER, APP_USER&appUUID=8b2d3309-8c5d-419b-9d4a-afd6baa5cc96",
 							"host": [
 								"{{activeHost}}"
 							],
@@ -282,12 +282,12 @@
 							],
 							"query": [
 								{
-									"key": "role",
-									"value": "APP_DEVELOPER"
+									"key": "roles",
+									"value": "APP_DEVELOPER, APP_USER"
 								},
 								{
 									"key": "appUUID",
-									"value": "2308dc5a-6475-4d09-8747-99d379a398a3"
+									"value": "8b2d3309-8c5d-419b-9d4a-afd6baa5cc96"
 								}
 							]
 						}
@@ -473,7 +473,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{activeHost}}/client/role/mapping?role=APP_USER",
+							"raw": "{{activeHost}}/client/role/mapping?roles=APP_USER, APP_DEVELOPER",
 							"host": [
 								"{{activeHost}}"
 							],
@@ -484,8 +484,8 @@
 							],
 							"query": [
 								{
-									"key": "role",
-									"value": "APP_USER"
+									"key": "roles",
+									"value": "APP_USER, APP_DEVELOPER"
 								}
 							]
 						}
