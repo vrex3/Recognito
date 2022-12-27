@@ -240,46 +240,47 @@ public class MappingService {
         log.info("{} Fetching role-resource mappings for appUUID - {}", LOG_TEXT, appUUID);
 
         Set<String> allowedRoles = selectedRoles.length > 0 ? new HashSet<>(Arrays.asList(selectedRoles)) : new HashSet<>();
-        final boolean allRoles = allowedRoles.size() == 0;
+        RoleResourceMapping response = new RoleResourceMapping(appUUID);
 
-        try {
-            List<ResourceAppMap> mappings = mappingRepository.findByIdAppUUID(appUUID);
-            RoleResourceMapping response = new RoleResourceMapping(appUUID);
+        if (allowedRoles.size() > 0) {
+            try {
+                List<ResourceAppMap> mappings = mappingRepository.findByIdAppUUID(appUUID);
+                if (mappings != null && mappings.size() > 0) {
+                    log.info("{} Fetched role-resource mappings for appUUID - {}. [New mappings : {}]", LOG_TEXT, appUUID, mappings.size());
 
-            if (mappings != null && mappings.size() > 0) {
-                log.info("{} Fetched role-resource mappings for appUUID - {}. [New mappings : {}]", LOG_TEXT, appUUID, mappings.size());
-
-                /**
-                 * role -> set of resources
-                 */
-                Map<String, Set<String>> roleResourceMap = new HashMap<>();
+                    /**
+                     * role -> set of resources
+                     */
+                    Map<String, Set<String>> roleResourceMap = new HashMap<>();
 
 
-                mappings.stream().forEach(mapping -> {
-                    String resource = mapping.getId().getResourceId();
-                    Set<String> roles = mapping.getRoles();
-                    roles.stream().forEach(role -> {
-                        if (allRoles || allowedRoles.contains(role)) {
-                            roleResourceMap.putIfAbsent(role, new HashSet<>());
-                            roleResourceMap.get(role).add(resource);
-                        }
+                    mappings.stream().forEach(mapping -> {
+                        String resource = mapping.getId().getResourceId();
+                        Set<String> roles = mapping.getRoles();
+                        roles.stream().forEach(role -> {
+                            if (allowedRoles.contains(role)) {
+                                roleResourceMap.putIfAbsent(role, new HashSet<>());
+                                roleResourceMap.get(role).add(resource);
+                            }
+                        });
                     });
-                });
 
-                roleResourceMap.forEach((role, resources) -> response.addMapping(role, resources));
-                log.info("{} Mapped role-resource mappings for appUUID - {}. [New mappings : {}]", LOG_TEXT, appUUID, mappings.size());
+                    roleResourceMap.forEach((role, resources) -> response.addMapping(role, resources));
+                    log.info("{} Mapped role-resource mappings for appUUID - {}. [New mappings : {}]", LOG_TEXT, appUUID, mappings.size());
 
-            } else
-                log.info("{} Fetched NO role-resource mappings for appUUID - {}", LOG_TEXT, appUUID);
+                } else
+                    log.info("{} Fetched NO role-resource mappings for appUUID - {}", LOG_TEXT, appUUID);
 
-            return response;
-        } catch (Exception exception) {
-            log.error("{} Encountered exception fetching mappings", LOG_TEXT_ERROR, exception);
-            throw ApplicationException.builder().
-                    errorMessage(exception.getMessage()).
-                    status(HttpStatus.INTERNAL_SERVER_ERROR).
-                    build();
+
+            } catch (Exception exception) {
+                log.error("{} Encountered exception fetching mappings", LOG_TEXT_ERROR, exception);
+                throw ApplicationException.builder().
+                        errorMessage(exception.getMessage()).
+                        status(HttpStatus.INTERNAL_SERVER_ERROR).
+                        build();
+            }
         }
+        return response;
     }
 
     /**

@@ -1,6 +1,5 @@
 package org.vrex.recognito.controller.stateful;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -41,23 +40,18 @@ public class ClientMappingController {
 
     /**
      * Views current roles and their mapped resources for app linked to logged in user
-     * <p>
-     * TODO
-     * Accept multiple roles in parameter
+     * Service allows for returning data for any number of passed roles (comma separated)
      *
      * @param username
-     * @param role
+     * @param roles
      * @return
      */
     @GetMapping
     public ResponseEntity<?> viewRolesForApp(
             @AuthenticationPrincipal String username,
-            @RequestParam(required = false) String role) {
+            @RequestParam(required = false) String roles) {
         return HttpResponseUtil.wrapInHttpStatusOkResponse(
-                !StringUtils.isEmpty(role) && RoleUtil.isClientRole(role) ?
-                        mappingService.getRoleResourceMappingForUser(username, role) :
-                        mappingService.getRoleResourceMappingForUser(username)
-        );
+                mappingService.getRoleResourceMappingForUser(username, RoleUtil.extractValidRoles(roles)));
     }
 
 

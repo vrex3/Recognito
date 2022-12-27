@@ -3,6 +3,7 @@ package org.vrex.recognito.controller.stateless;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -43,23 +44,22 @@ public class MappingController {
      * Returns the role mappings for an app
      * If a role is specified OR valid only details of that role is returned
      * Otherwise details of ALL roles are returned
-     * <p>
-     * TODO:
-     * Service allows for returning data for any number of passed roles
-     * Can be incorporated into request later.
+     * Service allows for returning data for any number of passed roles (comma separated)
+     * If appUUID is not passed, roles are displayed for linked app for logged in user.
      *
+     * @param username
      * @param appUUID
-     * @param role
+     * @param roles
      * @return
      */
     @GetMapping
     public ResponseEntity<?> viewRolesForApp(
-            @RequestParam String appUUID,
-            @RequestParam(required = false) String role) {
+            @AuthenticationPrincipal String username,
+            @RequestParam(required = false) String appUUID,
+            @RequestParam(required = false) String roles) {
         return HttpResponseUtil.wrapInHttpStatusOkResponse(
-                !StringUtils.isEmpty(role) && RoleUtil.isValidRole(role) ?
-                        mappingService.getRoleResourceMappingForApplication(appUUID, role) :
-                        mappingService.getRoleResourceMappingForApplication(appUUID)
-        );
+                StringUtils.isEmpty(appUUID) ?
+                        mappingService.getRoleResourceMappingForUser(username, RoleUtil.extractValidRoles(roles)) :
+                        mappingService.getRoleResourceMappingForApplication(appUUID, RoleUtil.extractValidRoles(roles)));
     }
 }
