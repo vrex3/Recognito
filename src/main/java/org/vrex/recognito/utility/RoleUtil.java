@@ -8,13 +8,13 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Component;
-
 import org.vrex.recognito.entity.Role;
 import org.vrex.recognito.entity.User;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
 
 public class RoleUtil {
 
@@ -34,6 +34,24 @@ public class RoleUtil {
      */
     public static boolean isValidRole(String role) {
         return StringUtils.isEmpty(role) ? false : EnumUtils.isValidEnum(Role.class, role);
+    }
+
+    /**
+     * Extracts all valid roles from a comma separated string of roles
+     * Returns response as an array
+     *
+     * @param roles
+     * @return
+     */
+    public static String[] extractValidRoles(String roles) {
+        String[] roleArray = StringUtils.isEmpty(roles) ? new String[0] : roles.split(",");
+        List<String> validRoles = new LinkedList<>();
+        String role;
+        for (int i = 0; i < roleArray.length; i++) {
+            role = roleArray[i] != null ? roleArray[i].trim().toUpperCase() : "";
+            if (isValidRole(role)) validRoles.add(role);
+        }
+        return validRoles.toArray(new String[validRoles.size()]);
     }
 
     /**
@@ -106,7 +124,6 @@ public class RoleUtil {
      */
     public static boolean isSystemAdmin() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        return !ObjectUtils.isEmpty(auth) &&
-                auth.getAuthorities().stream().anyMatch(user -> user.getAuthority().equals(Role.SYS_ADMIN.name()));
+        return !ObjectUtils.isEmpty(auth) && auth.getAuthorities().stream().anyMatch(user -> user.getAuthority().equals(Role.SYS_ADMIN.name()));
     }
 }
