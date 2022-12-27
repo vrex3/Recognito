@@ -1,4 +1,4 @@
-package org.vrex.recognito.controller;
+package org.vrex.recognito.controller.stateless;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,7 +21,7 @@ import java.util.Map;
 @RestController
 @RequestMapping(value = "/system/user")
 @SuppressWarnings("unused")
-public class StatelessUserController {
+public class UserController {
 
     @Autowired
     private UserService userService;
